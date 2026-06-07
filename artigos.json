@@ -1,23 +1,5 @@
 [
   {
-    "slug": "doencas-tireoidianas-na-gestacao-o-que-mudou-com-o-guideline-ata-2026",
-    "title": "Doenças Tireoidianas na Gestação: O que Mudou com o Guideline ATA 2026?",
-    "category": "Guidelines",
-    "excerpt": "As Diretrizes 2026 da ATA atualizam metas de TSH, indicações de tratamento e manejo do hipertireoidismo na pré-concepção, gestação e pós-parto.",
-    "date": "07/06/2026",
-    "read_time": 3,
-    "tags": [
-      "tireoide",
-      "gestação",
-      "hipotireoidismo",
-      "hipertireoidismo",
-      "ATA 2026",
-      "pré-concepção",
-      "pós-parto",
-      "guideline"
-    ]
-  },
-  {
     "slug": "sulfato-de-magnesio-no-pos-parto-12h-ou-24h-na-pre-eclampsia-grave",
     "title": "Sulfato de Magnésio no Pós-Parto: 12h ou 24h na Pré-eclâmpsia Grave?",
     "category": "Pré-eclâmpsia",
@@ -32,6 +14,26 @@
       "eclâmpsia",
       "NNT",
       "toxicidade"
+    ]
+  },
+  {
+    "slug": "doencas-tireoidianas-na-gestacao-o-que-mudou-com-o-guideline-ata-2026",
+    "title": "Doenças Tireoidianas na Gestação: O que Mudou com o Guideline ATA 2026?",
+    "category": "Guidelines",
+    "excerpt": "As Diretrizes 2026 da ATA simplificam as metas de TSH, atualizam indicações de tratamento e detalham o manejo do hipertireoidismo na pré-concepção, gestação e pós-parto.",
+    "date": "07/06/2026",
+    "read_time": 5,
+    "tags": [
+      "tireoide",
+      "gestação",
+      "hipotireoidismo",
+      "hipertireoidismo",
+      "ATA 2026",
+      "pré-concepção",
+      "pós-parto",
+      "guideline",
+      "doença de Graves",
+      "tireoidite"
     ]
   }
 ]
