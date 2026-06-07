@@ -68,6 +68,11 @@ img { max-width: 100%; display: block; }
   width: auto;
   flex-shrink: 0;
 }
+.hero-logo {
+  height: 160px;
+  width: auto;
+  margin: 0 auto 24px;
+}
 .logo-badge {
   width: 38px;
   height: 38px;
