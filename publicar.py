@@ -69,10 +69,12 @@ def save_meta(articles: list):
 def rebuild_index(articles: list):
     html = INDEX.read_text(encoding="utf-8")
     cards = "\n".join(build_card_html(a) for a in reversed(articles))
+    # Replace everything inside the articles-grid div
     html = re.sub(
-        r"<!-- ARTICLES_PLACEHOLDER -->",
-        cards if cards else "<!-- ARTICLES_PLACEHOLDER -->",
+        r'(<div class="articles-grid" id="articles-grid">)(.*?)(</div>)',
+        lambda m: m.group(1) + "\n" + (cards if cards else "<!-- ARTICLES_PLACEHOLDER -->") + "\n      " + m.group(3),
         html,
+        flags=re.DOTALL,
     )
     INDEX.write_text(html, encoding="utf-8")
 
