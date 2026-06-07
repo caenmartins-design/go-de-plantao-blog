@@ -1,20 +1,5 @@
 [
   {
-    "slug": "sulfato-de-magnesio-no-pos-parto-12h-ou-24h-na-pre-eclampsia-grave",
-    "title": "Sulfato de Magnésio no Pós-Parto: 12h ou 24h na Pré-eclâmpsia Grave?",
-    "category": "Pré-eclâmpsia",
-    "excerpt": "Um modelo de decisão analítica com 45.800 pacientes questiona o regime tradicional de 24 horas na profilaxia anticonvulsivante.",
-    "date": "06/06/2026",
-    "read_time": 2,
-    "tags": [
-      "sulfato de magnésio",
-      "pré-eclâmpsia",
-      "pós-parto",
-      "custo-efetividade",
-      "eclâmpsia"
-    ]
-  },
-  {
     "slug": "doencas-tireoidianas-na-gestacao-o-que-mudou-com-o-guideline-ata-2026",
     "title": "Doenças Tireoidianas na Gestação: O que Mudou com o Guideline ATA 2026?",
     "category": "Guidelines",
@@ -30,6 +15,23 @@
       "pré-concepção",
       "pós-parto",
       "guideline"
+    ]
+  },
+  {
+    "slug": "sulfato-de-magnesio-no-pos-parto-12h-ou-24h-na-pre-eclampsia-grave",
+    "title": "Sulfato de Magnésio no Pós-Parto: 12h ou 24h na Pré-eclâmpsia Grave?",
+    "category": "Pré-eclâmpsia",
+    "excerpt": "Um modelo de decisão analítica com 45.800 pacientes questiona o regime tradicional de 24 horas na profilaxia anticonvulsivante — e os dados mudam a perspectiva clínica.",
+    "date": "07/06/2026",
+    "read_time": 5,
+    "tags": [
+      "sulfato de magnésio",
+      "pré-eclâmpsia",
+      "pós-parto",
+      "custo-efetividade",
+      "eclâmpsia",
+      "NNT",
+      "toxicidade"
     ]
   }
 ]
