@@ -395,6 +395,57 @@ img { max-width: 100%; display: block; }
 .site-footer strong { color: white; }
 .site-footer a { color: rgba(255,255,255,.7); }
 
+/* ---- ARTICLE PROMO BLOCK ---- */
+.article-promo-diu {
+  background: linear-gradient(135deg, #0f2560 0%, #1a3fa6 60%, #7b1550 100%);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin: 48px 0;
+  color: white;
+}
+.apd-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 99px;
+  letter-spacing: .4px;
+  margin-bottom: 14px;
+}
+.apd-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.apd-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.apd-btn {
+  display: inline-block;
+  background: var(--pink);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 13px 26px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background .15s, transform .1s;
+  box-shadow: 0 4px 16px rgba(212,39,122,.4);
+}
+.apd-btn:hover {
+  background: #b51f67;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
 /* ---- PROMO BANNER ---- */
 .promo-banner-wrap {
   background: linear-gradient(135deg, #0f2560 0%, #1a3fa6 60%, #7b1550 100%);
