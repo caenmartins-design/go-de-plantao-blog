@@ -395,10 +395,111 @@ img { max-width: 100%; display: block; }
 .site-footer strong { color: white; }
 .site-footer a { color: rgba(255,255,255,.7); }
 
+/* ---- PROMO BANNER ---- */
+.promo-banner-wrap {
+  background: linear-gradient(135deg, #0f2560 0%, #1a3fa6 60%, #7b1550 100%);
+  padding: 0 24px;
+}
+.promo-banner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 0;
+}
+.promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 99px;
+  letter-spacing: .4px;
+  margin-bottom: 14px;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .7; }
+}
+.promo-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.promo-text { flex: 1; min-width: 260px; }
+.promo-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 6px;
+}
+.promo-title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.promo-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  line-height: 1.6;
+  max-width: 520px;
+}
+.promo-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.promo-price {
+  color: rgba(255,255,255,.7);
+  font-size: 14px;
+  text-align: right;
+}
+.promo-price strong {
+  color: #fff;
+  font-size: 20px;
+}
+.promo-btn {
+  display: inline-block;
+  background: var(--pink);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, transform .1s;
+  box-shadow: 0 4px 16px rgba(212,39,122,.4);
+}
+.promo-btn:hover {
+  background: #b51f67;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.promo-location {
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+  text-align: right;
+}
+
 /* ---- RESPONSIVE ---- */
 @media (max-width: 640px) {
   .hero { padding: 48px 20px; }
   .header-nav { display: none; }
   .articles-grid { grid-template-columns: 1fr; }
   .article-cta { padding: 28px 20px; }
+  .promo-content { flex-direction: column; align-items: flex-start; }
+  .promo-cta { align-items: flex-start; }
+  .promo-price, .promo-location { text-align: left; }
 }
