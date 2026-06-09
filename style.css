@@ -395,6 +395,53 @@ img { max-width: 100%; display: block; }
 .site-footer strong { color: white; }
 .site-footer a { color: rgba(255,255,255,.7); }
 
+/* ---- ARTICLE REFERENCE DOWNLOAD ---- */
+.article-reference {
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 40px 0;
+}
+.ref-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.ref-icon { font-size: 32px; flex-shrink: 0; }
+.ref-info { flex: 1; min-width: 180px; }
+.ref-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--blue);
+  margin-bottom: 3px;
+}
+.ref-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.ref-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 7px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.ref-btn:hover { background: var(--blue-dark); text-decoration: none; color: #fff; }
+
 /* ---- ARTICLE PROMO BLOCK ---- */
 .article-promo-diu {
   background: linear-gradient(135deg, #0f2560 0%, #1a3fa6 60%, #7b1550 100%);

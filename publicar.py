@@ -4,15 +4,16 @@ Go de Plantão — Script de publicação automática
 Uso: chamado automaticamente pelo Claude Code após gerar cada artigo.
 """
 
-import os, re, json, subprocess
+import os, re, json, shutil, subprocess
 from datetime import datetime
 from pathlib import Path
 
-BASE_DIR  = Path(__file__).parent
-ARTIGOS   = BASE_DIR / "artigos"
-INDEX     = BASE_DIR / "index.html"
-TEMPLATE  = ARTIGOS / "_template.html"
-META_FILE = BASE_DIR / "artigos.json"
+BASE_DIR   = Path(__file__).parent
+ARTIGOS    = BASE_DIR / "artigos"
+REFERENCES = BASE_DIR / "assets" / "references"
+INDEX      = BASE_DIR / "index.html"
+TEMPLATE   = ARTIGOS / "_template.html"
+META_FILE  = BASE_DIR / "artigos.json"
 
 COURSE_URL = "https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia"
 COUPON     = "GODEPLANTAO"
@@ -35,6 +36,20 @@ def estimate_read_time(html: str) -> int:
 
 def build_tags_html(tags: list) -> str:
     return " ".join(f'<span class="tag">{t}</span>' for t in tags)
+
+
+def build_reference_html(slug: str, reference_title: str) -> str:
+    return f"""
+    <div class="article-reference">
+      <div class="ref-inner">
+        <span class="ref-icon">📄</span>
+        <div class="ref-info">
+          <p class="ref-label">Artigo original</p>
+          <p class="ref-title">{reference_title}</p>
+        </div>
+        <a class="ref-btn" href="../assets/references/{slug}.pdf" target="_blank" rel="noopener">⬇ Baixar PDF</a>
+      </div>
+    </div>"""
 
 
 def build_card_html(article: dict) -> str:
@@ -83,18 +98,22 @@ def publish_article(
     excerpt: str,
     tags: list = None,
     date: str = None,
+    reference_pdf: str = None,
+    reference_title: str = None,
 ) -> dict:
     """
     Publica um artigo no blog.
 
     Parâmetros
     ----------
-    title      : Título do artigo
-    category   : Categoria (ex: 'Pré-eclâmpsia', 'Urgências', 'Guidelines')
-    body_html  : Corpo do artigo em HTML (sem <html>/<body>)
-    excerpt    : Resumo curto (1-2 frases) para o card na home
-    tags       : Lista de tags (opcional)
-    date       : Data no formato 'DD/MM/AAAA' (usa hoje se omitido)
+    title           : Título do artigo
+    category        : Categoria (ex: 'Pré-eclâmpsia', 'Urgências', 'Guidelines')
+    body_html       : Corpo do artigo em HTML (sem <html>/<body>)
+    excerpt         : Resumo curto (1-2 frases) para o card na home
+    tags            : Lista de tags (opcional)
+    date            : Data no formato 'DD/MM/AAAA' (usa hoje se omitido)
+    reference_pdf   : Caminho local para o PDF de referência (opcional)
+    reference_title : Título do artigo de referência para exibir no botão (opcional)
 
     Retorna
     -------
@@ -105,16 +124,31 @@ def publish_article(
     slug  = slugify(title)
     rt    = estimate_read_time(body_html)
 
+    # Copia PDF de referência se fornecido
+    ref_html = ""
+    if reference_pdf:
+        src = Path(reference_pdf)
+        if src.exists():
+            REFERENCES.mkdir(parents=True, exist_ok=True)
+            dest = REFERENCES / f"{slug}.pdf"
+            shutil.copy2(src, dest)
+            ref_title = reference_title or src.name
+            ref_html  = build_reference_html(slug, ref_title)
+            print(f"   PDF     : {dest.name}")
+        else:
+            print(f"⚠️  PDF não encontrado: {reference_pdf}")
+
     # Gera arquivo do artigo
     template = TEMPLATE.read_text(encoding="utf-8")
     page = (template
-        .replace("{{TITLE}}",     title)
-        .replace("{{CATEGORY}}", category)
-        .replace("{{DATE}}",      date)
-        .replace("{{READ_TIME}}", str(rt))
-        .replace("{{EXCERPT}}",   excerpt)
-        .replace("{{BODY}}",      body_html)
-        .replace("{{TAGS}}",      build_tags_html(tags))
+        .replace("{{TITLE}}",         title)
+        .replace("{{CATEGORY}}",      category)
+        .replace("{{DATE}}",          date)
+        .replace("{{READ_TIME}}",     str(rt))
+        .replace("{{EXCERPT}}",       excerpt)
+        .replace("{{BODY}}",          body_html)
+        .replace("{{TAGS}}",          build_tags_html(tags))
+        .replace("{{REFERENCE_PDF}}", ref_html)
     )
 
     article_path = ARTIGOS / f"{slug}.html"
@@ -122,16 +156,16 @@ def publish_article(
 
     # Atualiza metadados
     articles = load_meta()
-    # Remove duplicata se slug já existe
     articles = [a for a in articles if a["slug"] != slug]
     meta = {
-        "slug":      slug,
-        "title":     title,
-        "category":  category,
-        "excerpt":   excerpt,
-        "date":      date,
-        "read_time": rt,
-        "tags":      tags,
+        "slug":          slug,
+        "title":         title,
+        "category":      category,
+        "excerpt":       excerpt,
+        "date":          date,
+        "read_time":     rt,
+        "tags":          tags,
+        "has_reference": bool(reference_pdf and Path(reference_pdf).exists()),
     }
     articles.append(meta)
     save_meta(articles)
@@ -159,82 +193,3 @@ def _git_push(commit_msg: str):
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0 and "nothing to commit" not in result.stdout:
             print(f"⚠️  git: {result.stderr.strip() or result.stdout.strip()}")
-
-
-# ---------------------------------------------------------------------------
-# Exemplo de uso direto (para testes)
-# ---------------------------------------------------------------------------
-if __name__ == "__main__":
-    publish_article(
-        title    = "Sulfato de Magnésio no Pós-Parto: 12h ou 24h na Pré-eclâmpsia Grave?",
-        category = "Pré-eclâmpsia",
-        excerpt  = "Um modelo de decisão analítica com 45.800 pacientes questiona o regime tradicional de 24 horas na profilaxia anticonvulsivante.",
-        tags     = ["sulfato de magnésio", "pré-eclâmpsia", "pós-parto", "custo-efetividade", "eclâmpsia"],
-        body_html="""
-<p>O esquema tradicional de <strong>24 horas de sulfato de magnésio</strong> no pós-parto é amplamente
-utilizado para profilaxia anticonvulsivante em pacientes com pré-eclâmpsia grave. No entanto, esse regime
-possui baixa sustentação por evidências robustas, aumenta a exposição materna ao magnésio e impacta
-negativamente o aleitamento materno, a deambulação precoce e o vínculo materno-neonatal.</p>
-
-<h2>Desenho do Estudo</h2>
-<p>Trata-se de um <strong>modelo de decisão analítica</strong> com uma coorte teórica de
-<strong>45.800 pacientes</strong> com pré-eclâmpsia com características de gravidade. O objetivo foi avaliar
-custo-efetividade, desfechos maternos, QALYs, toxicidade e impacto econômico dos dois regimes.</p>
-
-<h2>Quando Ocorrem as Convulsões no Pós-Parto?</h2>
-<ul>
-  <li><strong>70%</strong> das convulsões ocorrem nas <strong>primeiras 12 horas</strong> pós-parto</li>
-  <li><strong>17%</strong> ocorrem entre <strong>12 e 24 horas</strong> pós-parto</li>
-</ul>
-<p>Isso sugere que a maior parte do benefício anticonvulsivante ocorre na fase precoce do pós-parto.</p>
-
-<h2>Resultados Clínicos</h2>
-<table>
-  <thead><tr><th>Desfecho</th><th>Regime 12h</th><th>Regime 24h</th></tr></thead>
-  <tbody>
-    <tr><td>Eclâmpsia</td><td>398 casos</td><td>312 casos</td></tr>
-    <tr><td>Toxicidade por magnésio</td><td>2.089 casos</td><td>2.745 casos</td></tr>
-    <tr><td>Mortes maternas</td><td>10,87</td><td>10,50</td></tr>
-  </tbody>
-</table>
-
-<h2>Qualidade de Vida (QALYs)</h2>
-<ul>
-  <li>Regime 12h → <strong>255 QALYs</strong></li>
-  <li>Regime 24h → <strong>238 QALYs</strong></li>
-</ul>
-
-<h2>Impacto Econômico</h2>
-<ul>
-  <li>12h → US$ 69,4 milhões</li>
-  <li>24h → US$ 90,9 milhões</li>
-  <li><strong>Economia líquida: US$ 21,5 milhões</strong></li>
-</ul>
-<p>O principal componente de custo foi a <strong>enfermagem 1:1</strong> — não o sulfato de magnésio em si.</p>
-
-<h2>Número Necessário para Tratar (NNT)</h2>
-<div class="callout">
-  <div class="callout-title">Dado clínico importante</div>
-  São necessárias <strong>531 pacientes</strong> em esquema de 24h para prevenir <strong>1 caso de eclâmpsia</strong>
-  entre 12–24h pós-parto. Nesse grupo, ~7 apresentarão toxicidade por magnésio.
-</div>
-
-<h2>Análise de Sensibilidade</h2>
-<p>O regime de 12h foi <strong>custo-efetivo em 89%</strong> das 10.000 simulações de Monte Carlo.
-Os principais fatores que impactaram o modelo: custo de enfermagem, custo de UTI e toxicidade por magnésio.</p>
-
-<h2>Conclusão Prática</h2>
-<p>O regime de 12h de sulfato de magnésio no pós-parto:</p>
-<ul>
-  <li>Reduz custos em mais de US$ 21 milhões</li>
-  <li>Reduz toxicidade por magnésio</li>
-  <li>Melhora os QALYs maternos</li>
-  <li>Mantém baixo impacto absoluto em eventos graves</li>
-</ul>
-<p>O estudo reforça a necessidade de <strong>individualizar a duração do sulfato de magnésio</strong> com base
-na estratificação de risco de cada paciente.</p>
-
-<p><em>Referência: Cost-Effectiveness Analysis: Postpartum Magnesium Sulfate (12 vs 24 Hours) for Seizure
-Prophylaxis in Severe Preeclampsia.</em></p>
-""",
-    )
