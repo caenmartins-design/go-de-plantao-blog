@@ -327,7 +327,7 @@ img { max-width: 100%; display: block; }
 
 /* ---- ARTICLE PROMO BLOCK ---- */
 .article-promo-diu {
-  background: linear-gradient(135deg, var(--magenta-dark) 0%, var(--magenta) 60%, #cf2079 100%);
+  background: linear-gradient(135deg, var(--azul-dark) 0%, var(--azul) 65%, #5a91c8 100%);
   border-radius: 16px; padding: 32px 36px; margin: 48px 0;
   color: white; position: relative; overflow: hidden;
 }
@@ -352,19 +352,19 @@ img { max-width: 100%; display: block; }
   margin-bottom: 20px; position: relative;
 }
 .apd-btn {
-  display: inline-block; background: var(--white); color: var(--magenta);
+  display: inline-block; background: var(--white); color: var(--azul);
   font-size: 15px; font-weight: 800; padding: 13px 26px; border-radius: 8px;
   text-decoration: none; transition: background .15s, transform .1s;
   box-shadow: 0 4px 16px rgba(0,0,0,.2); position: relative; font-family: 'Itim', cursive;
 }
 .apd-btn:hover {
-  background: var(--papel); color: var(--magenta-dark);
+  background: var(--papel); color: var(--azul-dark);
   transform: translateY(-1px); text-decoration: none;
 }
 
 /* ---- PROMO BANNER ---- */
 .promo-banner-wrap {
-  background: linear-gradient(135deg, var(--magenta-dark) 0%, var(--magenta) 60%, #cf2079 100%);
+  background: linear-gradient(135deg, var(--azul-dark) 0%, var(--azul) 65%, #5a91c8 100%);
   padding: 0 24px; position: relative; overflow: hidden;
 }
 .promo-banner-wrap::before {
@@ -400,14 +400,14 @@ img { max-width: 100%; display: block; }
 .promo-price { color: rgba(255,255,255,.7); font-size: 14px; text-align: right; }
 .promo-price strong { color: #fff; font-size: 20px; }
 .promo-btn {
-  display: inline-block; background: var(--white); color: var(--magenta);
+  display: inline-block; background: var(--white); color: var(--azul);
   font-size: 15px; font-weight: 800; padding: 14px 28px; border-radius: 8px;
   text-decoration: none; white-space: nowrap;
   transition: background .15s, transform .1s;
   box-shadow: 0 4px 16px rgba(0,0,0,.2); font-family: 'Itim', cursive;
 }
 .promo-btn:hover {
-  background: var(--papel); color: var(--magenta-dark);
+  background: var(--papel); color: var(--azul-dark);
   transform: translateY(-1px); text-decoration: none;
 }
 .promo-location { color: rgba(255,255,255,.55); font-size: 12px; text-align: right; }
