@@ -15,7 +15,8 @@
       "ocitocina",
       "obstetrícia",
       "mortalidade materna"
-    ]
+    ],
+    "has_reference": true
   },
   {
     "slug": "deficiencia-ferro-vitamina-b12-diagnostico-antes-das-complicacoes",
