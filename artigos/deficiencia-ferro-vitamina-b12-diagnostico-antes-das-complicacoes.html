@@ -15,6 +15,19 @@
   <meta name="description" content="Ferritina abaixo de 30 ng/mL já caracteriza deficiência de ferro mesmo sem anemia. Saiba quando suspeitar, como interpretar os exames e como repor ferro e B12 segundo o Protocolo FEBRASGO nº 120 (2026)." />
 
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    .fc-wrap { margin: 1.5rem 0; font-size: 0.87rem; line-height: 1.45; }
+    .fc-center { display: flex; justify-content: center; }
+    .fc-box { background: #eef2f7; border: 1.5px solid #9ab4d0; border-radius: 6px; padding: 0.5rem 0.85rem; text-align: center; box-sizing: border-box; }
+    .fc-start { background: #1d3f6c; color: #fff; font-weight: 700; border-color: #1d3f6c; }
+    .fc-branch { background: #d0e5f5; border-color: #3a78b2; font-weight: 600; }
+    .fc-arrow { color: #3a78b2; font-size: 1.2rem; display: block; text-align: center; line-height: 1.6; }
+    .fc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .fc-col { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+    .fc-col-hd { font-weight: 700; font-size: 0.77rem; text-transform: uppercase; letter-spacing: 0.06em; color: #1d3f6c; text-align: center; padding: 0.3rem 0.5rem; background: #d0e5f5; border-radius: 4px; margin-bottom: 0.25rem; }
+    .fc-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.25rem; }
+    .fc-sub-col { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  </style>
 </head>
 <body>
 
@@ -184,6 +197,83 @@
   <strong>4.</strong> B12 &lt; 200 pg/mL → tratar; 200–299 pg/mL com sintomas → dosagem de homocisteína<br>
   <strong>5.</strong> Tratar ambas quando indicado; não aguardar anemia estabelecida<br>
   <strong>6.</strong> Reavaliação laboratorial em 3 meses para confirmar resposta
+</div>
+
+<h2>Fluxograma de Manejo</h2>
+
+<div class="fc-wrap">
+
+  <div class="fc-center">
+    <div class="fc-box fc-start" style="min-width:210px">Suspeita clínica<br>ou grupo de risco</div>
+  </div>
+  <div class="fc-center"><span class="fc-arrow">↓</span></div>
+  <div class="fc-center">
+    <div class="fc-box" style="min-width:280px">
+      <strong>Exames</strong><br>
+      Hb · ferritina · sat. transferrina · B12 ± folato
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin:0.1rem 0;">
+    <div class="fc-center"><span class="fc-arrow">↓</span></div>
+    <div class="fc-center"><span class="fc-arrow">↓</span></div>
+  </div>
+
+  <div class="fc-cols">
+
+    <!-- FERRO -->
+    <div class="fc-col">
+      <div class="fc-col-hd">Ferro</div>
+      <div class="fc-box fc-branch">Ferritina &lt;30 ng/mL<br>→ Deficiência de ferro</div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-box">Hb ≥8 g/dL → Ferro oral</div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-box">
+        <strong>Opções orais</strong><br>
+        Sulfato ferroso · Fumarato ferroso<br>
+        Gluconato ferroso · Ferro polimaltose<br>
+        Ferro bisglicinato · Ferro sucrossomal<br>
+        Ferrocarbonila · Pirofosfato férrico
+      </div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-box">Reavaliar em <strong>2–4 semanas</strong></div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-box fc-branch">Sem resposta / intolerância<br>→ Ferro IV</div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-box">
+        <strong>Opções IV</strong><br>
+        Sacarato férrico · Carboximaltose · Derisomaltose
+      </div>
+    </div>
+
+    <!-- B12 -->
+    <div class="fc-col">
+      <div class="fc-col-hd">Vitamina B12</div>
+      <div class="fc-box fc-branch">B12 &lt;200 pg/mL<br>ou &lt;300 + sintomas<br>→ Deficiência de B12</div>
+      <span class="fc-arrow">↓</span>
+      <div class="fc-sub">
+        <div class="fc-sub-col">
+          <div class="fc-box">Sem sintomas<br>neurológicos<br>→ <strong>Via oral</strong></div>
+          <span class="fc-arrow">↓</span>
+          <div class="fc-box">
+            Cianocobalamina<br>
+            Metilcobalamina<br>
+            <strong>1.000–2.000 mcg/dia</strong>
+          </div>
+        </div>
+        <div class="fc-sub-col">
+          <div class="fc-box">Com sintomas /<br>má absorção<br>→ <strong>IM</strong></div>
+          <span class="fc-arrow">↓</span>
+          <div class="fc-box">
+            Cianocobalamina<br>
+            Hidroxocobalamina<br>
+            <em>(esquema<br>escalonado)</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <h2>Conclusão</h2>
