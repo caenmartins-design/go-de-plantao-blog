@@ -26,8 +26,8 @@ export default {
     }
 
     // Só aciona se o card foi movido para a lista "Publicar"
-    const listAfter = body.action?.data?.listAfter?.name;
-    if (listAfter !== 'Publicar') {
+    const listAfter = body.action?.data?.listAfter?.name?.toUpperCase();
+    if (listAfter !== 'PUBLICAR') {
       return new Response('OK', { status: 200 });
     }
 
