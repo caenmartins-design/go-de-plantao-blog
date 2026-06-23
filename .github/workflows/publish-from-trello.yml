@@ -1,0 +1,45 @@
+name: Publish Article from Trello
+
+on:
+  repository_dispatch:
+    types: [publish-article]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Anthropic SDK
+        run: npm install @anthropic-ai/sdk
+
+      - name: Generate and publish article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CARD_TITLE: ${{ github.event.client_payload.title }}
+          CARD_DESCRIPTION: ${{ github.event.client_payload.description }}
+          CARD_CATEGORY: ${{ github.event.client_payload.category }}
+          CARD_TAGS: ${{ github.event.client_payload.tags }}
+          CARD_READ_TIME: ${{ github.event.client_payload.read_time }}
+          CARD_DATE: ${{ github.event.client_payload.date }}
+        run: node .github/scripts/generate-article.js
+
+      - name: Commit and push
+        run: |
+          git config user.name "Go de Plantão Bot"
+          git config user.email "bot@godeplantao.com"
+          git add artigos/ artigos.json index.html
+          git diff --staged --quiet || git commit -m "Auto: ${{ github.event.client_payload.title }}"
+          git push

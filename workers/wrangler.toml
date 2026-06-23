@@ -1,0 +1,12 @@
+name = "godeplantao-trello-webhook"
+main = "trello-webhook.js"
+compatibility_date = "2024-09-01"
+
+[vars]
+GH_REPO_OWNER = "caenmartins-design"
+GH_REPO_NAME  = "go-de-plantao-blog"
+
+# Secrets (configurar via Dashboard ou wrangler secret put):
+# TRELLO_API_KEY
+# TRELLO_TOKEN
+# GH_PAT
