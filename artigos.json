@@ -1,5 +1,18 @@
 [
   {
+    "slug": "post",
+    "title": "Post",
+    "category": "Ginecologia",
+    "excerpt": "A ANVISA registrou o Inluriyo® (tosilato de inlunestranto), nova terapia oral para pacientes com câncer de mama ER+, HER2– e mutação ESR1 após falha endócrina.",
+    "date": "25/06/2026",
+    "read_time": 5,
+    "tags": [
+      "câncer de mama",
+      "tratamento adjuvante",
+      "ANVISA"
+    ]
+  },
+  {
     "slug": "fezolinetante-veoza-aprovado-pela-anvisa-para-sintomas-vasomotores-da-menopausa",
     "title": "Fezolinetante (Veoza®): Aprovado pela Anvisa para Sintomas Vasomotores da Menopausa",
     "category": "Ginecologia",
