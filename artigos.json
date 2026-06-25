@@ -3,6 +3,19 @@
     "slug": "post",
     "title": "Post",
     "category": "Ginecologia",
+    "excerpt": "A Anvisa aprovou o Inluriyo® (tosilato de inlunestranto) para câncer de mama ER+, HER2- com mutação ESR1 em doença avançada ou metastática após progressão à terapia endócrina.",
+    "date": "25/06/2026",
+    "read_time": 5,
+    "tags": [
+      "câncer de mama",
+      "tratamento adjuvante",
+      "ANVISA"
+    ]
+  },
+  {
+    "slug": "post",
+    "title": "Post",
+    "category": "Ginecologia",
     "excerpt": "A ANVISA registrou o Inluriyo® (tosilato de inlunestranto), nova terapia oral para pacientes com câncer de mama ER+, HER2– e mutação ESR1 após falha endócrina.",
     "date": "25/06/2026",
     "read_time": 5,
