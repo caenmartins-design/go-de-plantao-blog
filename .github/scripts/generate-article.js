@@ -173,6 +173,12 @@ async function main() {
   const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
   const slug = generateSlug(title);
 
+  const articlePath = path.join(BLOG_ROOT, 'artigos', `${slug}.html`);
+  if (fs.existsSync(articlePath)) {
+    console.log(`⚠️  Artigo já existe: artigos/${slug}.html — ignorando duplicata.`);
+    process.exit(0);
+  }
+
   console.log(`Gerando artigo: "${title}" (${slug})`);
 
   const client = new Anthropic();
@@ -226,7 +232,6 @@ ${description}`
     article_body_html, meta_description, tags
   );
 
-  const articlePath = path.join(BLOG_ROOT, 'artigos', `${slug}.html`);
   fs.writeFileSync(articlePath, articleHtml);
   console.log(`✓ artigos/${slug}.html criado`);
 

@@ -4,7 +4,6 @@
 
 export default {
   async fetch(request, env) {
-    // Trello valida o endpoint com HEAD antes de registrar o webhook
     if (request.method === 'HEAD') {
       return new Response('OK', { status: 200 });
     }
@@ -13,19 +12,29 @@ export default {
       return new Response('Method Not Allowed', { status: 405 });
     }
 
+    const rawBody = await request.text();
+
+    // Valida assinatura HMAC-SHA1 enviada pelo Trello
+    const signature = request.headers.get('X-Trello-Webhook');
+    if (!signature) {
+      return new Response('Forbidden', { status: 403 });
+    }
+    const valid = await verifyTrelloSignature(signature, rawBody, request.url, env.TRELLO_TOKEN);
+    if (!valid) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
     let body;
     try {
-      body = await request.json();
+      body = JSON.parse(rawBody);
     } catch {
       return new Response('Invalid JSON', { status: 400 });
     }
 
-    // Só processa movimentação de card
     if (body.action?.type !== 'updateCard') {
       return new Response('OK', { status: 200 });
     }
 
-    // Só aciona se o card foi movido para a lista "Publicar"
     const listAfter = body.action?.data?.listAfter?.name?.toUpperCase();
     if (listAfter !== 'PUBLICAR') {
       return new Response('OK', { status: 200 });
@@ -36,7 +45,6 @@ export default {
       return new Response('No card ID', { status: 400 });
     }
 
-    // Busca detalhes completos do card
     const cardResp = await fetch(
       `https://api.trello.com/1/cards/${cardId}?key=${env.TRELLO_API_KEY}&token=${env.TRELLO_TOKEN}`
     );
@@ -45,10 +53,12 @@ export default {
     }
     const card = await cardResp.json();
 
-    // Faz parse da descrição do card
     const parsed = parseCardDescription(card.desc || '');
 
-    // Dispara o GitHub Action
+    if (!parsed.content) {
+      return new Response('Card sem conteúdo após "---"', { status: 400 });
+    }
+
     const ghResp = await fetch(
       `https://api.github.com/repos/${env.GH_REPO_OWNER}/${env.GH_REPO_NAME}/dispatches`,
       {
@@ -62,6 +72,7 @@ export default {
         body: JSON.stringify({
           event_type: 'publish-article',
           client_payload: {
+            card_id:     cardId,
             title:       card.name,
             description: parsed.content,
             category:    parsed.category || 'Ginecologia',
@@ -83,10 +94,29 @@ export default {
   }
 };
 
+// Verifica assinatura HMAC-SHA1 do Trello usando crypto.subtle (tempo constante)
+async function verifyTrelloSignature(signature, body, callbackURL, secret) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-1' },
+    false,
+    ['verify']
+  );
+  let sigBytes;
+  try {
+    sigBytes = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
+  } catch {
+    return false;
+  }
+  return crypto.subtle.verify('HMAC', key, sigBytes, encoder.encode(body + callbackURL));
+}
+
 function parseCardDescription(desc) {
   const lines = desc.split('\n');
   const meta  = {};
-  let contentStart = 0;
+  let contentStart = -1;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -102,11 +132,19 @@ function parseCardDescription(desc) {
     }
   }
 
-  meta.content = lines.slice(contentStart).join('\n').trim();
+  if (contentStart >= 0) {
+    meta.content = lines.slice(contentStart).join('\n').trim();
+  } else {
+    // Sem separador: usa tudo exceto as linhas de metadados
+    meta.content = lines
+      .filter(l => !l.trim().match(/^(CATEGORIA|TAGS|TEMPO):/))
+      .join('\n')
+      .trim();
+  }
+
   return meta;
 }
 
 function getTodayDate() {
-  const d = new Date();
-  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+  return new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 }
