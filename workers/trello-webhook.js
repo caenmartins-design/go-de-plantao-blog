@@ -46,7 +46,7 @@ export default {
     }
 
     const cardResp = await fetch(
-      `https://api.trello.com/1/cards/${cardId}?key=${env.TRELLO_API_KEY}&token=${env.TRELLO_TOKEN}`
+      `https://api.trello.com/1/cards/${cardId}?attachments=true&key=${env.TRELLO_API_KEY}&token=${env.TRELLO_TOKEN}`
     );
     if (!cardResp.ok) {
       return new Response('Failed to fetch card from Trello', { status: 500 });
@@ -58,6 +58,10 @@ export default {
     if (!parsed.content) {
       return new Response('Card sem conteúdo após "---"', { status: 400 });
     }
+
+    const pdfAttachment = (card.attachments || []).find(a =>
+      a.mimeType === 'application/pdf' || /\.pdf$/i.test(a.fileName || a.name || '')
+    );
 
     const ghResp = await fetch(
       `https://api.github.com/repos/${env.GH_REPO_OWNER}/${env.GH_REPO_NAME}/dispatches`,
@@ -78,7 +82,9 @@ export default {
             category:    parsed.category || 'Ginecologia',
             tags:        parsed.tags     || '',
             read_time:   parsed.tempo    || '5',
-            date:        getTodayDate()
+            date:        getTodayDate(),
+            pdf_url:      pdfAttachment ? pdfAttachment.url : '',
+            pdf_filename: pdfAttachment ? (pdfAttachment.fileName || pdfAttachment.name || '') : ''
           }
         })
       }

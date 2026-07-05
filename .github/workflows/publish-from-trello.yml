@@ -28,12 +28,16 @@ jobs:
       - name: Generate and publish article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
           CARD_TITLE: ${{ github.event.client_payload.title }}
           CARD_DESCRIPTION: ${{ github.event.client_payload.description }}
           CARD_CATEGORY: ${{ github.event.client_payload.category }}
           CARD_TAGS: ${{ github.event.client_payload.tags }}
           CARD_READ_TIME: ${{ github.event.client_payload.read_time }}
           CARD_DATE: ${{ github.event.client_payload.date }}
+          CARD_PDF_URL: ${{ github.event.client_payload.pdf_url }}
+          CARD_PDF_FILENAME: ${{ github.event.client_payload.pdf_filename }}
         run: node .github/scripts/generate-article.js
 
       - name: Commit and push
@@ -41,5 +45,6 @@ jobs:
           git config user.name "Go de Plantão Bot"
           git config user.email "bot@godeplantao.com"
           git add artigos/ artigos.json index.html
+          git add pdfs/ 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Auto: ${{ github.event.client_payload.title }}"
           git push

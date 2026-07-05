@@ -1,8 +1,29 @@
 const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 const BLOG_ROOT = path.join(__dirname, '..', '..');
+
+function downloadFile(url, destPath, redirectCount = 0) {
+  return new Promise((resolve, reject) => {
+    if (redirectCount > 5) return reject(new Error('Excesso de redirecionamentos ao baixar PDF'));
+    https.get(url, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        res.resume();
+        return resolve(downloadFile(res.headers.location, destPath, redirectCount + 1));
+      }
+      if (res.statusCode !== 200) {
+        res.resume();
+        return reject(new Error(`Falha ao baixar PDF (HTTP ${res.statusCode})`));
+      }
+      const fileStream = fs.createWriteStream(destPath);
+      res.pipe(fileStream);
+      fileStream.on('finish', () => fileStream.close(resolve));
+      fileStream.on('error', reject);
+    }).on('error', reject);
+  });
+}
 
 function generateSlug(title) {
   return title
@@ -172,6 +193,24 @@ async function main() {
 
   console.log(`Gerando artigo: "${title}" (${slug})`);
 
+  let pdfRelPath = null;
+  const pdfUrl = process.env.CARD_PDF_URL;
+  if (pdfUrl) {
+    const trelloKey = process.env.TRELLO_API_KEY;
+    const trelloToken = process.env.TRELLO_TOKEN;
+    if (!trelloKey || !trelloToken) {
+      throw new Error('Anexo de PDF encontrado no card, mas TRELLO_API_KEY/TRELLO_TOKEN não estão configurados nos secrets do repositório');
+    }
+    const pdfsDir = path.join(BLOG_ROOT, 'pdfs');
+    fs.mkdirSync(pdfsDir, { recursive: true });
+    const pdfFileName = `${slug}.pdf`;
+    const pdfDestPath = path.join(pdfsDir, pdfFileName);
+    const authedUrl = `${pdfUrl}?key=${trelloKey}&token=${trelloToken}`;
+    await downloadFile(authedUrl, pdfDestPath);
+    pdfRelPath = `pdfs/${pdfFileName}`;
+    console.log(`✓ PDF baixado do Trello: ${pdfRelPath}`);
+  }
+
   const client = new Anthropic();
 
   const system = `Você é o redator médico do blog Go de Plantão, especializado em Ginecologia e Obstetrícia.
@@ -218,9 +257,20 @@ ${description}`
 
   const { meta_description, excerpt, article_body_html } = JSON.parse(jsonMatch[0]);
 
+  let bodyHtml = article_body_html;
+  if (pdfRelPath) {
+    const downloadBlock = `    <div class="callout">
+      <div class="callout-title">📄 Baixe o material completo</div>
+      <p>O PDF completo está disponível para download gratuito.</p>
+      <a class="cta-btn" href="../${pdfRelPath}" target="_blank" rel="noopener">⬇️ Baixar PDF completo</a>
+    </div>
+`;
+    bodyHtml = downloadBlock + bodyHtml;
+  }
+
   const articleHtml = buildArticleHTML(
     slug, title, category, date, readTime,
-    article_body_html, meta_description, tags
+    bodyHtml, meta_description, tags
   );
 
   fs.writeFileSync(articlePath, articleHtml);
