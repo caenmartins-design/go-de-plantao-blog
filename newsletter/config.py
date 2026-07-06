@@ -35,6 +35,9 @@ EMAIL_NOME_REMETENTE  = os.getenv("EMAIL_NOME_REMETENTE", "GO de Plantão Newsle
 EMAIL_ASSUNTO         = os.getenv("EMAIL_ASSUNTO", "GO de Plantão | Atualização Semanal em GO")
 EMAIL_DESTINATARIOS   = [e.strip() for e in os.getenv("EMAIL_DESTINATARIOS", "").split(",") if e.strip()]
 
+# URL de publicação CSV da planilha de respostas do Google Forms (File > Share > Publish to web)
+NEWSLETTER_SIGNUP_CSV_URL = os.getenv("NEWSLETTER_SIGNUP_CSV_URL", "")
+
 # WhatsApp — Z-API
 ZAPI_INSTANCE_ID  = os.getenv("ZAPI_INSTANCE_ID", "")
 ZAPI_TOKEN        = os.getenv("ZAPI_TOKEN", "")

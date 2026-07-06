@@ -23,11 +23,11 @@ from datetime import datetime
 # Garante que o diretório do script está no PYTHONPATH
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config         import DADOS_DIR, NEWSLETTERS_DIR
+from config         import DADOS_DIR, NEWSLETTERS_DIR, EMAIL_DESTINATARIOS
 from buscador       import buscar_tudo, marcar_vistos
 from curador        import curar_artigos
 from newsletter_gen import gerar_newsletter, publicar_no_blog
-from entrega        import enviar_email, enviar_whatsapp
+from entrega        import enviar_email, enviar_whatsapp, buscar_inscritos
 
 ARTIGOS_BRUTOS_FILE  = DADOS_DIR / "artigos_brutos.json"
 ARTIGOS_CURADOS_FILE = DADOS_DIR / "artigos_curados.json"
@@ -103,7 +103,12 @@ def cmd_enviar_email(resultado=None):
             return
         resultado = dados
 
-    res = enviar_email(resultado["html"], resultado["semana"])
+    inscritos = buscar_inscritos()
+    if inscritos:
+        print(f"   {len(inscritos)} inscrito(s) via formulário")
+    destinatarios = list({e.lower(): e for e in (EMAIL_DESTINATARIOS + inscritos)}.values())
+
+    res = enviar_email(resultado["html"], resultado["semana"], destinatarios=destinatarios)
     if res["ok"]:
         print(f"\n✅ E-mail enviado para {len(res.get('enviados',[]))} destinatário(s).")
     else:
