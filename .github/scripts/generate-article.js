@@ -71,6 +71,7 @@ function buildArticleHTML(slug, title, category, date, readTime, articleBody, me
       </a>
       <nav class="header-nav">
         <a href="/">Blog</a>
+        <a href="/newsletters.html">Newsletters</a>
         <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank" rel="noopener">Cursos</a>
       </nav>
     </div>
