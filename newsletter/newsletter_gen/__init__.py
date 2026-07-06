@@ -1,0 +1,2 @@
+from newsletter_gen.gerador import gerar_newsletter
+from newsletter_gen.publicador import publicar_no_blog
