@@ -38,6 +38,7 @@ jobs:
           CARD_DATE: ${{ github.event.client_payload.date }}
           CARD_PDF_URL: ${{ github.event.client_payload.pdf_url }}
           CARD_PDF_FILENAME: ${{ github.event.client_payload.pdf_filename }}
+          CARD_PDF_IS_UPLOAD: ${{ github.event.client_payload.pdf_is_upload }}
         run: node .github/scripts/generate-article.js
 
       - name: Commit and push

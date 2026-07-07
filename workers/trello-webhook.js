@@ -83,8 +83,9 @@ export default {
             tags:        parsed.tags     || '',
             read_time:   parsed.tempo    || '5',
             date:        getTodayDate(),
-            pdf_url:      pdfAttachment ? pdfAttachment.url : '',
-            pdf_filename: pdfAttachment ? (pdfAttachment.fileName || pdfAttachment.name || '') : ''
+            pdf_url:       pdfAttachment ? pdfAttachment.url : '',
+            pdf_filename:  pdfAttachment ? (pdfAttachment.fileName || pdfAttachment.name || '') : '',
+            pdf_is_upload: pdfAttachment ? (pdfAttachment.isUpload === true) : false
           }
         })
       }

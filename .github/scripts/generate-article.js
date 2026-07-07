@@ -195,21 +195,27 @@ async function main() {
   console.log(`Gerando artigo: "${title}" (${slug})`);
 
   let pdfRelPath = null;
-  const pdfUrl = process.env.CARD_PDF_URL;
-  if (pdfUrl) {
-    const trelloKey = process.env.TRELLO_API_KEY;
+  const pdfUrl      = process.env.CARD_PDF_URL;
+  const pdfIsUpload = process.env.CARD_PDF_IS_UPLOAD === 'true';
+
+  if (pdfUrl && pdfIsUpload) {
+    // Arquivo hospedado no Trello: precisa de auth para download
+    const trelloKey   = process.env.TRELLO_API_KEY;
     const trelloToken = process.env.TRELLO_TOKEN;
     if (!trelloKey || !trelloToken) {
-      throw new Error('Anexo de PDF encontrado no card, mas TRELLO_API_KEY/TRELLO_TOKEN não estão configurados nos secrets do repositório');
+      throw new Error('PDF no Trello detectado, mas TRELLO_API_KEY/TRELLO_TOKEN não estão configurados nos secrets');
     }
-    const pdfsDir = path.join(BLOG_ROOT, 'pdfs');
+    const pdfsDir    = path.join(BLOG_ROOT, 'pdfs');
     fs.mkdirSync(pdfsDir, { recursive: true });
     const pdfFileName = `${slug}.pdf`;
-    const pdfDestPath = path.join(pdfsDir, pdfFileName);
-    const authedUrl = `${pdfUrl}?key=${trelloKey}&token=${trelloToken}`;
-    await downloadFile(authedUrl, pdfDestPath);
+    const authedUrl   = `${pdfUrl}?key=${trelloKey}&token=${trelloToken}`;
+    await downloadFile(authedUrl, path.join(pdfsDir, pdfFileName));
     pdfRelPath = `pdfs/${pdfFileName}`;
     console.log(`✓ PDF baixado do Trello: ${pdfRelPath}`);
+  } else if (pdfUrl) {
+    // Link externo (Google Drive, Dropbox etc.): usa a URL diretamente
+    pdfRelPath = pdfUrl;
+    console.log(`✓ PDF externo: ${pdfRelPath}`);
   }
 
   const client = new Anthropic();
@@ -260,10 +266,11 @@ ${description}`
 
   let bodyHtml = article_body_html;
   if (pdfRelPath) {
+    const href = pdfRelPath.startsWith('http') ? pdfRelPath : `../${pdfRelPath}`;
     const downloadBlock = `    <div class="callout">
       <div class="callout-title">📄 Baixe o material completo</div>
       <p>O PDF completo está disponível para download gratuito.</p>
-      <a class="cta-btn" href="../${pdfRelPath}" target="_blank" rel="noopener">⬇️ Baixar PDF completo</a>
+      <a class="cta-btn" href="${href}" target="_blank" rel="noopener">⬇️ Baixar PDF completo</a>
     </div>
 `;
     bodyHtml = downloadBlock + bodyHtml;
