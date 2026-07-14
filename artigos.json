@@ -389,5 +389,24 @@
       "Infertilidade"
     ],
     "has_reference": true
+  },
+  {
+    "slug": "acog-atualiza-diretrizes-de-rastreamento-do-cancer-de-colo-do-utero",
+    "title": "ACOG Atualiza Diretrizes de Rastreamento do Câncer de Colo do Útero",
+    "category": "Rastreamento",
+    "excerpt": "Dos 30 aos 65 anos, o teste primário de hrHPV coletado pelo profissional a cada 5 anos passa a ser a estratégia preferencial do ACOG, à frente do co-teste e da citologia isolada. Veja a nova hierarquia, a auto-coleta e quando interromper o rastreamento após os 65 anos.",
+    "date": "14/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Câncer do Colo do Útero",
+      "HPV",
+      "Rastreamento",
+      "ACOG",
+      "Diretrizes",
+      "Citologia",
+      "Auto-coleta",
+      "hrHPV"
+    ],
+    "has_reference": true
   }
 ]
