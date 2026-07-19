@@ -408,5 +408,24 @@
       "hrHPV"
     ],
     "has_reference": true
+  },
+  {
+    "slug": "acog-os-efeitos-das-mudancas-climaticas-na-saude-obstetrica-e-ginecologica",
+    "title": "ACOG: Os Efeitos das Mudanças Climáticas na Saúde Obstétrica e Ginecológica",
+    "category": "Saúde Pública",
+    "excerpt": "Calor extremo, fumaça de queimadas e poluição do ar estão associados a perda gestacional precoce, parto prematuro, pré-eclâmpsia e natimorto. O ACOG detalha por que a gestante é fisiologicamente mais vulnerável, quais orientações dar no pré-natal e como reduzir a pegada de carbono da própria assistência.",
+    "date": "18/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Mudanças Climáticas",
+      "ACOG",
+      "Saúde Ambiental",
+      "Pré-natal",
+      "Sustentabilidade",
+      "Pré-eclâmpsia",
+      "Parto Prematuro",
+      "Saúde Pública"
+    ],
+    "has_reference": true
   }
 ]
