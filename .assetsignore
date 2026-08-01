@@ -2,3 +2,5 @@
 .wrangler
 newsletter
 workers
+src
+wrangler.toml

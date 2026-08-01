@@ -1,0 +1,21 @@
+name = "godeplantao"
+main = "src/worker.js"
+compatibility_date = "2024-09-25"
+
+[assets]
+directory = "./"
+binding = "ASSETS"
+
+[vars]
+PAYWALL_ENABLED = "false"
+HOTMART_CHECKOUT_URL = "#"
+
+# Depois de criar o KV namespace (wrangler kv namespace create ASSINANTES),
+# descomente e preencha o id abaixo:
+# [[kv_namespaces]]
+# binding = "ASSINANTES"
+# id = "SEU_ID_AQUI"
+
+# Segredos (não vão aqui — configure com `wrangler secret put NOME`):
+#   HOTMART_HOTTOK   -> token de validação do webhook, gerado no painel do Hotmart
+#   COOKIE_SECRET     -> qualquer string aleatória longa, só para assinar o cookie de acesso
