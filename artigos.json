@@ -427,5 +427,24 @@
       "Saúde Pública"
     ],
     "has_reference": true
+  },
+  {
+    "slug": "inducao-do-parto-qual-e-o-melhor-metodo-segundo-a-cochrane",
+    "title": "Indução do Parto: Qual é o Melhor Método Segundo a Cochrane?",
+    "category": "Obstetrícia",
+    "excerpt": "Meta-análise em rede da Cochrane com 106 ensaios e 30.348 mulheres comparou 14 métodos de indução do parto: nenhum supera claramente o misoprostol vaginal em eficácia, mas os perfis de segurança fetal — sobretudo risco de hiperestimulação uterina — variam de forma relevante entre as estratégias.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Indução do Parto",
+      "Misoprostol",
+      "Ocitocina",
+      "Cochrane",
+      "Meta-análise em Rede",
+      "Cateter de Balão",
+      "Dinoprostona",
+      "Obstetrícia"
+    ],
+    "has_reference": true
   }
 ]
