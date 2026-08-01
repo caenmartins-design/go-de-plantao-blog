@@ -22,16 +22,6 @@
       --tier-urgent:#c0392b; --tier-urgent-bg:#fbe4e1;
     }
 
-    /* ---- tool disclaimer ---- */
-    .tool-disclaimer{
-      display:flex; gap:12px; align-items:flex-start;
-      background:var(--tier-warn-bg); border:1px solid #f0d9a6; border-left:4px solid var(--tier-warn);
-      border-radius:0 var(--radius) var(--radius) 0; padding:18px 22px; margin:8px 0 32px;
-      font-size:16px; line-height:1.65; color:var(--tinta);
-    }
-    .tool-disclaimer .ico{font-size:21px; line-height:1.4; flex:0 0 auto}
-    .tool-disclaimer b{color:var(--tier-warn)}
-
     /* ---- layout: nav + main ---- */
     .tool-layout{display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:28px; align-items:start}
     @media (max-width:900px){ .tool-layout{grid-template-columns:1fr} }
@@ -204,11 +194,6 @@
         <span>Baseada nas Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte I e Parte II</span>
       </div>
       <div class="article-divider"></div>
-    </div>
-
-    <div class="tool-disclaimer">
-      <span class="ico">⚠</span>
-      <div><b>Documento-base ainda preliminar.</b> Esta ferramenta segue as Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II (versão em consulta pública, jul/2026), deliberada preliminarmente na 152ª reunião da Conitec (12/06/2026). O texto pode mudar após a consulta pública. É um apoio de navegação clínica — não substitui o julgamento médico nem a leitura da diretriz original.</div>
     </div>
 
     <div class="tool-layout">
