@@ -503,5 +503,23 @@
       "Saúde Reprodutiva"
     ],
     "has_reference": false
+  },
+  {
+    "slug": "terapia-hormonal-na-menopausa-apos-cancer-ginecologico-as-recomendacoes-da-figo-",
+    "title": "Terapia Hormonal na Menopausa após Câncer Ginecológico: As Recomendações da FIGO 2026",
+    "category": "Guidelines",
+    "excerpt": "A FIGO publicou um position paper sobre terapia hormonal da menopausa (THM) em sobreviventes de câncer ginecológico: a contraindicação não deve ser generalizada, e a decisão depende da histologia tumoral, do estágio e da sensibilidade hormonal. Veja quem pode e quem não pode receber THM.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "THM",
+      "Menopausa",
+      "Câncer Ginecológico",
+      "FIGO",
+      "Sobrevivência ao Câncer",
+      "Terapia Hormonal",
+      "Guidelines"
+    ],
+    "has_reference": true
   }
 ]
