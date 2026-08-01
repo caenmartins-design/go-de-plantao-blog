@@ -88,6 +88,11 @@
     }
     .tool-trail button.crumb:hover{border-color:var(--magenta); color:var(--tinta)}
     .tool-trail .sep{color:var(--gray-600); font-size:13px}
+    .tool-trail button.back{
+      background:var(--azul-light); border:1px solid var(--azul); color:var(--azul-dark);
+      border-radius:999px; padding:7px 16px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Itim', cursive;
+    }
+    .tool-trail button.back:hover{background:var(--azul); color:#fff}
     .tool-trail button.reset{
       background:transparent; border:1px dashed var(--gray-200); color:var(--gray-600);
       border-radius:999px; padding:7px 15px; font-size:14px; cursor:pointer; margin-left:auto; font-family:'Itim', cursive;
@@ -283,6 +288,12 @@ function jumpTrail(idx){
   state.path = state.path.slice(0, idx);
   render();
 }
+function back(){
+  if (state.path.length){
+    state.path.pop();
+    render();
+  }
+}
 
 function tierLabel(tier){
   switch(tier){
@@ -358,6 +369,9 @@ function renderTrail(){
     trail.appendChild(btn);
   });
   if (state.path.length){
+    const backBtn = el('button', {class:'back', type:'button'}, [document.createTextNode('← voltar')]);
+    backBtn.addEventListener('click', back);
+    trail.appendChild(backBtn);
     const reset = el('button', {class:'reset', type:'button'}, [document.createTextNode('reiniciar módulo')]);
     reset.addEventListener('click', ()=> jumpTrail(0));
     trail.appendChild(reset);
