@@ -15,6 +15,15 @@
   <meta name="description" content="Ferramenta interativa de apoio à decisão clínica para rastreamento e seguimento do câncer do colo do útero, com base nas Diretrizes Brasileiras (Parte II, versão preliminar de consulta pública, jul/2026)." />
 
   <link rel="stylesheet" href="../style.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#1e1e22" />
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+  <link rel="icon" href="/icons/favicon-16.png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Go de Plantão" />
+
   <style>
     :root{
       --tier-watch:#2f8f5b;  --tier-watch-bg:#e4f3ea;
@@ -4135,6 +4144,11 @@ registerModule({ id:'gestante', group:'Populações especiais', label:'Gestantes
 /* boot */
 goModule('inicial');
 
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
 </script>
 </body>
 </html>

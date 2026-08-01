@@ -16,6 +16,15 @@
   
   
   <link rel="stylesheet" href="../style.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#1e1e22" />
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+  <link rel="icon" href="/icons/favicon-16.png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Go de Plantão" />
+
 </head>
 <body>
 
@@ -190,5 +199,10 @@
     <p style="margin-top:8px">Use o cupom <strong>GODEPLANTAO</strong> nos <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank">cursos do Estratégia MED</a></p>
   </footer>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+</script>
 </body>
 </html>
