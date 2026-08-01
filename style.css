@@ -412,6 +412,9 @@ img { max-width: 100%; display: block; }
 }
 .promo-location { color: rgba(255,255,255,.55); font-size: 12px; text-align: right; }
 
+/* ---- MOBILE TAB BAR ---- */
+.mobile-tabbar { display: none; }
+
 /* ---- RESPONSIVE ---- */
 @media (max-width: 640px) {
   .hero { padding: 48px 20px; }
@@ -421,4 +424,21 @@ img { max-width: 100%; display: block; }
   .promo-content { flex-direction: column; align-items: flex-start; }
   .promo-cta { align-items: flex-start; }
   .promo-price, .promo-location { text-align: left; }
+
+  body { padding-bottom: 64px; }
+  .mobile-tabbar {
+    display: flex;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+    background: var(--dark);
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-tabbar .tab-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 8px 4px 10px;
+    color: rgba(255,255,255,.6); text-decoration: none;
+    font-family: 'Itim', cursive; font-size: 11px;
+  }
+  .mobile-tabbar .tab-icon { font-size: 20px; line-height: 1; }
+  .mobile-tabbar .tab-item.active { color: #fff; }
 }
