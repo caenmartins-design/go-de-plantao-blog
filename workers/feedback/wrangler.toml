@@ -1,0 +1,15 @@
+name = "godeplantao-feedback"
+main = "feedback.js"
+compatibility_date = "2024-09-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://godeplantao.cae-nmartins.workers.dev"
+NOTIFY_TO = "cae.nmartins@estrategiamed.com.br"
+NOTIFY_FROM = "onboarding@resend.dev"
+
+# Secrets (configurar via wrangler secret put):
+#   RESEND_API_KEY
+
+[[kv_namespaces]]
+binding = "FEEDBACK_KV"
+id = "38fd5bf990484ef388f0f2be8bb5a839"

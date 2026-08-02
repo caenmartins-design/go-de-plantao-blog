@@ -7,3 +7,4 @@ newsletter/.env
 newsletter/venv/
 newsletter/.venv/
 newsletter/dados/
+.wrangler/

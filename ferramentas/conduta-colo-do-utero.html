@@ -459,6 +459,7 @@ function renderStatic(){
 }
 
 /* ---- feedback tab ---- */
+const FEEDBACK_ENDPOINT = 'https://godeplantao-feedback.cae-nmartins.workers.dev';
 let feedbackState = { rating: 0, module: '', comment: '', email: '', status: '' };
 
 function buildFeedbackText(){
@@ -528,13 +529,26 @@ function renderFeedback(){
   card.appendChild(emailWrap);
 
   const actions = el('div', {class:'fbactions'});
-  const sendBtn = el('button', {class:'fbsend', type:'button'}, [document.createTextNode('Enviar por e-mail')]);
+  const sending = feedbackState.status === 'sending';
+  const sendBtn = el('button', {class:'fbsend', type:'button'}, [document.createTextNode(sending ? 'Enviando…' : 'Enviar feedback')]);
+  if (sending) sendBtn.disabled = true;
   sendBtn.addEventListener('click', () => {
-    const body = buildFeedbackText();
-    const subject = 'Feedback — Fluxograma colo do útero';
-    window.location.href = 'mailto:cae.nmartins@estrategiamed.com.br?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    feedbackState.status = 'sent';
+    if (feedbackState.status === 'sending') return;
+    feedbackState.status = 'sending';
     render();
+    fetch(FEEDBACK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tool: 'conduta-colo-do-utero',
+        rating: feedbackState.rating || null,
+        moduleLabel: feedbackState.module && MODULES[feedbackState.module] ? MODULES[feedbackState.module].label : '',
+        comment: feedbackState.comment,
+        email: feedbackState.email
+      })
+    })
+      .then(r => { if (!r.ok) throw new Error('bad status'); feedbackState.status = 'sent'; render(); })
+      .catch(() => { feedbackState.status = 'senderror'; render(); });
   });
   const copyBtn = el('button', {class:'fbcopy', type:'button'}, [document.createTextNode('Copiar resumo')]);
   copyBtn.addEventListener('click', () => {
@@ -553,7 +567,9 @@ function renderFeedback(){
   card.appendChild(actions);
 
   if (feedbackState.status === 'sent'){
-    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Seu aplicativo de e-mail deve abrir com o feedback pronto para enviar. Se não abrir, use "Copiar resumo" e envie por onde preferir.')]));
+    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Feedback enviado, muito obrigado! Ele já foi registrado e vai ajudar a melhorar a ferramenta.')]));
+  } else if (feedbackState.status === 'senderror'){
+    card.appendChild(el('p', {class:'fbconfirm warn'}, [document.createTextNode('Não consegui enviar agora. Tente de novo em instantes ou use "Copiar resumo" e mande por e-mail/WhatsApp.')]));
   } else if (feedbackState.status === 'copied'){
     card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Resumo copiado! Cole onde preferir (e-mail, WhatsApp etc.).')]));
   } else if (feedbackState.status === 'copyfail'){
