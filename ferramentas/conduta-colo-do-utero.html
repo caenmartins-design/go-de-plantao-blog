@@ -167,6 +167,40 @@
       margin:40px 4px 0; padding-top:18px; border-top:1px solid var(--gray-200);
       font-size:14.5px; color:var(--gray-600); line-height:1.7;
     }
+
+    /* feedback form */
+    .fbcard{max-width:640px}
+    .fblabel{
+      display:block; font-family:'Itim', cursive; font-size:16px; color:var(--tinta); margin-bottom:9px;
+    }
+    .fbrating{margin-top:20px}
+    .fbrating-btns{display:flex; gap:8px}
+    .fbstar{
+      width:46px; height:46px; border-radius:9px; border:1px solid var(--gray-200); background:var(--gray-50);
+      color:var(--gray-600); font-size:16px; cursor:pointer; transition:border-color .15s, background .15s;
+    }
+    .fbstar:hover{border-color:var(--magenta)}
+    .fbstar.active{background:var(--magenta); border-color:var(--magenta); color:#fff; font-weight:700}
+    .fbfield{margin-top:20px}
+    .fbselect, .fbinput, .fbtextarea{
+      width:100%; background:var(--white); border:1px solid var(--gray-200); border-radius:8px; color:var(--tinta);
+      padding:12px 14px; font-size:15.5px; font-family:'Itim', cursive;
+    }
+    .fbtextarea{resize:vertical; min-height:110px; line-height:1.5}
+    .fbselect:focus, .fbinput:focus, .fbtextarea:focus{outline:2px solid var(--azul); outline-offset:1px; border-color:var(--azul)}
+    .fbactions{display:flex; gap:10px; margin-top:24px; flex-wrap:wrap}
+    .fbsend{
+      background:var(--magenta); color:#fff; border:none; border-radius:8px; padding:12px 20px;
+      font-size:15.5px; font-family:'Itim', cursive; cursor:pointer; transition:background .15s;
+    }
+    .fbsend:hover{background:var(--magenta-dark)}
+    .fbcopy{
+      background:var(--white); color:var(--tinta); border:1px solid var(--gray-200); border-radius:8px; padding:12px 20px;
+      font-size:15.5px; font-family:'Itim', cursive; cursor:pointer;
+    }
+    .fbcopy:hover{border-color:var(--azul)}
+    .fbconfirm{margin-top:16px; padding:11px 14px; background:var(--azul-light); color:var(--azul-dark); border-radius:8px; font-size:14.5px}
+    .fbconfirm.warn{background:var(--tier-warn-bg); color:var(--tier-warn)}
   </style>
 </head>
 <body>
@@ -321,7 +355,8 @@ function renderNav(){
   nav.innerHTML = '';
   const all = Object.values(MODULES);
   const special = all.filter(m => m.group === 'Populações especiais');
-  const other = all.filter(m => m.group !== 'Populações especiais' && m.id !== 'inicial');
+  const opiniao = all.filter(m => m.group === 'Sua opinião');
+  const other = all.filter(m => m.group !== 'Populações especiais' && m.group !== 'Sua opinião' && m.id !== 'inicial');
 
   function block(title, hint, mods, cls){
     const b = el('div', {class: 'aside-block' + (cls ? ' '+cls : '')});
@@ -338,6 +373,7 @@ function renderNav(){
 
   nav.appendChild(block('Situações especiais', 'Se alguma se aplica à paciente, comece por aqui — a conduta muda.', special, 'special'));
   nav.appendChild(block('Informações complementares', null, other));
+  nav.appendChild(block('Sua opinião', null, opiniao));
 }
 
 function renderIntro(){
@@ -413,10 +449,116 @@ function renderStatic(){
   host.appendChild(el('div', {class:'refpanel', html: currentModule().html}));
 }
 
+/* ---- feedback tab ---- */
+let feedbackState = { rating: 0, module: '', comment: '', email: '', status: '' };
+
+function buildFeedbackText(){
+  const mod = feedbackState.module && MODULES[feedbackState.module] ? MODULES[feedbackState.module].label : 'Geral / a ferramenta como um todo';
+  const stars = feedbackState.rating ? (feedbackState.rating + '/5') : 'não informado';
+  return 'Feedback — Fluxograma de condutas no rastreamento do câncer de colo do útero\n\n'
+    + 'Nota (1-5): ' + stars + '\n'
+    + 'Parte da ferramenta: ' + mod + '\n'
+    + 'Comentário: ' + (feedbackState.comment.trim() || '(vazio)') + '\n'
+    + (feedbackState.email.trim() ? ('Contato de quem enviou: ' + feedbackState.email.trim() + '\n') : '');
+}
+
+function renderFeedback(){
+  document.getElementById('trail').innerHTML = '';
+  const host = document.getElementById('cardhost');
+  host.innerHTML = '';
+
+  const card = el('div', {class:'card fbcard'});
+  card.appendChild(el('h2', null, [document.createTextNode('O que podemos melhorar?')]));
+  card.appendChild(el('p', {class:'note'}, [document.createTextNode('Leva menos de um minuto e ajuda a priorizar os próximos ajustes. Não existe um banco de dados por trás desta aba: ao enviar, seu aplicativo de e-mail abre com o feedback pronto — ou copie e mande por onde preferir.')]));
+
+  const ratingWrap = el('div', {class:'fbrating'});
+  ratingWrap.appendChild(textEl('span', 'fblabel', 'De 1 a 5, o quanto essa ferramenta ajudou agora?'));
+  const ratingBtns = el('div', {class:'fbrating-btns'});
+  for (let i = 1; i <= 5; i++){
+    const b = el('button', {class:'fbstar' + (feedbackState.rating === i ? ' active' : ''), type:'button'}, [document.createTextNode(String(i))]);
+    b.addEventListener('click', () => { feedbackState.rating = i; render(); });
+    ratingBtns.appendChild(b);
+  }
+  ratingWrap.appendChild(ratingBtns);
+  card.appendChild(ratingWrap);
+
+  const selWrap = el('div', {class:'fbfield'});
+  selWrap.appendChild(textEl('label', 'fblabel', 'Sobre qual parte é o seu feedback?'));
+  const sel = document.createElement('select');
+  sel.className = 'fbselect';
+  const optAll = document.createElement('option');
+  optAll.value = ''; optAll.textContent = 'Geral / a ferramenta como um todo';
+  sel.appendChild(optAll);
+  Object.values(MODULES).forEach(m => {
+    if (m.id === 'feedback') return;
+    const o = document.createElement('option');
+    o.value = m.id; o.textContent = m.label;
+    sel.appendChild(o);
+  });
+  sel.value = feedbackState.module;
+  sel.addEventListener('change', () => { feedbackState.module = sel.value; });
+  selWrap.appendChild(sel);
+  card.appendChild(selWrap);
+
+  const commentWrap = el('div', {class:'fbfield'});
+  commentWrap.appendChild(textEl('label', 'fblabel', 'Comentário (o que funcionou, o que faltou, o que confundiu)'));
+  const ta = document.createElement('textarea');
+  ta.className = 'fbtextarea'; ta.rows = 5; ta.value = feedbackState.comment;
+  ta.placeholder = 'Ex.: no módulo de HIV, não ficou claro o que fazer quando...';
+  ta.addEventListener('input', () => { feedbackState.comment = ta.value; });
+  commentWrap.appendChild(ta);
+  card.appendChild(commentWrap);
+
+  const emailWrap = el('div', {class:'fbfield'});
+  emailWrap.appendChild(textEl('label', 'fblabel', 'Seu e-mail (opcional, só se quiser resposta)'));
+  const emailInput = document.createElement('input');
+  emailInput.type = 'email'; emailInput.className = 'fbinput'; emailInput.value = feedbackState.email;
+  emailInput.placeholder = 'seuemail@exemplo.com';
+  emailInput.addEventListener('input', () => { feedbackState.email = emailInput.value; });
+  emailWrap.appendChild(emailInput);
+  card.appendChild(emailWrap);
+
+  const actions = el('div', {class:'fbactions'});
+  const sendBtn = el('button', {class:'fbsend', type:'button'}, [document.createTextNode('Enviar por e-mail')]);
+  sendBtn.addEventListener('click', () => {
+    const body = buildFeedbackText();
+    const subject = 'Feedback — Fluxograma colo do útero';
+    window.location.href = 'mailto:cae.nmartins@estrategiamed.com.br?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    feedbackState.status = 'sent';
+    render();
+  });
+  const copyBtn = el('button', {class:'fbcopy', type:'button'}, [document.createTextNode('Copiar resumo')]);
+  copyBtn.addEventListener('click', () => {
+    const text = buildFeedbackText();
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(
+        () => { feedbackState.status = 'copied'; render(); },
+        () => { feedbackState.status = 'copyfail'; render(); }
+      );
+    } else {
+      feedbackState.status = 'copyfail'; render();
+    }
+  });
+  actions.appendChild(sendBtn);
+  actions.appendChild(copyBtn);
+  card.appendChild(actions);
+
+  if (feedbackState.status === 'sent'){
+    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Seu aplicativo de e-mail deve abrir com o feedback pronto para enviar. Se não abrir, use "Copiar resumo" e envie por onde preferir.')]));
+  } else if (feedbackState.status === 'copied'){
+    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Resumo copiado! Cole onde preferir (e-mail, WhatsApp etc.).')]));
+  } else if (feedbackState.status === 'copyfail'){
+    card.appendChild(el('p', {class:'fbconfirm warn'}, [document.createTextNode('Não consegui copiar automaticamente — selecione o texto do comentário manualmente.')]));
+  }
+
+  host.appendChild(card);
+}
+
 function render(){
   renderNav();
   renderIntro();
   if (currentModule().type === 'static'){ renderStatic(); }
+  else if (currentModule().type === 'feedback'){ renderFeedback(); }
   else { renderTrail(); renderCard(); }
 }
 
@@ -648,6 +790,17 @@ registerModule({
       <p>Construída a partir das Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II, versão <b>preliminar</b> em consulta pública (jul/2026). Cobre os Capítulos 1 a 6 (avaliação diagnóstica, doença glandular, câncer superficialmente invasivo, tratamento e vigilância pós-tratamento, histerectomizadas, HIV/imunossupressão e gestantes) e trechos selecionados do Capítulo 7 (indicação de colposcopia por sangramento). Não substitui a leitura da diretriz original nem o julgamento clínico — em caso de discordância entre esta ferramenta e o texto oficial, o texto oficial prevalece.</p>
     </div>
   `
+});
+
+/* ============================================================
+   MODULE: feedback (aba de opinião do usuário — sem backend;
+   monta um e-mail pronto ou copia um resumo para a área de
+   transferência)
+   ============================================================ */
+registerModule({
+  id:'feedback', group:'Sua opinião', type:'feedback',
+  label:'Deixar feedback',
+  desc:'Ajude a melhorar esta ferramenta: avalie, diga o que faltou ou o que confundiu.'
 });
 
 /* ============================================================
