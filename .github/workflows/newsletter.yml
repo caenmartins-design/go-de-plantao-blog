@@ -10,7 +10,26 @@ permissions:
   contents: write
 
 jobs:
+  check-skip:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - id: check
+        run: |
+          # Pausa pontual pedida para não rodar em 2026-08-03 (só afeta o disparo
+          # automático de segunda; workflow_dispatch manual continua funcionando).
+          # Pode remover este job depois dessa data.
+          hoje=$(TZ='America/Sao_Paulo' date +%Y-%m-%d)
+          if [ "$hoje" = "2026-08-03" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   newsletter:
+    needs: check-skip
+    if: needs.check-skip.outputs.skip != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
