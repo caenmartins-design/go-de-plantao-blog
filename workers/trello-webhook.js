@@ -53,10 +53,10 @@ export default {
     }
     const card = await cardResp.json();
 
-    const parsed = parseCardDescription(card.desc || '');
+    const content = (card.desc || '').trim();
 
-    if (!parsed.content) {
-      return new Response('Card sem conteúdo após "---"', { status: 400 });
+    if (!content) {
+      return new Response('Card sem descrição — não há roteiro para gerar o artigo', { status: 400 });
     }
 
     const pdfAttachment = (card.attachments || []).find(a =>
@@ -78,10 +78,7 @@ export default {
           client_payload: {
             card_id:     cardId,
             title:       card.name,
-            description: parsed.content,
-            category:    parsed.category || 'Ginecologia',
-            tags:        parsed.tags     || '',
-            read_time:   parsed.tempo    || '5',
+            description: content,
             date:        getTodayDate(),
             pdf_url:       pdfAttachment ? pdfAttachment.url : '',
             pdf_filename:  pdfAttachment ? (pdfAttachment.fileName || pdfAttachment.name || '') : '',
@@ -118,38 +115,6 @@ async function verifyTrelloSignature(signature, body, callbackURL, secret) {
     return false;
   }
   return crypto.subtle.verify('HMAC', key, sigBytes, encoder.encode(body + callbackURL));
-}
-
-function parseCardDescription(desc) {
-  const lines = desc.split('\n');
-  const meta  = {};
-  let contentStart = -1;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (line.startsWith('CATEGORIA:')) {
-      meta.category = line.replace('CATEGORIA:', '').trim();
-    } else if (line.startsWith('TAGS:')) {
-      meta.tags = line.replace('TAGS:', '').trim();
-    } else if (line.startsWith('TEMPO:')) {
-      meta.tempo = line.replace('TEMPO:', '').trim();
-    } else if (line === '---') {
-      contentStart = i + 1;
-      break;
-    }
-  }
-
-  if (contentStart >= 0) {
-    meta.content = lines.slice(contentStart).join('\n').trim();
-  } else {
-    // Sem separador: usa tudo exceto as linhas de metadados
-    meta.content = lines
-      .filter(l => !l.trim().match(/^(CATEGORIA|TAGS|TEMPO):/))
-      .join('\n')
-      .trim();
-  }
-
-  return meta;
 }
 
 function getTodayDate() {

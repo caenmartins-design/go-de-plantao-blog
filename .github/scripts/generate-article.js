@@ -172,18 +172,17 @@ function updateIndex(slug, title, category, date, readTime, excerpt) {
 }
 
 async function main() {
-  const title       = process.env.CARD_TITLE;
-  const description = process.env.CARD_DESCRIPTION;
-  const category    = process.env.CARD_CATEGORY || 'Ginecologia';
-  const tagsRaw     = process.env.CARD_TAGS || '';
-  const readTime    = process.env.CARD_READ_TIME || '5';
-  const date        = process.env.CARD_DATE;
+  const title            = process.env.CARD_TITLE;
+  const description      = process.env.CARD_DESCRIPTION;
+  const categoryOverride = process.env.CARD_CATEGORY || '';
+  const tagsOverride     = process.env.CARD_TAGS || '';
+  const readTimeOverride = process.env.CARD_READ_TIME || '';
+  const date             = process.env.CARD_DATE;
 
   if (!title || !description) {
     throw new Error('CARD_TITLE e CARD_DESCRIPTION são obrigatórios');
   }
 
-  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
   const slug = generateSlug(title);
 
   const articlePath = path.join(BLOG_ROOT, 'artigos', `${slug}.html`);
@@ -234,12 +233,30 @@ REGRAS DE CONTEÚDO:
 - Referência bibliográfica no final: <p><em>Referência: ...</em></p>
 - Não inclua a tag <article> em si, apenas o conteúdo interno
 
+Quando categoria, tags e/ou tempo de leitura não vierem definidos manualmente, decida você mesmo com base no roteiro:
+- categoria: escolha a mais adequada dentre as já usadas no blog (Ginecologia, Obstetrícia, Rastreamento, Guidelines, Saúde Pública); só crie uma nova categoria, curta e específica, se nenhuma dessas servir
+- tags: de 3 a 6 palavras-chave curtas e relevantes para o tema
+- tempo de leitura: estimativa em minutos (número inteiro), coerente com o tamanho do roteiro
+
 RETORNE SOMENTE JSON VÁLIDO no seguinte formato (sem markdown, sem blocos de código):
 {
   "meta_description": "descrição SEO com até 155 caracteres",
   "excerpt": "resumo com até 220 caracteres para o card da homepage",
+  "category": "categoria sugerida (ignorada se já veio definida manualmente)",
+  "tags": ["tag1", "tag2", "tag3"],
+  "read_time": 5,
   "article_body_html": "HTML completo do corpo do artigo"
 }`;
+
+  const category = categoryOverride
+    ? `Categoria (definida manualmente): ${categoryOverride}`
+    : 'Categoria: não informada — decida com base no roteiro';
+  const tags = tagsOverride
+    ? `Tags (definidas manualmente): ${tagsOverride}`
+    : 'Tags: não informadas — decida com base no roteiro';
+  const readTime = readTimeOverride
+    ? `Tempo de leitura (definido manualmente): ${readTimeOverride} min`
+    : 'Tempo de leitura: não informado — decida com base no roteiro';
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
@@ -248,10 +265,10 @@ RETORNE SOMENTE JSON VÁLIDO no seguinte formato (sem markdown, sem blocos de c�
     messages: [{
       role: 'user',
       content: `Título: ${title}
-Categoria: ${category}
-Tags: ${tags.join(', ')}
+${category}
+${tags}
 Data: ${date}
-Tempo de leitura: ${readTime} min
+${readTime}
 
 Roteiro:
 ${description}`
@@ -262,7 +279,15 @@ ${description}`
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Claude não retornou JSON válido:\n' + text);
 
-  const { meta_description, excerpt, article_body_html } = JSON.parse(jsonMatch[0]);
+  const parsed = JSON.parse(jsonMatch[0]);
+  const { meta_description, excerpt, article_body_html } = parsed;
+
+  const finalCategory = categoryOverride || parsed.category || 'Ginecologia';
+  const finalTags = (tagsOverride
+    ? tagsOverride.split(',')
+    : (Array.isArray(parsed.tags) ? parsed.tags : [])
+  ).map(t => t.trim()).filter(Boolean);
+  const finalReadTime = readTimeOverride || String(parsed.read_time || 5).replace(/\D/g, '') || '5';
 
   let bodyHtml = article_body_html;
   if (pdfRelPath) {
@@ -277,15 +302,15 @@ ${description}`
   }
 
   const articleHtml = buildArticleHTML(
-    slug, title, category, date, readTime,
-    bodyHtml, meta_description, tags
+    slug, title, finalCategory, date, finalReadTime,
+    bodyHtml, meta_description, finalTags
   );
 
   fs.writeFileSync(articlePath, articleHtml);
   console.log(`✓ artigos/${slug}.html criado`);
 
-  updateArtigos(slug, title, category, excerpt, date, readTime, tags);
-  updateIndex(slug, title, category, date, readTime, excerpt);
+  updateArtigos(slug, title, finalCategory, excerpt, date, finalReadTime, finalTags);
+  updateIndex(slug, title, finalCategory, date, finalReadTime, excerpt);
 
   console.log('✅ Publicação concluída!');
 }
