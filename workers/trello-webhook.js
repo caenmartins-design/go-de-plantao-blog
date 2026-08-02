@@ -1,6 +1,8 @@
 // Cloudflare Worker — receptor do webhook do Trello
 // Secrets necessários (via Cloudflare Dashboard → Workers → Settings → Variables):
-//   TRELLO_API_KEY, TRELLO_TOKEN, GH_PAT, GH_REPO_OWNER, GH_REPO_NAME
+//   TRELLO_API_KEY, TRELLO_TOKEN, TRELLO_API_SECRET, GH_PAT, GH_REPO_OWNER, GH_REPO_NAME
+// TRELLO_API_SECRET é o "Secret" da API (aba API Key em trello.com/power-ups/admin),
+// usado por Trello para assinar o webhook — não confundir com TRELLO_TOKEN.
 
 export default {
   async fetch(request, env) {
@@ -19,7 +21,7 @@ export default {
     if (!signature) {
       return new Response('Forbidden', { status: 403 });
     }
-    const valid = await verifyTrelloSignature(signature, rawBody, request.url, env.TRELLO_TOKEN);
+    const valid = await verifyTrelloSignature(signature, rawBody, request.url, env.TRELLO_API_SECRET);
     if (!valid) {
       return new Response('Forbidden', { status: 403 });
     }
