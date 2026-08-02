@@ -83,7 +83,7 @@ export default {
           event_type: 'publish-article',
           client_payload: {
             card_id:     cardId,
-            title:       card.name,
+            title:       card.name.replace(/\s*\n+\s*/g, ' — ').trim(),
             description: content,
             date:        getTodayDate(),
             pdf_url:       pdfAttachment ? pdfAttachment.url : '',
