@@ -4,6 +4,10 @@
 // TRELLO_API_SECRET é o "Secret" da API (aba API Key em trello.com/power-ups/admin),
 // usado por Trello para assinar o webhook — não confundir com TRELLO_TOKEN.
 
+// Precisa ser IDÊNTICA à callbackURL cadastrada no webhook do Trello (sem barra final) —
+// Trello assina com essa string exata; request.url do Worker vem com "/" no final e quebraria o HMAC.
+const CALLBACK_URL = 'https://godeplantao-trello-webhook.cae-nmartins.workers.dev';
+
 export default {
   async fetch(request, env) {
     if (request.method === 'HEAD') {
@@ -21,7 +25,7 @@ export default {
     if (!signature) {
       return new Response('Forbidden', { status: 403 });
     }
-    const valid = await verifyTrelloSignature(signature, rawBody, request.url, env.TRELLO_API_SECRET);
+    const valid = await verifyTrelloSignature(signature, rawBody, CALLBACK_URL, env.TRELLO_API_SECRET);
     if (!valid) {
       return new Response('Forbidden', { status: 403 });
     }
