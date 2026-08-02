@@ -36,7 +36,7 @@ export default {
     }
 
     const listAfter = body.action?.data?.listAfter?.name?.toUpperCase();
-    if (listAfter !== 'PUBLICAR') {
+    if (listAfter !== 'POSTADOS INSTAGRAM') {
       return new Response('OK', { status: 200 });
     }
 

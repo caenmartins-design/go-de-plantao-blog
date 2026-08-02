@@ -1,0 +1,53 @@
+name: Newsletter Semanal
+
+on:
+  schedule:
+    # Toda segunda-feira às 07:00 (horário de Brasília, UTC-3) = 10:00 UTC
+    - cron: '0 10 * * 1'
+  workflow_dispatch: {}   # permite disparar manualmente em Actions → Newsletter Semanal → Run workflow
+
+permissions:
+  contents: write
+
+jobs:
+  newsletter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restaurar estado (artigos já vistos, para não duplicar semana a semana)
+        uses: actions/cache@v4
+        with:
+          path: newsletter/dados
+          key: newsletter-dados-${{ github.run_id }}
+          restore-keys: |
+            newsletter-dados-
+
+      - name: Instalar dependências
+        run: pip install -r newsletter/requirements.txt
+
+      - name: Rodar pipeline da newsletter (buscar → curar → gerar → publicar no blog → enviar e-mail)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
+          EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
+          EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
+          EMAIL_SENHA: ${{ secrets.EMAIL_SENHA }}
+          EMAIL_NOME_REMETENTE: ${{ secrets.EMAIL_NOME_REMETENTE }}
+          EMAIL_DESTINATARIOS: ${{ secrets.EMAIL_DESTINATARIOS }}
+          EMAIL_ASSUNTO: ${{ secrets.EMAIL_ASSUNTO }}
+          BLOG_URL: ${{ secrets.BLOG_URL }}
+        run: |
+          git config --global user.name "Go de Plantão Bot"
+          git config --global user.email "bot@godeplantao.com"
+          python newsletter/main.py tudo
