@@ -48,11 +48,16 @@
     .aside-block.special{
       background:var(--magenta-light); border-color:transparent; border-left:4px solid var(--magenta);
     }
+    .aside-block.feedback{
+      background:var(--azul-light); border-color:transparent; border-left:4px solid var(--azul);
+      box-shadow:var(--shadow-md);
+    }
     .aside-block h3{
       font-family:'Anton', sans-serif; font-size:13.5px; font-weight:400; letter-spacing:.8px; text-transform:uppercase;
       color:var(--magenta); margin-bottom:5px;
     }
     .aside-block:not(.special) h3{color:var(--azul)}
+    .aside-block.feedback h3{font-size:15px}
     .aside-hint{font-size:14px; color:var(--tinta-light); line-height:1.55; margin-bottom:10px}
 
     .aside-btn{
@@ -61,6 +66,10 @@
       display:block; font-family:'Itim', cursive; margin-top:7px; transition:border-color .15s, background .15s;
     }
     .aside-block.special .aside-btn{background:rgba(255,255,255,.6)}
+    .aside-block.feedback .aside-btn{
+      background:var(--azul); color:#fff; font-weight:700; text-align:center; padding:13px;
+    }
+    .aside-block.feedback .aside-btn:hover{background:var(--azul-dark); border-color:var(--azul-dark)}
     .aside-btn:hover{border-color:var(--magenta); background:var(--white)}
     .aside-btn.active{border-color:var(--magenta); background:var(--white); font-weight:700}
     .aside-block:not(.special) .aside-btn{background:var(--gray-50)}
@@ -372,8 +381,8 @@ function renderNav(){
   }
 
   nav.appendChild(block('Situações especiais', 'Se alguma se aplica à paciente, comece por aqui — a conduta muda.', special, 'special'));
+  nav.appendChild(block('💬 Sua opinião', 'O que faltou? O que confundiu? Leva menos de 1 minuto.', opiniao, 'feedback'));
   nav.appendChild(block('Informações complementares', null, other));
-  nav.appendChild(block('Sua opinião', null, opiniao));
 }
 
 function renderIntro(){
