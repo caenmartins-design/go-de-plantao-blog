@@ -5,13 +5,14 @@ const https = require('https');
 
 const BLOG_ROOT = path.join(__dirname, '..', '..');
 
-function downloadFile(url, destPath, redirectCount = 0) {
+function downloadFile(url, destPath, headers = {}, redirectCount = 0) {
   return new Promise((resolve, reject) => {
     if (redirectCount > 5) return reject(new Error('Excesso de redirecionamentos ao baixar PDF'));
-    https.get(url, (res) => {
+    https.get(url, { headers }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         res.resume();
-        return resolve(downloadFile(res.headers.location, destPath, redirectCount + 1));
+        // não repassa headers de auth do Trello para o destino do redirect (ex.: CDN assinada)
+        return resolve(downloadFile(res.headers.location, destPath, {}, redirectCount + 1));
       }
       if (res.statusCode !== 200) {
         res.resume();
@@ -207,8 +208,10 @@ async function main() {
     const pdfsDir    = path.join(BLOG_ROOT, 'pdfs');
     fs.mkdirSync(pdfsDir, { recursive: true });
     const pdfFileName = `${slug}.pdf`;
-    const authedUrl   = `${pdfUrl}?key=${trelloKey}&token=${trelloToken}`;
-    await downloadFile(authedUrl, path.join(pdfsDir, pdfFileName));
+    // O endpoint de download de anexo do Trello não aceita key/token via query string
+    // (retorna 401) — precisa do header Authorization: OAuth.
+    const authHeader = { Authorization: `OAuth oauth_consumer_key="${trelloKey}", oauth_token="${trelloToken}"` };
+    await downloadFile(pdfUrl, path.join(pdfsDir, pdfFileName), authHeader);
     pdfRelPath = `pdfs/${pdfFileName}`;
     console.log(`✓ PDF baixado do Trello: ${pdfRelPath}`);
   } else if (pdfUrl) {
