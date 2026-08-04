@@ -73,10 +73,33 @@ function buildArticleHTML(slug, title, category, date, readTime, articleBody, me
       <nav class="header-nav">
         <a href="/">Blog</a>
         <a href="/newsletters.html">Newsletters</a>
+        <a href="/ferramentas/conduta-colo-do-utero">Ferramentas</a>
         <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank" rel="noopener">Cursos</a>
       </nav>
     </div>
   </header>
+
+  <div class="promo-banner-wrap" id="toolPromoBanner">
+    <div class="promo-banner">
+      <button class="promo-close" type="button" onclick="(function(){var b=document.getElementById('toolPromoBanner');if(b)b.remove();try{sessionStorage.setItem('toolPromoClosed','1')}catch(e){}})()" aria-label="Fechar aviso">&times;</button>
+      <span class="promo-badge">🔬 Novidade</span>
+      <div class="promo-content">
+        <div class="promo-text">
+          <div class="promo-label">Ferramenta interativa</div>
+          <div class="promo-title">Conduta no rastreamento do colo do útero</div>
+          <p class="promo-sub">Informe o genótipo do HPV e o achado da colposcopia — receba a conduta na hora, com base nas novas Diretrizes Brasileiras.</p>
+        </div>
+        <div class="promo-cta">
+          <a href="/ferramentas/conduta-colo-do-utero" class="promo-btn">Testar agora →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      try { if (sessionStorage.getItem('toolPromoClosed')) { var b = document.getElementById('toolPromoBanner'); if (b) b.remove(); } } catch(e){}
+    })();
+  </script>
 
   <main class="article-page">
 
@@ -120,6 +143,25 @@ ${articleBody}
     <p style="margin-top:8px">Use o cupom <strong>GODEPLANTAO</strong> nos <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank">cursos do Estratégia MED</a></p>
   </footer>
 
+<nav class="mobile-tabbar">
+  <a href="/" class="tab-item active">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+    <span class="tab-label">Artigos</span>
+  </a>
+  <a href="/newsletters.html" class="tab-item">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg></span>
+    <span class="tab-label">Newsletter</span>
+  </a>
+  <a href="/ferramentas/conduta-colo-do-utero" class="tab-item">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+    <span class="tab-label">Ferramentas</span>
+  </a>
+</nav>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+</script>
 </body>
 </html>`;
 }

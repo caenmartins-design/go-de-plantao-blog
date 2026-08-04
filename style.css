@@ -411,6 +411,11 @@ img { max-width: 100%; display: block; }
   transform: translateY(-1px); text-decoration: none;
 }
 .promo-location { color: rgba(255,255,255,.55); font-size: 12px; text-align: right; }
+.promo-close {
+  position: absolute; top: 8px; right: 8px; background: none; border: none;
+  color: rgba(255,255,255,.65); font-size: 24px; line-height: 1; cursor: pointer; padding: 6px 9px;
+}
+.promo-close:hover { color: #fff; }
 
 /* ---- MOBILE TAB BAR ---- */
 .mobile-tabbar { display: none; }

@@ -124,6 +124,28 @@
     </div>
   </header>
 
+  <div class="promo-banner-wrap" id="toolPromoBanner">
+    <div class="promo-banner">
+      <button class="promo-close" type="button" onclick="(function(){var b=document.getElementById('toolPromoBanner');if(b)b.remove();try{sessionStorage.setItem('toolPromoClosed','1')}catch(e){}})()" aria-label="Fechar aviso">&times;</button>
+      <span class="promo-badge">🔬 Novidade</span>
+      <div class="promo-content">
+        <div class="promo-text">
+          <div class="promo-label">Ferramenta interativa</div>
+          <div class="promo-title">Conduta no rastreamento do colo do útero</div>
+          <p class="promo-sub">Informe o genótipo do HPV e o achado da colposcopia — receba a conduta na hora, com base nas novas Diretrizes Brasileiras.</p>
+        </div>
+        <div class="promo-cta">
+          <a href="/ferramentas/conduta-colo-do-utero" class="promo-btn">Testar agora →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      try { if (sessionStorage.getItem('toolPromoClosed')) { var b = document.getElementById('toolPromoBanner'); if (b) b.remove(); } } catch(e){}
+    })();
+  </script>
+
   <main class="article-page">
 
     <nav class="article-breadcrumb">
