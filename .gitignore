@@ -6,5 +6,6 @@ __pycache__/
 newsletter/.env
 newsletter/venv/
 newsletter/.venv/
-newsletter/dados/
+newsletter/dados/*
+!newsletter/dados/vistos.json
 .wrangler/
