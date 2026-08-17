@@ -1,9 +1,12 @@
 name: Newsletter Semanal
 
+# Gatilho semanal (schedule) DESATIVADO em 2026-08-17: a curadoria por IA depende de
+# ANTHROPIC_API_KEY (secret deste repo), que está inválida/sem créditos — o workflow
+# falhava toda segunda no passo "Rodar pipeline da newsletter" (exit code 1). A
+# publicação semanal passou a ser feita por automação local via Claude Code
+# (ver ~/Library/LaunchAgents/br.com.godeplantao.newsletter.plist). Mantido
+# workflow_dispatch para permitir disparo manual caso necessário.
 on:
-  schedule:
-    # Toda segunda-feira às 07:00 (horário de Brasília, UTC-3) = 10:00 UTC
-    - cron: '0 10 * * 1'
   workflow_dispatch: {}   # permite disparar manualmente em Actions → Newsletter Semanal → Run workflow
 
 permissions:
