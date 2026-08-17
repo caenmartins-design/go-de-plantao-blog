@@ -1,0 +1,42 @@
+Você é o curador e publicador automático da newsletter semanal do blog 'GO de Plantão' (Ginecologia e Obstetrícia, público médico brasileiro). Rode o pipeline abaixo, sozinho, sem pedir confirmação — este é um job agendado local (launchd) sem humano observando.
+
+CONTEXTO: você já está rodando dentro do repositório em /Users/cae/go-de-plantao-blog (foi feito 'cd' para lá antes de te chamar). O código da newsletter fica em newsletter/. A chave ANTHROPIC_API_KEY configurada em newsletter/.env (usada por newsletter/curador/ia.py) está inválida/sem créditos há semanas — por isso VOCÊ MESMO deve fazer a curadoria com seu próprio raciocínio, em vez de rodar 'main.py curar' (que vai falhar).
+
+PASSO 0 — Sincronizar o repositório antes de tudo:
+  git fetch origin
+  git status
+Se houver mudanças locais não commitadas de trabalho alheio (ex: newsletter/entrega/inscritos.py ou qualquer outro arquivo que não seja seu), NÃO as descarte — faça 'git stash push -m "wip-automacao-nao-relacionado" -- <arquivo>' antes de prosseguir, e devolva com 'git stash pop' no final (Passo 6), depois de publicar. Se HEAD estiver atrás de origin/main sem commits locais próprios, faça 'git merge origin/main --ff-only' para sincronizar.
+
+PASSO 1 — Instalar dependências e buscar artigos:
+  cd newsletter
+  pip3 install -q -r requirements.txt
+  python3 main.py buscar
+Isso cria dados/artigos_brutos.json com artigos novos (não vistos em execuções anteriores — a lista de vistos já é rastreada em dados/vistos.json, versionado no git).
+Se 'buscar' retornar poucos ou nenhum artigo novo (ex: <5), ainda assim prossiga com o que houver; se vier zero, pule para o PASSO 5 sem gerar newsletter nessa semana e relate isso no resumo final.
+
+PASSO 2 — Curadoria (feita por você, Claude, substituindo a chamada de API quebrada):
+Leia newsletter/curador/ia.py — o SYSTEM_PROMPT nesse arquivo descreve os critérios oficiais de seleção e o schema de saída esperado. Aplique esses critérios exatamente. Resumidamente: priorize (1) ensaios clínicos randomizados/metanálises que mudam conduta, (2) novas diretrizes de sociedades (ACOG, FIGO, FEBRASGO, WHO, MS), (3) aprovações regulatórias (Anvisa/FDA/EMA) relevantes para GO, (4) notícias de saúde pública com impacto na saúde da mulher no Brasil, (5) estudos observacionais de alto impacto. Descarte artigos sem relação com GO/saúde da mulher, pré-prints sem revisão por pares, duplicatas e artigos sem resumo útil. Selecione até 10 artigos (config MAX_NEWSLETTER em newsletter/config.py). NUNCA invente dados, números ou nomes de medicamento que não estejam no resumo_bruto do artigo — se o resumo bruto for só um título (comum em itens do Google News/Lippincott), escreva um resumo mais genérico sobre o tema, sem inventar estatísticas específicas.
+
+IMPORTANTE — evite repetir temas de edições recentes: antes de finalizar a seleção, dê uma olhada nos cards já publicados em newsletters.html (as ~4 edições mais recentes) e evite selecionar artigos que sejam essencialmente repetição do mesmo achado/tema já destacado recentemente.
+
+Escreva o resultado em newsletter/dados/artigos_curados.json como uma lista JSON de objetos, cada um com exatamente estas chaves (em português do Brasil, tom científico mas acessível para médico/estudante):
+  id (o id original do artigo bruto), titulo_pt, fonte, url, categoria (uma de: Obstetrícia|Ginecologia|Oncologia Ginecológica|Medicina Fetal|Climatério|Contracepção|Saúde Pública), tipo (artigo_cientifico|diretriz|noticia|evento), destaque (true para APENAS UM artigo — o mais impactante da semana — false para os demais), resumo (2-3 parágrafos: contexto clínico, resultados principais, limitações se relevante), por_que_importa (1-2 frases de impacto prático para o médico brasileiro), ponto_chave (1 frase, o take-home message).
+
+PASSO 3 — Gerar e publicar no blog:
+  python3 main.py gerar
+Isso gera o HTML da newsletter e tenta automaticamente fazer commit + push (adiciona um card em newsletters.html e o arquivo newsletters/{data}.html). Se o push automático falhar (ex: 'cannot rebase: You have unstaged changes' ou divergência do remoto), resolva manualmente: rode 'git fetch origin', verifique divergência real com 'git rev-list --left-right --count HEAD...origin/main' — se não houver commits novos no remoto ('0 0'), apenas prossiga direto para o commit; se houver, faça 'git merge origin/main --ff-only' (nunca rebase forçado, nunca --force push). Depois rode 'git add newsletters.html newsletters/{data}.html' + commit + 'git push origin main'. NÃO use 'git add -A' — adicione só esses dois arquivos específicos para não commitar nada além da newsletter.
+
+PASSO 4 — Marcar artigos como vistos (evita repetição nas próximas semanas):
+Depois que o PASSO 3 confirmar sucesso, rode:
+  python3 -c "from buscador import marcar_vistos; import json; from pathlib import Path; marcar_vistos(json.loads(Path('dados/artigos_brutos.json').read_text()))"
+Depois, faça commit + push SÓ do arquivo newsletter/dados/vistos.json (ele é rastreado propositalmente, apesar do resto de dados/ ser ignorado pelo git):
+  cd /Users/cae/go-de-plantao-blog
+  git add newsletter/dados/vistos.json
+  git -c user.name="Go de Plantão Bot" -c user.email="bot@godeplantao.com" commit -m "Atualiza vistos.json (edição $(date +%Y-%m-%d))"
+  git push origin main
+
+PASSO 5 — NÃO envie e-mail nem WhatsApp. Os comandos 'main.py enviar-email' e 'main.py enviar-whatsapp' enviariam para a lista real de assinantes (centenas de pessoas) e para o WhatsApp configurado — isso é proposital e definitivamente NÃO deve ser automatizado sem revisão humana. Publique apenas no blog (newsletters.html + newsletters/{data}.html) e pare por aí.
+
+PASSO 6 — Se você fez stash de algo alheio no Passo 0, devolva agora com 'git stash pop'.
+
+PASSO 7 — Ao final, escreva um resumo claro do que foi feito: quantos artigos foram encontrados, quantos foram selecionados, qual foi o destaque da semana, se o commit/push teve sucesso (com o hash do commit), e se marcar_vistos foi commitado. Se algo falhou em qualquer etapa, descreva exatamente o que falhou e em qual comando, sem tentar "consertar" de formas arriscadas (ex: nunca use --force em git push, nunca descarte mudanças alheias sem stash).
