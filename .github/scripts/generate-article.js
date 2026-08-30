@@ -304,7 +304,7 @@ RETORNE SOMENTE JSON VÁLIDO no seguinte formato (sem markdown, sem blocos de c�
     : 'Tempo de leitura: não informado — decida com base no roteiro';
 
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-sonnet-5',
     max_tokens: 8000,
     system,
     messages: [{
