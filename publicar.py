@@ -81,8 +81,10 @@ def save_meta(articles: list):
 
 
 def rebuild_index(articles: list):
+    # articles é armazenado com o mais recente primeiro (mesma convenção do
+    # pipeline automatizado via Trello, que usa unshift em vez de append).
     html = INDEX.read_text(encoding="utf-8")
-    cards = "\n".join(build_card_html(a) for a in reversed(articles))
+    cards = "\n".join(build_card_html(a) for a in articles)
     START = '<div class="articles-grid" id="articles-grid">'
     SENTINEL = "<!-- /articles-grid -->"
     start_idx = html.index(START) + len(START)
@@ -167,7 +169,7 @@ def publish_article(
         "tags":          tags,
         "has_reference": bool(reference_pdf and Path(reference_pdf).exists()),
     }
-    articles.append(meta)
+    articles.insert(0, meta)
     save_meta(articles)
 
     # Reconstrói index

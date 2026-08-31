@@ -298,6 +298,213 @@
     ]
   },
   {
+    "slug": "inducao-do-parto-qual-e-o-melhor-metodo-segundo-a-cochrane",
+    "title": "Indução do Parto: Qual é o Melhor Método Segundo a Cochrane?",
+    "category": "Obstetrícia",
+    "excerpt": "Meta-análise em rede da Cochrane com 106 ensaios e 30.348 mulheres comparou 14 métodos de indução do parto: nenhum supera claramente o misoprostol vaginal em eficácia, mas os perfis de segurança fetal — sobretudo risco de hiperestimulação uterina — variam de forma relevante entre as estratégias.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Indução do Parto",
+      "Misoprostol",
+      "Ocitocina",
+      "Cochrane",
+      "Meta-análise em Rede",
+      "Cateter de Balão",
+      "Dinoprostona",
+      "Obstetrícia"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "parceria-com-doulas-em-ambientes-clinicos-o-que-recomenda-a-acog",
+    "title": "Parceria com Doulas em Ambientes Clínicos: O que Recomenda a ACOG?",
+    "category": "Guidelines",
+    "excerpt": "A ACOG publicou o Committee Statement nº 31 (agosto de 2026) recomendando a integração formal de doulas às equipes de assistência obstétrica e ginecológica. Veja o que mostram as evidências, as cinco recomendações práticas e os limites do papel da doula.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Doulas",
+      "ACOG",
+      "Equidade em Saúde",
+      "Trabalho de Parto",
+      "Saúde Materna",
+      "Mortalidade Materna",
+      "Medicaid",
+      "Guidelines"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "hiv-e-prep-o-que-o-ginecologista-precisa-saber-segundo-a-acog",
+    "title": "HIV e PrEP: O que o Ginecologista Precisa Saber Segundo a ACOG",
+    "category": "Guidelines",
+    "excerpt": "A ACOG atualizou suas recomendações sobre rastreamento de HIV e profilaxia pré-exposição (PrEP): ginecologistas devem oferecer testagem a todas as pacientes e prescrever PrEP a quem tiver risco aumentado — ou simplesmente solicitar. Veja os esquemas disponíveis e a monitorização recomendada.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "HIV",
+      "PrEP",
+      "ACOG",
+      "Profilaxia Pré-Exposição",
+      "Rastreamento",
+      "Saúde Sexual",
+      "Equidade em Saúde",
+      "Guidelines"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "agonistas-de-glp-1-alteram-o-ciclo-menstrual-o-que-mostra-a-farmacovigilancia",
+    "title": "Agonistas de GLP-1 Alteram o Ciclo Menstrual? O que Mostra a Farmacovigilância",
+    "category": "Ginecologia",
+    "excerpt": "Análise do banco de farmacovigilância da FDA (FAERS) identificou sinais estatísticos fortes entre agonistas do receptor de GLP-1 e distúrbios menstruais — coágulos, sangramento intenso e ciclos anovulatórios foram os achados mais robustos. Entenda os limites desses dados e o que perguntar na consulta.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "GLP-1",
+      "Farmacovigilância",
+      "FAERS",
+      "Distúrbios Menstruais",
+      "Semaglutida",
+      "Tirzepatida",
+      "Obesidade",
+      "Saúde Reprodutiva"
+    ],
+    "has_reference": false
+  },
+  {
+    "slug": "terapia-hormonal-na-menopausa-apos-cancer-ginecologico-as-recomendacoes-da-figo-",
+    "title": "Terapia Hormonal na Menopausa após Câncer Ginecológico: As Recomendações da FIGO 2026",
+    "category": "Guidelines",
+    "excerpt": "A FIGO publicou um position paper sobre terapia hormonal da menopausa (THM) em sobreviventes de câncer ginecológico: a contraindicação não deve ser generalizada, e a decisão depende da histologia tumoral, do estágio e da sensibilidade hormonal. Veja quem pode e quem não pode receber THM.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "THM",
+      "Menopausa",
+      "Câncer Ginecológico",
+      "FIGO",
+      "Sobrevivência ao Câncer",
+      "Terapia Hormonal",
+      "Guidelines"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "neoplasia-trofoblastica-gestacional-o-que-mudou-no-estadiamento-figo-2026",
+    "title": "Neoplasia Trofoblástica Gestacional: O que Mudou no Estadiamento FIGO 2026",
+    "category": "Guidelines",
+    "excerpt": "A FIGO atualizou em 2026 o estadiamento da neoplasia trofoblástica gestacional: novos critérios de hCG, inclusão de metástases linfonodais, criação da categoria de ultra-alto risco e um estadiamento próprio para PSTT/ETT. Veja o que muda na prática.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "NTG",
+      "Neoplasia Trofoblástica Gestacional",
+      "FIGO",
+      "Estadiamento",
+      "Coriocarcinoma",
+      "PSTT",
+      "ETT",
+      "Mola Hidatiforme"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "clampeamento-do-cordao-umbilical-o-que-mudou-nas-recomendacoes-do-rcog",
+    "title": "Clampeamento do Cordão Umbilical: O que Mudou nas Recomendações do RCOG?",
+    "category": "Guidelines",
+    "excerpt": "O RCOG publicou o Scientific Impact Paper nº 78 revisando o clampeamento do cordão umbilical: a decisão não deve ser baseada no relógio, mas na fisiologia da transição neonatal. Veja os tempos recomendados para prematuros e termo, os mitos desmentidos e as situações especiais.",
+    "date": "31/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Clampeamento do Cordão Umbilical",
+      "RCOG",
+      "Transição Neonatal",
+      "Prematuridade",
+      "Reanimação Neonatal",
+      "Terceiro Período do Parto",
+      "Transfusão Placentária"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "acog-os-efeitos-das-mudancas-climaticas-na-saude-obstetrica-e-ginecologica",
+    "title": "ACOG: Os Efeitos das Mudanças Climáticas na Saúde Obstétrica e Ginecológica",
+    "category": "Saúde Pública",
+    "excerpt": "Calor extremo, fumaça de queimadas e poluição do ar estão associados a perda gestacional precoce, parto prematuro, pré-eclâmpsia e natimorto. O ACOG detalha por que a gestante é fisiologicamente mais vulnerável, quais orientações dar no pré-natal e como reduzir a pegada de carbono da própria assistência.",
+    "date": "18/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Mudanças Climáticas",
+      "ACOG",
+      "Saúde Ambiental",
+      "Pré-natal",
+      "Sustentabilidade",
+      "Pré-eclâmpsia",
+      "Parto Prematuro",
+      "Saúde Pública"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "febrasgo-position-statement-tratamento-cirurgico-do-prolapso-apical",
+    "title": "FEBRASGO Position Statement — Tratamento Cirúrgico do Prolapso Apical",
+    "category": "Ginecologia",
+    "excerpt": "Toda cirurgia para prolapso uterino ou de cúpula vaginal deve incluir suspensão apical — histerectomia vaginal isolada não corrige o defeito. Compare indicações, taxas de sucesso e complicações de sacrocolpopexia, fixação uterossacral, sacroespinhal, ileococcígea, Manchester e colpocleise.",
+    "date": "14/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Prolapso Apical",
+      "Uroginecologia",
+      "FEBRASGO",
+      "Sacrocolpopexia",
+      "Histeropexia",
+      "Colpocleise",
+      "Cirurgia de Manchester",
+      "Prolapso de Órgãos Pélvicos"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "febrasgo-position-statement-tratamento-cirurgico-da-endometriose",
+    "title": "FEBRASGO Position Statement — Tratamento Cirúrgico da Endometriose",
+    "category": "Ginecologia",
+    "excerpt": "A cirurgia não cura a endometriose. Veja como a FEBRASGO recomenda individualizar a técnica por fenótipo — endometrioma, doença infiltrativa profunda e peritoneal superficial —, por que a terapia hormonal pós-operatória reduz recorrência em 50–60% e quando evitar reoperações.",
+    "date": "14/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Endometriose",
+      "FEBRASGO",
+      "Endometrioma",
+      "Endometriose Infiltrativa Profunda",
+      "Reserva Ovariana",
+      "Cistectomia",
+      "Terapia Hormonal",
+      "Infertilidade"
+    ],
+    "has_reference": true
+  },
+  {
+    "slug": "acog-atualiza-diretrizes-de-rastreamento-do-cancer-de-colo-do-utero",
+    "title": "ACOG Atualiza Diretrizes de Rastreamento do Câncer de Colo do Útero",
+    "category": "Rastreamento",
+    "excerpt": "Dos 30 aos 65 anos, o teste primário de hrHPV coletado pelo profissional a cada 5 anos passa a ser a estratégia preferencial do ACOG, à frente do co-teste e da citologia isolada. Veja a nova hierarquia, a auto-coleta e quando interromper o rastreamento após os 65 anos.",
+    "date": "14/07/2026",
+    "read_time": 5,
+    "tags": [
+      "Câncer do Colo do Útero",
+      "HPV",
+      "Rastreamento",
+      "ACOG",
+      "Diretrizes",
+      "Citologia",
+      "Auto-coleta",
+      "hrHPV"
+    ],
+    "has_reference": true
+  },
+  {
     "slug": "glp-1-antes-da-gestacao-o-que-as-evidencias-mostram-sobre-os-desfechos-obstetric",
     "title": "GLP-1 antes da gestação: O que as evidências mostram sobre os desfechos obstétricos?",
     "category": "Obstetrícia",
@@ -520,6 +727,24 @@
     "has_reference": true
   },
   {
+    "slug": "ministerio-da-saude-atualiza-recomendacoes-sobre-contato-pele-a-pele",
+    "title": "Ministério da Saúde Atualiza Recomendações Sobre Contato Pele a Pele",
+    "category": "Guidelines",
+    "excerpt": "O Ministério da Saúde publicou a Nota Técnica nº 98/2026 estabelecendo o contato pele a pele imediato e ininterrupto como regra na sala de parto. Veja as mudanças para parto vaginal, cesariana, prematuros estáveis e gemelares.",
+    "date": "14/06/2026",
+    "read_time": 5,
+    "tags": [
+      "contato pele a pele",
+      "recém-nascido",
+      "parto vaginal",
+      "cesariana",
+      "Nota Técnica 98/2026",
+      "Ministério da Saúde",
+      "humanização"
+    ],
+    "has_reference": true
+  },
+  {
     "slug": "sulfato-de-magnesio-no-pos-parto-12h-ou-24h-na-pre-eclampsia-grave",
     "title": "Sulfato de Magnésio no Pós-Parto: 12h ou 24h na Pré-eclâmpsia Grave?",
     "category": "Pré-eclâmpsia",
@@ -629,231 +854,6 @@
       "ANVISA",
       "FEBRASGO",
       "fertilidade"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "ministerio-da-saude-atualiza-recomendacoes-sobre-contato-pele-a-pele",
-    "title": "Ministério da Saúde Atualiza Recomendações Sobre Contato Pele a Pele",
-    "category": "Guidelines",
-    "excerpt": "O Ministério da Saúde publicou a Nota Técnica nº 98/2026 estabelecendo o contato pele a pele imediato e ininterrupto como regra na sala de parto. Veja as mudanças para parto vaginal, cesariana, prematuros estáveis e gemelares.",
-    "date": "14/06/2026",
-    "read_time": 5,
-    "tags": [
-      "contato pele a pele",
-      "recém-nascido",
-      "parto vaginal",
-      "cesariana",
-      "Nota Técnica 98/2026",
-      "Ministério da Saúde",
-      "humanização"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "febrasgo-position-statement-tratamento-cirurgico-do-prolapso-apical",
-    "title": "FEBRASGO Position Statement — Tratamento Cirúrgico do Prolapso Apical",
-    "category": "Ginecologia",
-    "excerpt": "Toda cirurgia para prolapso uterino ou de cúpula vaginal deve incluir suspensão apical — histerectomia vaginal isolada não corrige o defeito. Compare indicações, taxas de sucesso e complicações de sacrocolpopexia, fixação uterossacral, sacroespinhal, ileococcígea, Manchester e colpocleise.",
-    "date": "14/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Prolapso Apical",
-      "Uroginecologia",
-      "FEBRASGO",
-      "Sacrocolpopexia",
-      "Histeropexia",
-      "Colpocleise",
-      "Cirurgia de Manchester",
-      "Prolapso de Órgãos Pélvicos"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "febrasgo-position-statement-tratamento-cirurgico-da-endometriose",
-    "title": "FEBRASGO Position Statement — Tratamento Cirúrgico da Endometriose",
-    "category": "Ginecologia",
-    "excerpt": "A cirurgia não cura a endometriose. Veja como a FEBRASGO recomenda individualizar a técnica por fenótipo — endometrioma, doença infiltrativa profunda e peritoneal superficial —, por que a terapia hormonal pós-operatória reduz recorrência em 50–60% e quando evitar reoperações.",
-    "date": "14/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Endometriose",
-      "FEBRASGO",
-      "Endometrioma",
-      "Endometriose Infiltrativa Profunda",
-      "Reserva Ovariana",
-      "Cistectomia",
-      "Terapia Hormonal",
-      "Infertilidade"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "acog-atualiza-diretrizes-de-rastreamento-do-cancer-de-colo-do-utero",
-    "title": "ACOG Atualiza Diretrizes de Rastreamento do Câncer de Colo do Útero",
-    "category": "Rastreamento",
-    "excerpt": "Dos 30 aos 65 anos, o teste primário de hrHPV coletado pelo profissional a cada 5 anos passa a ser a estratégia preferencial do ACOG, à frente do co-teste e da citologia isolada. Veja a nova hierarquia, a auto-coleta e quando interromper o rastreamento após os 65 anos.",
-    "date": "14/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Câncer do Colo do Útero",
-      "HPV",
-      "Rastreamento",
-      "ACOG",
-      "Diretrizes",
-      "Citologia",
-      "Auto-coleta",
-      "hrHPV"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "acog-os-efeitos-das-mudancas-climaticas-na-saude-obstetrica-e-ginecologica",
-    "title": "ACOG: Os Efeitos das Mudanças Climáticas na Saúde Obstétrica e Ginecológica",
-    "category": "Saúde Pública",
-    "excerpt": "Calor extremo, fumaça de queimadas e poluição do ar estão associados a perda gestacional precoce, parto prematuro, pré-eclâmpsia e natimorto. O ACOG detalha por que a gestante é fisiologicamente mais vulnerável, quais orientações dar no pré-natal e como reduzir a pegada de carbono da própria assistência.",
-    "date": "18/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Mudanças Climáticas",
-      "ACOG",
-      "Saúde Ambiental",
-      "Pré-natal",
-      "Sustentabilidade",
-      "Pré-eclâmpsia",
-      "Parto Prematuro",
-      "Saúde Pública"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "inducao-do-parto-qual-e-o-melhor-metodo-segundo-a-cochrane",
-    "title": "Indução do Parto: Qual é o Melhor Método Segundo a Cochrane?",
-    "category": "Obstetrícia",
-    "excerpt": "Meta-análise em rede da Cochrane com 106 ensaios e 30.348 mulheres comparou 14 métodos de indução do parto: nenhum supera claramente o misoprostol vaginal em eficácia, mas os perfis de segurança fetal — sobretudo risco de hiperestimulação uterina — variam de forma relevante entre as estratégias.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Indução do Parto",
-      "Misoprostol",
-      "Ocitocina",
-      "Cochrane",
-      "Meta-análise em Rede",
-      "Cateter de Balão",
-      "Dinoprostona",
-      "Obstetrícia"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "parceria-com-doulas-em-ambientes-clinicos-o-que-recomenda-a-acog",
-    "title": "Parceria com Doulas em Ambientes Clínicos: O que Recomenda a ACOG?",
-    "category": "Guidelines",
-    "excerpt": "A ACOG publicou o Committee Statement nº 31 (agosto de 2026) recomendando a integração formal de doulas às equipes de assistência obstétrica e ginecológica. Veja o que mostram as evidências, as cinco recomendações práticas e os limites do papel da doula.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Doulas",
-      "ACOG",
-      "Equidade em Saúde",
-      "Trabalho de Parto",
-      "Saúde Materna",
-      "Mortalidade Materna",
-      "Medicaid",
-      "Guidelines"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "hiv-e-prep-o-que-o-ginecologista-precisa-saber-segundo-a-acog",
-    "title": "HIV e PrEP: O que o Ginecologista Precisa Saber Segundo a ACOG",
-    "category": "Guidelines",
-    "excerpt": "A ACOG atualizou suas recomendações sobre rastreamento de HIV e profilaxia pré-exposição (PrEP): ginecologistas devem oferecer testagem a todas as pacientes e prescrever PrEP a quem tiver risco aumentado — ou simplesmente solicitar. Veja os esquemas disponíveis e a monitorização recomendada.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "HIV",
-      "PrEP",
-      "ACOG",
-      "Profilaxia Pré-Exposição",
-      "Rastreamento",
-      "Saúde Sexual",
-      "Equidade em Saúde",
-      "Guidelines"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "agonistas-de-glp-1-alteram-o-ciclo-menstrual-o-que-mostra-a-farmacovigilancia",
-    "title": "Agonistas de GLP-1 Alteram o Ciclo Menstrual? O que Mostra a Farmacovigilância",
-    "category": "Ginecologia",
-    "excerpt": "Análise do banco de farmacovigilância da FDA (FAERS) identificou sinais estatísticos fortes entre agonistas do receptor de GLP-1 e distúrbios menstruais — coágulos, sangramento intenso e ciclos anovulatórios foram os achados mais robustos. Entenda os limites desses dados e o que perguntar na consulta.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "GLP-1",
-      "Farmacovigilância",
-      "FAERS",
-      "Distúrbios Menstruais",
-      "Semaglutida",
-      "Tirzepatida",
-      "Obesidade",
-      "Saúde Reprodutiva"
-    ],
-    "has_reference": false
-  },
-  {
-    "slug": "terapia-hormonal-na-menopausa-apos-cancer-ginecologico-as-recomendacoes-da-figo-",
-    "title": "Terapia Hormonal na Menopausa após Câncer Ginecológico: As Recomendações da FIGO 2026",
-    "category": "Guidelines",
-    "excerpt": "A FIGO publicou um position paper sobre terapia hormonal da menopausa (THM) em sobreviventes de câncer ginecológico: a contraindicação não deve ser generalizada, e a decisão depende da histologia tumoral, do estágio e da sensibilidade hormonal. Veja quem pode e quem não pode receber THM.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "THM",
-      "Menopausa",
-      "Câncer Ginecológico",
-      "FIGO",
-      "Sobrevivência ao Câncer",
-      "Terapia Hormonal",
-      "Guidelines"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "neoplasia-trofoblastica-gestacional-o-que-mudou-no-estadiamento-figo-2026",
-    "title": "Neoplasia Trofoblástica Gestacional: O que Mudou no Estadiamento FIGO 2026",
-    "category": "Guidelines",
-    "excerpt": "A FIGO atualizou em 2026 o estadiamento da neoplasia trofoblástica gestacional: novos critérios de hCG, inclusão de metástases linfonodais, criação da categoria de ultra-alto risco e um estadiamento próprio para PSTT/ETT. Veja o que muda na prática.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "NTG",
-      "Neoplasia Trofoblástica Gestacional",
-      "FIGO",
-      "Estadiamento",
-      "Coriocarcinoma",
-      "PSTT",
-      "ETT",
-      "Mola Hidatiforme"
-    ],
-    "has_reference": true
-  },
-  {
-    "slug": "clampeamento-do-cordao-umbilical-o-que-mudou-nas-recomendacoes-do-rcog",
-    "title": "Clampeamento do Cordão Umbilical: O que Mudou nas Recomendações do RCOG?",
-    "category": "Guidelines",
-    "excerpt": "O RCOG publicou o Scientific Impact Paper nº 78 revisando o clampeamento do cordão umbilical: a decisão não deve ser baseada no relógio, mas na fisiologia da transição neonatal. Veja os tempos recomendados para prematuros e termo, os mitos desmentidos e as situações especiais.",
-    "date": "31/07/2026",
-    "read_time": 5,
-    "tags": [
-      "Clampeamento do Cordão Umbilical",
-      "RCOG",
-      "Transição Neonatal",
-      "Prematuridade",
-      "Reanimação Neonatal",
-      "Terceiro Período do Parto",
-      "Transfusão Placentária"
     ],
     "has_reference": true
   }
