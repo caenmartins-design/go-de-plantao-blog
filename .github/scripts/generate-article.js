@@ -320,7 +320,9 @@ ${description}`
     }]
   });
 
-  const text = response.content[0].text.trim();
+  const textBlock = response.content.find(block => block.type === 'text');
+  if (!textBlock) throw new Error('Claude não retornou nenhum bloco de texto na resposta');
+  const text = textBlock.text.trim();
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Claude não retornou JSON válido:\n' + text);
 
