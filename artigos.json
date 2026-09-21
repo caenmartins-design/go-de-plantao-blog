@@ -1,5 +1,19 @@
 [
   {
+    "slug": "video",
+    "title": "Vídeo",
+    "category": "Ginecologia",
+    "excerpt": "Uma situação clínica inesperada gera a pergunta: você já passou por isso? Reflita sobre como reagiria e compartilhe sua experiência.",
+    "date": "21/09/2026",
+    "read_time": 3,
+    "tags": [
+      "prática clínica",
+      "comunicação médica",
+      "reflexão",
+      "atendimento ao paciente"
+    ]
+  },
+  {
     "slug": "e-ou-nao-e-para-fazer-calcio-na-gestacao",
     "title": "É ou não é para fazer cálcio na gestação?",
     "category": "Obstetrícia",
