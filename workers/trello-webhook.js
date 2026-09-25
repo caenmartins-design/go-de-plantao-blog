@@ -59,6 +59,12 @@ export default {
     }
     const card = await cardResp.json();
 
+    // Cards de vídeo (título começando com "Vídeo") são só para Instagram —
+    // não devem virar artigo no blog.
+    if (/^v[ií]deo\b/i.test((card.name || '').trim())) {
+      return new Response('Card de vídeo — não gera artigo', { status: 200 });
+    }
+
     const content = (card.desc || '').trim();
 
     if (!content) {
