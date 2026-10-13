@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: publish-article
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
