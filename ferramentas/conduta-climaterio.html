@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VEG94VC9YR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VEG94VC9YR');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terapêutica hormonal no climatério — Go de Plantão</title>
+  <meta name="description" content="Ferramenta interativa de apoio à decisão para tratamento do climatério: indicação, contraindicações, escolha de via e esquema da terapêutica hormonal, com composições e nomes comerciais, baseada no Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024 (SOBRAC)." />
+
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#1e1e22" />
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+  <link rel="icon" href="/icons/favicon-16.png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Go de Plantão" />
+
+  <style>
+    :root{
+      --tier-watch:#2f8f5b;  --tier-watch-bg:#e4f3ea;
+      --tier-warn:#b5790a;   --tier-warn-bg:#fbf0d9;
+      --tier-urgent:#c0392b; --tier-urgent-bg:#fbe4e1;
+    }
+
+    /* ---- layout: nav + main ---- */
+    .tool-layout{display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:28px; align-items:start}
+    @media (max-width:900px){ .tool-layout{grid-template-columns:1fr} }
+
+    .tool-main{min-width:0}
+
+    /* ---- aside: special situations + complementary info ---- */
+    .tool-aside{display:flex; flex-direction:column; gap:18px; position:sticky; top:16px; min-width:0}
+    @media (max-width:900px){ .tool-aside{position:static} }
+
+    .aside-block{
+      background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius);
+      padding:16px 16px 14px; box-shadow:var(--shadow-sm);
+    }
+    .aside-block.special{
+      background:var(--magenta-light); border-color:transparent; border-left:4px solid var(--magenta);
+    }
+    .aside-block.feedback{
+      background:var(--azul-light); border-color:transparent; border-left:4px solid var(--azul);
+      box-shadow:var(--shadow-md);
+    }
+    .aside-block h3{
+      font-family:'Anton', sans-serif; font-size:13.5px; font-weight:400; letter-spacing:.8px; text-transform:uppercase;
+      color:var(--magenta); margin-bottom:5px;
+    }
+    .aside-block:not(.special) h3{color:var(--azul)}
+    .aside-block.feedback h3{font-size:15px}
+    .aside-hint{font-size:14px; color:var(--tinta-light); line-height:1.55; margin-bottom:10px}
+
+    .aside-btn{
+      text-align:left; width:100%; border:1px solid transparent; background:var(--white); color:var(--tinta);
+      padding:11px 13px; border-radius:8px; font-size:15px; line-height:1.4; cursor:pointer;
+      display:block; font-family:'Itim', cursive; margin-top:7px; transition:border-color .15s, background .15s;
+    }
+    .aside-block.special .aside-btn{background:rgba(255,255,255,.6)}
+    .aside-block.feedback .aside-btn{
+      background:var(--azul); color:#fff; font-weight:700; text-align:center; padding:13px;
+    }
+    .aside-block.feedback .aside-btn:hover{background:var(--azul-dark); border-color:var(--azul-dark)}
+    .aside-btn:hover{border-color:var(--magenta); background:var(--white)}
+    .aside-btn.active{border-color:var(--magenta); background:var(--white); font-weight:700}
+    .aside-block:not(.special):not(.feedback) .aside-btn{background:var(--gray-50)}
+    .aside-block:not(.special):not(.feedback) .aside-btn:hover{border-color:var(--azul)}
+    .aside-block:not(.special):not(.feedback) .aside-btn.active{border-color:var(--azul); font-weight:700}
+
+    /* ---- module intro ---- */
+    .tool-intro{
+      background:var(--azul-light); border-left:4px solid var(--azul);
+      border-radius:0 var(--radius) var(--radius) 0; padding:20px 24px; margin-bottom:24px;
+    }
+    .tool-intro h1{
+      font-family:'Anton', sans-serif; font-size:27px; font-weight:400; letter-spacing:.5px;
+      color:var(--azul-dark); margin-bottom:10px;
+    }
+    .tool-intro p{color:var(--tinta); font-size:18px; max-width:68ch; line-height:1.65}
+
+    /* ---- breadcrumb / trail ---- */
+    .tool-trail{display:flex; flex-wrap:wrap; gap:6px; padding:0 4px 16px; align-items:center}
+    .tool-trail button.crumb{
+      background:var(--white); border:1px solid var(--gray-200); color:var(--gray-600);
+      border-radius:999px; padding:7px 15px; font-size:14px; cursor:pointer; max-width:280px;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:'Itim', cursive;
+    }
+    .tool-trail button.crumb:hover{border-color:var(--magenta); color:var(--tinta)}
+    .tool-trail .sep{color:var(--gray-600); font-size:13px}
+    .tool-trail button.back{
+      background:var(--azul-light); border:1px solid var(--azul); color:var(--azul-dark);
+      border-radius:999px; padding:7px 16px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Itim', cursive;
+    }
+    .tool-trail button.back:hover{background:var(--azul); color:#fff}
+    .tool-trail button.reset{
+      background:transparent; border:1px dashed var(--gray-200); color:var(--gray-600);
+      border-radius:999px; padding:7px 15px; font-size:14px; cursor:pointer; margin-left:auto; font-family:'Itim', cursive;
+    }
+    .tool-trail button.reset:hover{color:var(--tinta); border-color:var(--gray-600)}
+
+    /* ---- card / node ---- */
+    .card{
+      background:var(--white); border:1px solid var(--gray-200); border-left:4px solid var(--gray-200);
+      border-radius:var(--radius); padding:26px 26px 22px; box-shadow:var(--shadow-sm); margin:0 4px;
+    }
+    .card.tier-watch{border-left-color:var(--tier-watch)}
+    .card.tier-warn{border-left-color:var(--tier-warn)}
+    .card.tier-act{border-left-color:var(--magenta)}
+    .card.tier-urgent{border-left-color:var(--tier-urgent)}
+
+    .tierlabel{
+      display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600;
+      text-transform:uppercase; letter-spacing:.5px; padding:4px 12px; border-radius:99px; margin-bottom:14px;
+    }
+    .tierlabel.ask{background:var(--gray-100); color:var(--gray-600)}
+    .tierlabel.watch{background:var(--tier-watch-bg); color:var(--tier-watch)}
+    .tierlabel.warn{background:var(--tier-warn-bg); color:var(--tier-warn)}
+    .tierlabel.act{background:var(--magenta-light); color:var(--magenta)}
+    .tierlabel.urgent{background:var(--tier-urgent-bg); color:var(--tier-urgent)}
+
+    .card h2{
+      font-family:'Itim', cursive; font-size:23px; font-weight:400; line-height:1.4;
+      color:var(--tinta); margin-bottom:6px;
+    }
+    .card .note{color:var(--gray-600); font-size:16.5px; margin-top:12px; line-height:1.65; max-width:66ch}
+    .card .note b{color:var(--tinta)}
+    .card .altnote{
+      margin-top:16px; padding:13px 16px; background:var(--gray-50); border:1px solid var(--gray-200);
+      border-radius:8px; font-size:15.5px; color:var(--gray-600); line-height:1.6;
+    }
+    .card .refn{font-size:13px; color:var(--gray-600); margin-top:18px; letter-spacing:.3px; opacity:.8}
+
+    .opts{display:flex; flex-direction:column; gap:9px; margin-top:22px}
+    .optbtn{
+      text-align:left; width:100%; background:var(--white); border:1px solid var(--gray-200); color:var(--tinta);
+      border-radius:9px; padding:15px 18px; font-size:16.5px; font-family:'Itim', cursive; cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      transition:border-color .15s, background .15s;
+    }
+    .optbtn:hover{border-color:var(--magenta); background:var(--magenta-light)}
+    .optbtn .arrow{color:var(--gray-600); flex:0 0 auto}
+    .optbtn:hover .arrow{color:var(--magenta)}
+
+    .terminal{
+      margin-top:22px; padding-top:18px; border-top:1px dashed var(--gray-200);
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .terminal .tag{font-family:'Itim', cursive; font-size:15px}
+    .terminal button{
+      background:var(--azul); color:#fff; border:none; border-radius:7px; padding:11px 20px;
+      font-size:15.5px; font-family:'Itim', cursive; cursor:pointer; transition:background .15s;
+    }
+    .terminal button:hover{background:var(--azul-dark)}
+
+    /* reference panel (static module) */
+    .refpanel{display:flex; flex-direction:column; gap:18px; margin:0 4px}
+    .refcard{background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow-sm)}
+    .refcard h3{
+      font-family:'Anton', sans-serif; font-size:20px; font-weight:400; letter-spacing:.5px;
+      color:var(--azul); margin-bottom:10px; padding-bottom:8px; border-bottom:2px solid var(--azul-light);
+    }
+    .refcard p, .refcard li{font-size:16.5px; color:var(--gray-600); line-height:1.7}
+    .refcard ul{margin-top:8px; padding-left:22px}
+    .refcard code{font-family:monospace; font-size:.9em; background:var(--gray-50); padding:1px 6px; border-radius:4px; color:var(--tinta)}
+
+    .tool-colophon{
+      margin:40px 4px 0; padding-top:18px; border-top:1px solid var(--gray-200);
+      font-size:14.5px; color:var(--gray-600); line-height:1.7;
+    }
+
+    /* feedback form */
+    .fbcard{max-width:640px}
+    .fblabel{
+      display:block; font-family:'Itim', cursive; font-size:16px; color:var(--tinta); margin-bottom:9px;
+    }
+    .fbrating{margin-top:20px}
+    .fbrating-btns{display:flex; gap:8px}
+    .fbstar{
+      width:46px; height:46px; border-radius:9px; border:1px solid var(--gray-200); background:var(--gray-50);
+      color:var(--gray-600); font-size:16px; cursor:pointer; transition:border-color .15s, background .15s;
+    }
+    .fbstar:hover{border-color:var(--magenta)}
+    .fbstar.active{background:var(--magenta); border-color:var(--magenta); color:#fff; font-weight:700}
+    .fbfield{margin-top:20px}
+    .fbselect, .fbinput, .fbtextarea{
+      width:100%; background:var(--white); border:1px solid var(--gray-200); border-radius:8px; color:var(--tinta);
+      padding:12px 14px; font-size:15.5px; font-family:'Itim', cursive;
+    }
+    .fbtextarea{resize:vertical; min-height:110px; line-height:1.5}
+    .fbselect:focus, .fbinput:focus, .fbtextarea:focus{outline:2px solid var(--azul); outline-offset:1px; border-color:var(--azul)}
+    .fbactions{display:flex; gap:10px; margin-top:24px; flex-wrap:wrap}
+    .fbsend{
+      background:var(--magenta); color:#fff; border:none; border-radius:8px; padding:12px 20px;
+      font-size:15.5px; font-family:'Itim', cursive; cursor:pointer; transition:background .15s;
+    }
+    .fbsend:hover{background:var(--magenta-dark)}
+    .fbcopy{
+      background:var(--white); color:var(--tinta); border:1px solid var(--gray-200); border-radius:8px; padding:12px 20px;
+      font-size:15.5px; font-family:'Itim', cursive; cursor:pointer;
+    }
+    .fbcopy:hover{border-color:var(--azul)}
+    .fbconfirm{margin-top:16px; padding:11px 14px; background:var(--azul-light); color:var(--azul-dark); border-radius:8px; font-size:14.5px}
+    .fbconfirm.warn{background:var(--tier-warn-bg); color:var(--tier-warn)}
+
+    /* prescription block */
+    .card .rx{margin-top:18px}
+    .card .rx h4{font-family:'Anton', sans-serif; font-weight:400; font-size:15px; letter-spacing:.6px; text-transform:uppercase; color:var(--azul); margin:18px 0 8px}
+    .card .rx h4:first-child{margin-top:4px}
+    .rxwrap{overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--gray-200); border-radius:8px}
+    .refcard .rxwrap{margin:6px 0 10px}
+    .rxt{width:100%; border-collapse:collapse; font-size:15px; line-height:1.45; min-width:480px}
+    .rxt th{background:var(--gray-50); color:var(--tinta); text-align:left; font-weight:600; padding:9px 11px; border-bottom:1px solid var(--gray-200)}
+    .rxt td{padding:9px 11px; border-bottom:1px solid var(--gray-200); color:var(--gray-600); vertical-align:top}
+    .rxt tr:last-child td{border-bottom:none}
+    .rxt td:first-child{color:var(--tinta)}
+    .rxtip{margin-top:10px; padding:11px 14px; background:var(--azul-light); border-radius:8px; font-size:14.5px; color:var(--tinta); line-height:1.55}
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-logo">
+        <img src="../logo.png" alt="Go de Plantão" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="logo-badge" style="display:none">GO</div>
+        <div class="logo-text">
+          <strong>Go de Plantão</strong>
+          <span>Ginecologia &amp; Obstetrícia</span>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <a href="/">Blog</a>
+        <a href="/newsletters.html">Newsletters</a>
+        <a href="/ferramentas/conduta-colo-do-utero.html" style="color:#fff">Ferramentas</a>
+        <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank" rel="noopener">Cursos</a>
+      </nav>
+    </div>
+  </header>
+
+
+  <div class="container">
+
+    <nav class="article-breadcrumb" style="margin-top:28px">
+      <a href="/">Blog</a> › Ferramentas
+    </nav>
+
+    <div class="article-header">
+      <span class="article-category">Ferramenta interativa</span>
+      <h1 class="article-title">Terapêutica hormonal no climatério: da indicação à prescrição</h1>
+      <div class="article-meta">
+        <span>Baseada no Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024 (SOBRAC)</span>
+      </div>
+      <div class="article-divider"></div>
+    </div>
+
+    <div class="tool-layout">
+      <div class="tool-main">
+        <div class="tool-intro" id="modintro"></div>
+        <div class="tool-trail" id="trail"></div>
+        <div id="cardhost"></div>
+      </div>
+      <aside class="tool-aside" id="modnav" aria-label="Populações especiais e consulta rápida"></aside>
+    </div>
+
+    <p class="tool-colophon">
+      Ferramenta de apoio à decisão construída a partir do Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024 (SOBRAC/FEBRASGO). Nomes comerciais e dicas de uso a partir do material "Terapia Hormonal: Prescrição" (L. A. Resende, Gineco Endócrino na Prática). Disponibilidade e apresentações de medicamentos mudam — confira bula e registro na ANVISA antes de prescrever. Não substitui o texto do Consenso nem o julgamento clínico.
+    </p>
+
+  </div>
+
+  <footer class="site-footer">
+    <p><strong>Go de Plantão</strong> — Conteúdo educacional em Ginecologia e Obstetrícia</p>
+    <p style="margin-top:8px">Use o cupom <strong>GODEPLANTAO</strong> nos <a href="https://med.estrategia.com/concursos/cursos/cursos-de-ginecologia-e-obstetricia" target="_blank">cursos do Estratégia MED</a></p>
+  </footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ENGINE
+   Node schema:
+   { title, tier?: 'ask'|'watch'|'warn'|'act'|'urgent', note?, altnote?, ref?,
+     opts?: [ { t, to } ] }
+   'to' may be a plain nodeId within the same module tree, or:
+     "__restart__"        -> restart current module
+     "__module:ID__"       -> jump to module ID's start node
+   Absent/empty opts => terminal node.
+   ============================================================ */
+
+const MODULES = {};
+function registerModule(m){ MODULES[m.id] = m; }
+
+let state = { moduleId: null, path: [] }; // path: [{nodeId, label}]
+
+function currentModule(){ return MODULES[state.moduleId]; }
+function currentNodeId(){
+  const p = state.path;
+  return p.length ? p[p.length-1].nodeId : currentModule().start;
+}
+function currentNode(){
+  const mod = currentModule();
+  return mod.tree[currentNodeId()];
+}
+
+function goModule(id){
+  state.moduleId = id;
+  state.path = [];
+  render();
+  window.scrollTo({top:0, behavior:'instant' in window ? undefined : undefined});
+}
+function choose(to, label){
+  if (to === "__restart__"){ state.path = []; render(); return; }
+  if (to.indexOf("__module:") === 0){
+    const inner = to.slice(9, -2); // strip "__module:" prefix and trailing "__"
+    const parts = inner.split(':'); // "ID" or "ID:nodeId"
+    state.moduleId = parts[0];
+    state.path = parts[1] ? [{ nodeId: parts[1] }] : [];
+    render();
+    return;
+  }
+  state.path.push({ nodeId: to, label: label });
+  render();
+}
+function arrToTree(nodes){
+  const t = {};
+  nodes.forEach(n => { t[n.id] = n; });
+  return t;
+}
+function jumpTrail(idx){
+  state.path = state.path.slice(0, idx);
+  render();
+}
+function back(){
+  if (state.path.length){
+    state.path.pop();
+    render();
+  }
+}
+
+function tierLabel(tier){
+  switch(tier){
+    case 'watch': return 'Conduta / orientação';
+    case 'warn': return 'Atenção — individualizar';
+    case 'act': return 'Prescrição / conduta';
+    case 'urgent': return 'Não iniciar TH sistêmica';
+    default: return 'Pergunta';
+  }
+}
+
+function el(tag, attrs, children){
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    if (k === 'class') e.className = attrs[k];
+    else if (k === 'html') e.innerHTML = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  (children||[]).forEach(c => { if (c) e.appendChild(c); });
+  return e;
+}
+function textEl(tag, cls, text){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  e.textContent = text;
+  return e;
+}
+
+function renderNav(){
+  const nav = document.getElementById('modnav');
+  nav.innerHTML = '';
+  const all = Object.values(MODULES);
+  const special = all.filter(m => m.group === 'Populações especiais');
+  const opiniao = all.filter(m => m.group === 'Sua opinião');
+  const main = all.filter(m => m.group === 'Fluxo principal');
+  const other = all.filter(m => m.group === 'Consulta rápida');
+
+  function block(title, hint, mods, cls){
+    const b = el('div', {class: 'aside-block' + (cls ? ' '+cls : '')});
+    b.appendChild(el('h3', null, [document.createTextNode(title)]));
+    if (hint) b.appendChild(el('p', {class:'aside-hint'}, [document.createTextNode(hint)]));
+    mods.forEach(m => {
+      const btn = el('button', { class: 'aside-btn' + (state.moduleId===m.id ? ' active':''), type:'button' },
+        [ textEl('span', null, m.label) ]);
+      btn.addEventListener('click', ()=> goModule(m.id));
+      b.appendChild(btn);
+    });
+    return b;
+  }
+
+  nav.appendChild(block('Fluxo principal', null, main));
+  nav.appendChild(block('Populações especiais', 'Se alguma se aplica à paciente, comece por aqui — a conduta muda.', special, 'special'));
+  nav.appendChild(block('💬 Sua opinião', 'O que faltou? O que confundiu? Leva menos de 1 minuto.', opiniao, 'feedback'));
+  nav.appendChild(block('Consulta rápida', null, other));
+}
+
+function renderIntro(){
+  const box = document.getElementById('modintro');
+  const mod = currentModule();
+  box.innerHTML = '';
+  box.appendChild(el('h1', null, [document.createTextNode(mod.label)]));
+  if (mod.desc) box.appendChild(el('p', null, [document.createTextNode(mod.desc)]));
+}
+
+function renderTrail(){
+  const trail = document.getElementById('trail');
+  trail.innerHTML = '';
+  const mod = currentModule();
+  const startBtn = el('button', {class:'crumb', type:'button'}, [document.createTextNode('Início · ' + mod.label)]);
+  startBtn.addEventListener('click', ()=> jumpTrail(0));
+  trail.appendChild(startBtn);
+  state.path.forEach((step, i) => {
+    trail.appendChild(textEl('span','sep','→'));
+    const label = step.label || '…';
+    const btn = el('button', {class:'crumb', type:'button', title:label}, [document.createTextNode(label)]);
+    btn.addEventListener('click', ()=> jumpTrail(i+1));
+    trail.appendChild(btn);
+  });
+  if (state.path.length){
+    const backBtn = el('button', {class:'back', type:'button'}, [document.createTextNode('← voltar')]);
+    backBtn.addEventListener('click', back);
+    trail.appendChild(backBtn);
+    const reset = el('button', {class:'reset', type:'button'}, [document.createTextNode('reiniciar módulo')]);
+    reset.addEventListener('click', ()=> jumpTrail(0));
+    trail.appendChild(reset);
+  }
+}
+
+function renderCard(){
+  const host = document.getElementById('cardhost');
+  host.innerHTML = '';
+  const node = currentNode();
+  const tier = node.tier || 'ask';
+  const card = el('div', {class:'card tier-'+tier});
+  card.appendChild(el('div', {class:'tierlabel '+tier}, [document.createTextNode(tierLabel(tier))]));
+  card.appendChild(el('h2', null, [document.createTextNode(node.title)]));
+  if (node.note) card.appendChild(el('p', {class:'note', html: node.note}));
+  if (node.altnote) card.appendChild(el('div', {class:'altnote', html: '<b>Alternativa: </b>' + node.altnote}));
+  if (node.rx) card.appendChild(el('div', {class:'rx', html: node.rx}));
+
+  if (node.opts && node.opts.length){
+    const wrap = el('div', {class:'opts'});
+    node.opts.forEach(o => {
+      const b = el('button', {class:'optbtn', type:'button'}, [
+        textEl('span', null, o.t),
+        textEl('span', 'arrow', o.to && o.to.indexOf('__module:')===0 ? '↷' : '→')
+      ]);
+      b.addEventListener('click', () => choose(o.to, o.t));
+      wrap.appendChild(b);
+    });
+    card.appendChild(wrap);
+  } else {
+    const term = el('div', {class:'terminal'});
+    term.appendChild(textEl('span','tag','fim deste ramo do fluxo'));
+    const btn = el('button', {type:'button'}, [document.createTextNode('Reiniciar módulo')]);
+    btn.addEventListener('click', ()=> jumpTrail(0));
+    term.appendChild(btn);
+    card.appendChild(term);
+  }
+  if (node.ref) card.appendChild(el('div',{class:'refn'}, [document.createTextNode(node.ref)]));
+  host.appendChild(card);
+}
+
+function renderStatic(){
+  document.getElementById('trail').innerHTML = '';
+  const host = document.getElementById('cardhost');
+  host.innerHTML = '';
+  host.appendChild(el('div', {class:'refpanel', html: currentModule().html}));
+}
+
+/* ---- feedback tab ---- */
+const FEEDBACK_ENDPOINT = 'https://godeplantao-feedback.cae-nmartins.workers.dev';
+let feedbackState = { rating: 0, module: '', comment: '', email: '', status: '' };
+
+function buildFeedbackText(){
+  const mod = feedbackState.module && MODULES[feedbackState.module] ? MODULES[feedbackState.module].label : 'Geral / a ferramenta como um todo';
+  const stars = feedbackState.rating ? (feedbackState.rating + '/5') : 'não informado';
+  return 'Feedback — Terapêutica hormonal no climatério\n\n'
+    + 'Nota (1-5): ' + stars + '\n'
+    + 'Parte da ferramenta: ' + mod + '\n'
+    + 'Comentário: ' + (feedbackState.comment.trim() || '(vazio)') + '\n'
+    + (feedbackState.email.trim() ? ('Contato de quem enviou: ' + feedbackState.email.trim() + '\n') : '');
+}
+
+function renderFeedback(){
+  document.getElementById('trail').innerHTML = '';
+  const host = document.getElementById('cardhost');
+  host.innerHTML = '';
+
+  const card = el('div', {class:'card fbcard'});
+  card.appendChild(el('h2', null, [document.createTextNode('O que podemos melhorar?')]));
+  card.appendChild(el('p', {class:'note'}, [document.createTextNode('Leva menos de um minuto e ajuda a priorizar os próximos ajustes. Não existe um banco de dados por trás desta aba: ao enviar, seu aplicativo de e-mail abre com o feedback pronto — ou copie e mande por onde preferir.')]));
+
+  const ratingWrap = el('div', {class:'fbrating'});
+  ratingWrap.appendChild(textEl('span', 'fblabel', 'De 1 a 5, o quanto essa ferramenta ajudou agora?'));
+  const ratingBtns = el('div', {class:'fbrating-btns'});
+  for (let i = 1; i <= 5; i++){
+    const b = el('button', {class:'fbstar' + (feedbackState.rating === i ? ' active' : ''), type:'button'}, [document.createTextNode(String(i))]);
+    b.addEventListener('click', () => { feedbackState.rating = i; render(); });
+    ratingBtns.appendChild(b);
+  }
+  ratingWrap.appendChild(ratingBtns);
+  card.appendChild(ratingWrap);
+
+  const selWrap = el('div', {class:'fbfield'});
+  selWrap.appendChild(textEl('label', 'fblabel', 'Sobre qual parte é o seu feedback?'));
+  const sel = document.createElement('select');
+  sel.className = 'fbselect';
+  const optAll = document.createElement('option');
+  optAll.value = ''; optAll.textContent = 'Geral / a ferramenta como um todo';
+  sel.appendChild(optAll);
+  Object.values(MODULES).forEach(m => {
+    if (m.id === 'feedback') return;
+    const o = document.createElement('option');
+    o.value = m.id; o.textContent = m.label;
+    sel.appendChild(o);
+  });
+  sel.value = feedbackState.module;
+  sel.addEventListener('change', () => { feedbackState.module = sel.value; });
+  selWrap.appendChild(sel);
+  card.appendChild(selWrap);
+
+  const commentWrap = el('div', {class:'fbfield'});
+  commentWrap.appendChild(textEl('label', 'fblabel', 'Comentário (o que funcionou, o que faltou, o que confundiu)'));
+  const ta = document.createElement('textarea');
+  ta.className = 'fbtextarea'; ta.rows = 5; ta.value = feedbackState.comment;
+  ta.placeholder = 'Ex.: na prescrição transdérmica, faltou a opção...';
+  ta.addEventListener('input', () => { feedbackState.comment = ta.value; });
+  commentWrap.appendChild(ta);
+  card.appendChild(commentWrap);
+
+  const emailWrap = el('div', {class:'fbfield'});
+  emailWrap.appendChild(textEl('label', 'fblabel', 'Seu e-mail (opcional, só se quiser resposta)'));
+  const emailInput = document.createElement('input');
+  emailInput.type = 'email'; emailInput.className = 'fbinput'; emailInput.value = feedbackState.email;
+  emailInput.placeholder = 'seuemail@exemplo.com';
+  emailInput.addEventListener('input', () => { feedbackState.email = emailInput.value; });
+  emailWrap.appendChild(emailInput);
+  card.appendChild(emailWrap);
+
+  const actions = el('div', {class:'fbactions'});
+  const sending = feedbackState.status === 'sending';
+  const sendBtn = el('button', {class:'fbsend', type:'button'}, [document.createTextNode(sending ? 'Enviando…' : 'Enviar feedback')]);
+  if (sending) sendBtn.disabled = true;
+  sendBtn.addEventListener('click', () => {
+    if (feedbackState.status === 'sending') return;
+    feedbackState.status = 'sending';
+    render();
+    fetch(FEEDBACK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tool: 'conduta-climaterio',
+        rating: feedbackState.rating || null,
+        moduleLabel: feedbackState.module && MODULES[feedbackState.module] ? MODULES[feedbackState.module].label : '',
+        comment: feedbackState.comment,
+        email: feedbackState.email
+      })
+    })
+      .then(r => { if (!r.ok) throw new Error('bad status'); feedbackState.status = 'sent'; render(); })
+      .catch(() => { feedbackState.status = 'senderror'; render(); });
+  });
+  const copyBtn = el('button', {class:'fbcopy', type:'button'}, [document.createTextNode('Copiar resumo')]);
+  copyBtn.addEventListener('click', () => {
+    const text = buildFeedbackText();
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(
+        () => { feedbackState.status = 'copied'; render(); },
+        () => { feedbackState.status = 'copyfail'; render(); }
+      );
+    } else {
+      feedbackState.status = 'copyfail'; render();
+    }
+  });
+  actions.appendChild(sendBtn);
+  actions.appendChild(copyBtn);
+  card.appendChild(actions);
+
+  if (feedbackState.status === 'sent'){
+    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Feedback enviado, muito obrigado! Ele já foi registrado e vai ajudar a melhorar a ferramenta.')]));
+  } else if (feedbackState.status === 'senderror'){
+    card.appendChild(el('p', {class:'fbconfirm warn'}, [document.createTextNode('Não consegui enviar agora. Tente de novo em instantes ou use "Copiar resumo" e mande por e-mail/WhatsApp.')]));
+  } else if (feedbackState.status === 'copied'){
+    card.appendChild(el('p', {class:'fbconfirm'}, [document.createTextNode('Resumo copiado! Cole onde preferir (e-mail, WhatsApp etc.).')]));
+  } else if (feedbackState.status === 'copyfail'){
+    card.appendChild(el('p', {class:'fbconfirm warn'}, [document.createTextNode('Não consegui copiar automaticamente — selecione o texto do comentário manualmente.')]));
+  }
+
+  host.appendChild(card);
+}
+
+function render(){
+  renderNav();
+  renderIntro();
+  if (currentModule().type === 'static'){ renderStatic(); }
+  else if (currentModule().type === 'feedback'){ renderFeedback(); }
+  else { renderTrail(); renderCard(); }
+}
+
+/* theme toggle: cycles auto -> light -> dark -> auto, stamping data-theme on <html> */
+
+/* ============================================================
+   CLIMATÉRIO — helpers de prescrição
+   Fonte das condutas: Consenso Brasileiro de Terapêutica Hormonal do
+   Climatério 2024 (SOBRAC). Nomes comerciais: material "TH Prescrição"
+   (L. A. Resende, Gineco Endócrino na Prática) + lista complementar.
+   ============================================================ */
+function T(head, rows){
+  return '<div class="rxwrap"><table class="rxt"><thead><tr>' + head.map(h => '<th>'+h+'</th>').join('') +
+    '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => '<td>'+c+'</td>').join('') + '</tr>').join('') +
+    '</tbody></table></div>';
+}
+function H(t){ return '<h4>'+t+'</h4>'; }
+function TIP(t){ return '<div class="rxtip">'+t+'</div>'; }
+
+const TIPS_ORAL = TIP('<b>Via oral:</b> tomar à noite (possível efeito sedativo do progestagênio) e não em jejum (efeitos gastrointestinais do estrogênio). Boa adaptação prévia a um contraceptivo pode orientar a escolha do progestagênio (ex.: usava COC com drospirenona → TH com drospirenona).');
+const TIPS_ADESIVO = TIP('<b>Adesivo:</b> nunca sobre as mamas; pele limpa, seca, sem cremes, com poucos pelos e pouco atrito da roupa; trocar o local a cada troca; fixar dias da semana (ex.: segunda e quinta).');
+const TIPS_GEL = TIP('<b>Gel:</b> aplicar após o banho em pele limpa, seca e sem cremes (braços, ombros, abdome ou face interna das coxas — nunca nas mamas); não espalhar excessivamente.');
+
+const PG_ISOLADOS = T(
+  ['Progestagênio', 'Nome comercial (apresentação)', 'Sequencial (12–14 dias/mês)', 'Contínuo (todo dia)'],
+  [
+    ['<b>Progesterona micronizada</b> — oral ou vaginal', 'Utrogestan®, Junno®, Gynpro® (cáps. 100 e 200 mg)', '200–300 mg/dia', '100–200 mg/dia'],
+    ['<b>Didrogesterona</b>', 'Duphaston® (cp 10 mg)', '10–20 mg/dia', '5–10 mg/dia'],
+    ['Acetato de nomegestrol', 'Lutenil® (cp 5 mg)', '5 mg/dia', '2,5 mg/dia'],
+    ['Acetato de medroxiprogesterona', 'Provera® (cp 10 mg; há genéricos de 2,5/5 mg)', '5–10 mg/dia', '2,5 mg/dia'],
+    ['Noretisterona (NET/NETA)', 'disponível associada ao estradiol (ver produtos combinados)', '1 mg/dia', '0,5 mg/dia'],
+    ['Acetato de clormadinona', '—', '10 mg/dia', '5 mg/dia'],
+    ['Drospirenona', 'disponível associada ao estradiol (Angeliq®)', '—', '2 mg/dia'],
+    ['<b>DIU de levonorgestrel 52 mg</b>', 'Mirena®', 'proteção endometrial com qualquer estrogênio sistêmico', '']
+  ]) +
+  TIP('Doses: Consenso SOBRAC 2024, Tabela 2. A dose do progestagênio deve ser adaptada à dose do estrogênio e ao IMC. <b>Progesterona micronizada e didrogesterona</b> parecem associar-se a menor risco de câncer de mama e de TEV que os demais progestagênios (B). A progesterona micronizada pode ser usada por via vaginal (mesma dose e duração) se houver efeitos colaterais pela via oral. Progestagênio em <b>gel transdérmico</b> não tem evidência para proteção endometrial (D).');
+
+/* ============================================================
+   MODULE: inicial — fluxo principal
+   ============================================================ */
+registerModule({
+  id:'inicial', group:'Fluxo principal', label:'Avaliação e prescrição da TH — comece aqui',
+  desc:'Mulher na peri ou pós-menopausa com queixas climatéricas. Responda em sequência: indicação → contraindicações → janela de oportunidade → risco cardiovascular → útero → esquema. No final, a prescrição com composições e nomes comerciais.',
+  start:'in0',
+  tree:{
+    in0:{ title:'Qual a principal indicação / queixa?', opts:[
+      {t:'Sintomas vasomotores (fogachos, sudorese noturna) moderados a graves — com ou sem sintomas genitais', to:'ci0'},
+      {t:'Apenas sintomas geniturinários (ressecamento, dispareunia, urgência, ITU de repetição)', to:'__module:sgm__'},
+      {t:'Prevenção ou tratamento de osteoporose', to:'in_osso'},
+      {t:'Menopausa antes dos 40 anos (IOP) ou ooforectomia bilateral antes da idade da menopausa', to:'__module:iop__'},
+      {t:'Queixa principal de desejo sexual hipoativo', to:'__module:sexual__'},
+      {t:'Assintomática — quer TH para "prevenir" doença cardiovascular, demência ou envelhecimento', to:'in_semind'}
+    ]},
+    in_semind:{ title:'Sem indicação formal de TH.', tier:'warn',
+      note:'A TH está indicada para sintomas vasomotores moderados a graves, prevenção da osteoporose, sintomas vulvovaginais moderados a graves e hipoestrogenismo por IOP, hipogonadismo ou ooforectomia bilateral. <b>Não é recomendada</b> para melhorar a cognição ou prevenir demência após os 65 anos (A); reduz a incidência de DM2, mas não é aprovada para esse fim (A); não há evidência para uso com finalidade cosmética na pele/cabelos (D).',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 4 (cognição, Concl. I; pele, Concl. V); Cap. 6, Concl. III' },
+    in_osso:{ title:'A TH é opção para prevenção e tratamento da osteoporose até os 60 anos ou nos primeiros 10 anos de pós-menopausa.', tier:'act',
+      note:'A TH previne a perda óssea com efeito dose-dependente (A) e, em <b>doses convencionais</b>, reduz fraturas mesmo em mulheres de baixo risco (A) — para baixas doses não há dados de redução de fratura. Indicada sobretudo com sintomas climatéricos e alto risco de fratura, quando há intolerância ou contraindicação a outras terapias antiosteoporose (D). Uso prolongado é opção na baixa massa óssea, mesmo sem sintomas, quando alternativas não forem apropriadas (D). A <b>tibolona</b> aumenta a DMO e reduz fraturas (A — LIFT, 1,25 mg/dia), mas aumentou AVC em mulheres de 60–85 anos. Ao suspender a TH, a perda óssea é rápida, mas sem excesso de fraturas (A).',
+      ref:'SOBRAC 2024 · Cap. 3, Concl. V–X',
+      opts:[ {t:'Seguir para avaliação de contraindicações', to:'ci0'} ] },
+
+    /* ---- contraindicações ---- */
+    ci0:{ title:'Há alguma contraindicação à TH sistêmica (oral ou transdérmica)?',
+      note:'Antes de iniciar: anamnese e exame físico completos (A), <b>rastreamento mamográfico em dia</b> (A), colesterol total, HDL, triglicérides e glicemia de jejum (B). USTV <b>não</b> é rotina — só se houver sangramento anormal.',
+      ref:'SOBRAC 2024 · Cap. 1, Concl. I–III',
+      opts:[
+        {t:'Nenhuma contraindicação', to:'jan0'},
+        {t:'Sangramento vaginal sem explicação', to:'ci_sangra'},
+        {t:'Câncer de mama atual ou prévio (ou outro câncer sensível ao estrogênio)', to:'__module:mama__'},
+        {t:'Câncer de endométrio ou de ovário prévio', to:'__module:oncogine__'},
+        {t:'Doença coronariana, IAM ou AVC', to:'ci_cv'},
+        {t:'TEV prévio, ou trombofilia hereditária / alto risco tromboembólico', to:'ci_tev'},
+        {t:'Doença hepática', to:'ci_figado'},
+        {t:'Outras: LES ativo, porfiria, meningioma', to:'ci_outras'},
+        {t:'Sem contraindicação, mas a paciente prefere não usar hormônio', to:'__module:naohormonal__'}
+      ] },
+    ci_sangra:{ title:'Não iniciar TH antes de esclarecer o sangramento: investigar com ultrassonografia transvaginal (e prosseguir conforme achados).', tier:'urgent',
+      note:'Sangramento vaginal inexplicado é contraindicação à TH até que a causa seja definida. Se o sangramento surgir <b>durante</b> a TH, a investigação também é feita com USTV.',
+      ref:'SOBRAC 2024 · Cap. 1 (contraindicações e propedêutica)',
+      opts:[ {t:'Investigação concluída, causa benigna e tratada — seguir', to:'jan0'} ] },
+    ci_cv:{ title:'TH sistêmica contraindicada — tratar os sintomas com terapias não hormonais.', tier:'urgent',
+      note:'Doença coronariana, IAM e AVC constam entre as contraindicações à TH oral e transdérmica. Sintomas geniturinários podem ser tratados com estrogênio vaginal em baixa dose (absorção sistêmica mínima; não aumenta TEV — D).',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 6, Concl. XI',
+      opts:[ {t:'Tratamento não hormonal dos fogachos', to:'__module:naohormonal__'}, {t:'Tratamento da síndrome geniturinária', to:'__module:sgm__'} ] },
+    ci_tev:{ title:'TH sistêmica contraindicada — tratar os sintomas com terapias não hormonais.', tier:'urgent',
+      note:'O Consenso lista TEV prévio e história pessoal ou alto risco de doença tromboembólica hereditária como contraindicação à TH oral <b>e</b> transdérmica. Os dados observacionais de neutralidade do estradiol transdérmico (B) não foram obtidos nessa população. Estrogênio vaginal não aumenta o risco de TEV (D).',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 6, Concl. VII–XI',
+      opts:[ {t:'Tratamento não hormonal dos fogachos', to:'__module:naohormonal__'}, {t:'Tratamento da síndrome geniturinária', to:'__module:sgm__'} ] },
+    ci_figado:{ title:'TH sistêmica contraindicada na doença hepática — preferir terapias não hormonais.', tier:'urgent',
+      note:'Doença hepática consta entre as contraindicações do Consenso. O material didático de referência especifica <b>doença hepática descompensada</b>; em hepatopatia compensada, a decisão deve ser individualizada (evitar a via oral pela primeira passagem hepática).',
+      ref:'SOBRAC 2024 · Cap. 1',
+      opts:[ {t:'Tratamento não hormonal dos fogachos', to:'__module:naohormonal__'} ] },
+    ci_outras:{ title:'Contraindicações citadas no material didático (não listadas no Consenso SOBRAC 2024).', tier:'warn',
+      note:'<b>LES ativo</b> e <b>porfiria</b>: contraindicam a TH. <b>Meningioma</b>: contraindica os progestagênios (em mulher com útero, isso inviabiliza a TH combinada convencional). Contraindicações relativas: tabagismo (evitar a via oral), endometriose (risco de reativação — usar esquema combinado mesmo sem útero), enxaqueca, leiomiomas, HAS e DM descompensados (compensar antes de iniciar).',
+      ref:'Resende LA. TH: base teórica (Gineco Endócrino na Prática)',
+      opts:[ {t:'Tratamento não hormonal dos fogachos', to:'__module:naohormonal__'}, {t:'Contraindicação apenas relativa — seguir avaliando', to:'jan0'} ] },
+
+    /* ---- janela de oportunidade ---- */
+    jan0:{ title:'Idade e tempo desde a menopausa (janela de oportunidade):',
+      note:'A janela começa com os sintomas da transição (muitas vezes antes da menopausa) e vai até <b>10 anos após a menopausa</b>; se a data da menopausa for desconhecida, até os <b>60 anos</b> (A). Dentro dela, a TH deve ser iniciada o quanto antes (A).',
+      ref:'SOBRAC 2024 · Cap. 10, Concl. II–IV',
+      opts:[
+        {t:'Transição menopausal ou até 10 anos de pós-menopausa (ou < 60 anos)', to:'cv0'},
+        {t:'Mais de 60 anos e mais de 10 anos de menopausa, sem TH atual', to:'jan_fora'},
+        {t:'Mais de 65 anos, com útero', to:'jan_65'},
+        {t:'Já usa TH e quer saber até quando manter', to:'__module:duracao__'}
+      ] },
+    jan_fora:{ title:'Preferir inicialmente métodos não hormonais.', tier:'warn',
+      note:'Fora da janela, o início de TH associa-se a possível aumento de eventos cardiovasculares (A). Se, após decisão compartilhada, a TH for usada após os 60 anos: <b>via transdérmica, baixa dose de estrogênio</b> e, se houver útero, <b>progesterona natural</b> (menor risco tromboembólico — B).',
+      ref:'SOBRAC 2024 · Cap. 10, Concl. VIII–IX; Cap. 6, Concl. I',
+      opts:[
+        {t:'Tratamento não hormonal', to:'__module:naohormonal__'},
+        {t:'Sintomas refratários — decisão compartilhada de usar TH (transdérmica, baixa dose)', to:'ut_td'}
+      ] },
+    jan_65:{ title:'Discutir métodos alternativos antes de iniciar TH combinada.', tier:'warn',
+      note:'Acima dos 65 anos, com útero, o início de TH combinada associa-se a possível aumento do risco de demência (A).',
+      ref:'SOBRAC 2024 · Cap. 10, Concl. X',
+      opts:[ {t:'Tratamento não hormonal', to:'__module:naohormonal__'} ] },
+
+    /* ---- risco cardiovascular e escolha da via ---- */
+    cv0:{ title:'Risco cardiovascular (Escore de Risco Global de Framingham):',
+      note:'A SBC sugere o Escore Global de Framingham para mulheres brasileiras; ele usa idade, PA, tabagismo, diabetes, colesterol total e HDL.',
+      altnote:'o material didático de referência (FEBRASGO 2018) usa a calculadora ASCVD 2013: risco < 5% → qualquer via; 5–10% → preferir transdérmica; > 10% → contraindica a TH.',
+      ref:'SOBRAC 2024 · Cap. 1 (propedêutica)',
+      opts:[
+        {t:'Baixo', to:'fr0'},
+        {t:'Intermediário', to:'cv_inter'},
+        {t:'Alto', to:'cv_alto'}
+      ] },
+    cv_inter:{ title:'Preferir a via transdérmica.', tier:'act',
+      note:'Mulheres com risco cardiovascular intermediário possivelmente têm maior benefício com estradiol transdérmico.',
+      ref:'SOBRAC 2024 · Cap. 1',
+      opts:[ {t:'Seguir — via transdérmica', to:'ut_td'} ] },
+    cv_alto:{ title:'Iniciar com terapias não hormonais.', tier:'urgent',
+      note:'Para alto risco cardiovascular, o Consenso sugere o uso inicial de terapias não hormonais. O risco de evento cardiovascular aumenta quando a TH é iniciada em mulheres com risco cardiovascular elevado (A).',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 6, Concl. I',
+      opts:[ {t:'Tratamento não hormonal', to:'__module:naohormonal__'} ] },
+    fr0:{ title:'A paciente tem algum destes fatores?',
+      note:'Hipertensão arterial · obesidade · triglicérides > 400 mg/dL · síndrome metabólica ou DM2 · risco tromboembólico aumentado · outros riscos metabólicos/cardiovasculares · tabagismo · doença biliar.',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 6, Concl. IV–V',
+      opts:[
+        {t:'Sim, pelo menos um', to:'fr_sim'},
+        {t:'Não — mulher saudável', to:'fr_nao'}
+      ] },
+    fr_sim:{ title:'Via transdérmica (adesivo ou gel) é a preferida.', tier:'act',
+      note:'Evitar a primeira passagem hepática reduz o impacto em triglicérides, sistema renina-angiotensina e fatores de coagulação. Com TG > 400 mg/dL a via transdérmica é a mais apropriada mesmo com baixo risco cardiovascular. Na SM/DM2 sem doença cardiovascular estabelecida, estradiol transdérmico pode ser usado (B). <b>HAS descompensada:</b> compensar antes de iniciar.',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 6, Concl. IV–V, VIII',
+      opts:[ {t:'Seguir — via transdérmica', to:'ut_td'} ] },
+    fr_nao:{ title:'Para mulheres saudáveis, qualquer via é adequada. Qual a preferência?',
+      note:'A oral é a mais usada (facilidade e custo). A transdérmica tem nível sérico mais estável e é neutra em TG, PA e coagulação, mas custa mais e pode irritar a pele.',
+      ref:'SOBRAC 2024 · Cap. 1',
+      opts:[
+        {t:'Via oral', to:'ut_oral'},
+        {t:'Via transdérmica (adesivo ou gel)', to:'ut_td'}
+      ] },
+
+    /* ---- útero ---- */
+    ut_oral:{ title:'A paciente tem útero?', opts:[
+      {t:'Não (histerectomizada), sem história de endometriose', to:'rx_oral_e'},
+      {t:'Não, mas com história de endometriose', to:'esq_oral'},
+      {t:'Sim', to:'esq_oral'}
+    ]},
+    ut_td:{ title:'A paciente tem útero?', opts:[
+      {t:'Não (histerectomizada), sem história de endometriose', to:'rx_td_e'},
+      {t:'Não, mas com história de endometriose', to:'esq_td'},
+      {t:'Sim', to:'esq_td'}
+    ]},
+
+    /* ---- esquema ---- */
+    esq_oral:{ title:'Esquema combinado: contínuo ou sequencial?',
+      note:'Com útero, o progestagênio é obrigatório para proteção endometrial (A). <b>Contínuo</b> (estrogênio + progestagênio todo dia): amenorreia, proteção endometrial superior; preferido na pós-menopausa estabelecida, endometriose ou sintomas pré-menstruais. <b>Sequencial</b> (progestagênio 12–14 dias/mês — menos de 10 dias aumenta o risco de hiperplasia): na transição menopausal, quando a mulher aceita/deseja sangramento cíclico ou tem spotting no contínuo.',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 2, Concl. I–III',
+      opts:[
+        {t:'Contínuo', to:'rx_oral_cont'},
+        {t:'Sequencial (cíclico)', to:'rx_oral_seq'},
+        {t:'Proteção endometrial com DIU de levonorgestrel', to:'rx_diu'},
+        {t:'Considerar tibolona (pós-menopausa estabelecida)', to:'rx_tibolona'}
+      ] },
+    esq_td:{ title:'Esquema combinado: contínuo ou sequencial?',
+      note:'Com útero, o progestagênio é obrigatório (A). <b>Contínuo:</b> amenorreia, proteção endometrial superior. <b>Sequencial:</b> progestagênio 12–14 dias/mês, para a transição menopausal ou quando há spotting no contínuo. Com estradiol transdérmico, o progestagênio pode vir no próprio adesivo (noretisterona) ou por outra via — oral, vaginal ou DIU-LNG.',
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 2, Concl. I–V',
+      opts:[
+        {t:'Contínuo', to:'rx_td_cont'},
+        {t:'Sequencial (cíclico)', to:'rx_td_seq'},
+        {t:'Proteção endometrial com DIU de levonorgestrel', to:'rx_diu'}
+      ] },
+
+    /* ---- PRESCRIÇÕES ---- */
+    rx_oral_e:{ title:'Prescrição: estrogênio isolado, via oral, uso contínuo.', tier:'act',
+      note:'Iniciar com a menor dose efetiva e ajustar pela resposta (D). Sem útero não se associa progestagênio (exceto endometriose).',
+      rx: H('Opções') + T(['Fármaco', 'Nome comercial', 'Apresentação', 'Posologia'], [
+          ['17β-estradiol', 'Natifa®', 'cp 1 mg', '1 cp/dia, contínuo'],
+          ['Valerato de estradiol', 'Primogyna®', 'cp 1 mg ou 2 mg', '1 cp/dia, contínuo'],
+          ['Estrogênios conjugados', 'Menoprin®', 'cp 0,625 mg', '1 cp/dia — <i>o Consenso 2024 indica EEC como não disponível comercialmente; confirmar disponibilidade</i>']
+        ]) +
+        H('Doses (Consenso, Tabela 1)') + T(['', 'Ultrabaixa', 'Baixa', 'Convencional', 'Alta'], [
+          ['17β-estradiol oral', '0,5 mg', '1 mg', '2 mg', '> 2 mg'],
+          ['Valerato de estradiol', '—', '1 mg', '2 mg', '> 2 mg']
+        ]) + TIPS_ORAL,
+      ref:'SOBRAC 2024 · Cap. 1 (Tabela 1); Cap. 2, Concl. I',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_td_e:{ title:'Prescrição: estradiol transdérmico isolado, uso contínuo.', tier:'act',
+      note:'Iniciar com a menor dose efetiva. Sem útero não se associa progestagênio (exceto endometriose).',
+      rx: H('Adesivos') + T(['Nome comercial', 'Liberação', 'Posologia'], [
+          ['Systen®', '25 ou 50 mcg/dia', 'trocar 2×/semana'],
+          ['Estradot®', '25, 50 ou 100 mcg/dia', 'trocar 2×/semana']
+        ]) +
+        H('Géis') + T(['Nome comercial', 'Apresentação', 'Posologia'], [
+          ['Sandrena®', 'sachê 0,5 mg ou 1 mg de estradiol', '1 sachê/dia'],
+          ['Oestrogel®', 'gel 0,06% — 0,75 mg de estradiol por pump', '1–2 pumps/dia'],
+          ['Estreva®', 'gel 0,1% — 0,5 mg de estradiol por dose', '1–3 doses/dia']
+        ]) +
+        H('Doses (Consenso, Tabela 1)') + T(['', 'Ultrabaixa', 'Baixa', 'Convencional', 'Alta'], [
+          ['Adesivo', '14 mcg*', '25 mcg', '50 mcg', '100 mcg'],
+          ['Gel', '0,5 mg', '0,75–1 mg', '1,5 mg', '3 mg']
+        ]) + TIP('* não disponível no Brasil.') + TIPS_ADESIVO + TIPS_GEL,
+      ref:'SOBRAC 2024 · Cap. 1 (Tabela 1); Cap. 2, Concl. I',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_oral_cont:{ title:'Prescrição: TH combinada oral, esquema contínuo.', tier:'act',
+      note:'1 comprimido ao dia, sem pausa. Sangramento irregular é comum nos primeiros meses; se persistir além disso, investigar com USTV.',
+      rx: H('Produtos combinados') + T(['Nome comercial', 'Estrogênio', 'Progestagênio', 'Observação'], [
+          ['Natifa Pro®', 'estradiol 1 mg', 'noretisterona 0,5 mg', ''],
+          ['Natifa Pro UBD®', 'estradiol 0,5 mg', 'noretisterona 0,1 mg', 'ultrabaixa dose'],
+          ['Suprelle®', 'estradiol 1 mg', 'noretisterona 0,5 mg', ''],
+          ['Suprema®', 'estradiol 2 mg', 'noretisterona 1 mg', 'dose convencional'],
+          ['<b>Femoston Conti®</b>', 'estradiol 1 mg', '<b>didrogesterona 5 mg</b>', 'progestagênio de perfil neutro'],
+          ['Angeliq®', 'estradiol 1 mg', 'drospirenona 2 mg', 'antiandrogênico/antimineralocorticoide'],
+          ['Ceci®', 'estradiol 1 mg', 'drospirenona 2 mg', '']
+        ]) +
+        H('Ou montar: estrogênio oral + progestagênio isolado') +
+        TIP('Natifa® ou Primogyna® (1 cp/dia) + um progestagênio da tabela abaixo, na coluna "contínuo".') + PG_ISOLADOS + TIPS_ORAL,
+      ref:'SOBRAC 2024 · Cap. 1 (Tabela 2); Cap. 2; Cap. 6, Concl. X; Cap. 7, Concl. II',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_oral_seq:{ title:'Prescrição: TH combinada oral, esquema sequencial.', tier:'act',
+      note:'Estrogênio contínuo e progestagênio por 12–14 dias de cada ciclo (menos de 10 dias aumenta o risco de hiperplasia). Sangramento de privação esperado ao final da fase com progestagênio.',
+      rx: H('Produtos sequenciais') + T(['Nome comercial', 'Composição', 'Progestagênio', 'Posologia'], [
+          ['<b>Femoston 1/10®</b>', '28 cp: estradiol 1 mg; 14 deles com didrogesterona', '<b>didrogesterona 10 mg</b>', '1 cp/dia, sem pausa entre cartelas'],
+          ['Cicloprimogyna®', '21 cp: valerato de estradiol 2 mg (11) / + levonorgestrel 0,25 mg (10)', 'levonorgestrel 0,25 mg', '21 dias + pausa de 7 dias'],
+          ['Climene®', '21 cp: valerato de estradiol 2 mg (11) / + ciproterona 1 mg (10)', 'acetato de ciproterona 1 mg', '21 dias + pausa de 7 dias']
+        ]) +
+        TIP('Composição de Cicloprimogyna® e Climene® conforme bula; o material de referência cita "estradiol 1 mg" — conferir a apresentação vigente. Na pausa de 7 dias pode haver retorno de fogachos; nesse caso, preferir esquema sem pausa.') +
+        H('Ou montar: estrogênio oral contínuo + progestagênio 12–14 dias/mês') +
+        TIP('Ex.: Natifa® 1 mg/dia contínuo + progesterona micronizada 200 mg/dia do 1º ao 12º–14º dia de cada mês (ou didrogesterona 10 mg/dia no mesmo período).') + PG_ISOLADOS + TIPS_ORAL,
+      ref:'SOBRAC 2024 · Cap. 1 (Tabela 2, doses e duração do progestagênio)',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_td_cont:{ title:'Prescrição: estradiol transdérmico + progestagênio, esquema contínuo.', tier:'act',
+      note:'Opção preferida com fatores de risco cardiovascular/tromboembólico, após os 60 anos e no uso prolongado: estradiol transdérmico + <b>progesterona micronizada</b> (D/B).',
+      rx: H('Adesivos combinados (estradiol + noretisterona)') + T(['Nome comercial', 'Liberação diária', 'Posologia'], [
+          ['Systen Conti®', 'estradiol 50 mcg + noretisterona 170 mcg', 'trocar 2×/semana'],
+          ['Estalis®', 'estradiol 50 mcg + noretisterona 140 mcg', 'trocar 2×/semana']
+        ]) +
+        H('Ou montar: estradiol transdérmico + progestagênio por outra via') +
+        TIP('Adesivo (Systen®/Estradot®) ou gel (Sandrena®/Oestrogel®/Estreva®) + <b>progesterona micronizada 100–200 mg/dia</b> à noite, oral ou vaginal (Utrogestan®, Junno®, Gynpro®) — ou outro progestagênio da tabela, coluna "contínuo" — ou DIU-LNG 52 mg.') + PG_ISOLADOS + TIPS_ADESIVO + TIPS_GEL,
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 2, Concl. III–V; Cap. 10, Concl. VI, IX',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_td_seq:{ title:'Prescrição: estradiol transdérmico + progestagênio, esquema sequencial.', tier:'act',
+      note:'Estradiol transdérmico contínuo e progestagênio por 12–14 dias de cada mês.',
+      rx: H('Adesivo sequencial') + T(['Nome comercial', 'Composição', 'Posologia'], [
+          ['Systen Sequi®', '8 adesivos de estradiol 50 mcg/dia; os 4 últimos com noretisterona 170 mcg/dia', 'trocar 2×/semana, na ordem da cartela']
+        ]) +
+        H('Ou montar') +
+        TIP('Adesivo ou gel de estradiol contínuo + <b>progesterona micronizada 200 mg/dia</b> (oral ou vaginal) por 12–14 dias/mês — ou didrogesterona 10 mg/dia no mesmo período.') + PG_ISOLADOS + TIPS_ADESIVO + TIPS_GEL,
+      ref:'SOBRAC 2024 · Cap. 1 (Tabela 2)',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_diu:{ title:'Prescrição: qualquer estrogênio sistêmico + DIU de levonorgestrel 52 mg.', tier:'act',
+      note:'O SIU-LNG 52 mg é efetivo na proteção endometrial em pós-menopáusicas usando estrogênio (A). Na transição menopausal tem a vantagem de ser contraceptivo. O risco de câncer de mama parece inferior ou equivalente ao das demais TH combinadas (dados controversos).',
+      rx: T(['Componente', 'Opções'], [
+          ['Proteção endometrial', '<b>Mirena®</b> (levonorgestrel 52 mg) — o material de referência considera 5 anos de proteção com qualquer dose, tipo e via de estradiol'],
+          ['Estrogênio oral', 'Natifa® 1 mg ou Primogyna® 1–2 mg, 1 cp/dia contínuo'],
+          ['Estrogênio transdérmico', 'Systen® / Estradot® (adesivo, 2×/semana) ou Sandrena® / Oestrogel® / Estreva® (gel diário)']
+        ]),
+      ref:'SOBRAC 2024 · Cap. 1; Cap. 2, Concl. V',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] },
+
+    rx_tibolona:{ title:'Prescrição: tibolona (pós-menopausa estabelecida).', tier:'act',
+      note:'Molécula derivada da noretisterona com ações estrogênica, progestagênica e androgênica — não precisa de progestagênio associado. Eficácia antifratura comprovada (LIFT, 1,25 mg). Não aumentou TEV em ensaios randomizados (B); não aumenta a densidade mamográfica. Efeito no câncer de mama inconclusivo (B) e <b>contraindicada</b> com antecedente de câncer de mama (A). No LIFT (60–85 anos) aumentou AVC. O material de referência a considera de segunda linha, útil no desejo sexual hipoativo e no alto risco de fratura.',
+      rx: T(['Dose', 'Nomes comerciais', 'Posologia'], [
+          ['1,25 mg', 'Libiam®, Reduclim®', '1 cp/dia, contínuo'],
+          ['2,5 mg', 'Libiam®, Reduclim®, Clindella®, Livial®, Tibial®, Tiboclin®', '1 cp/dia, contínuo']
+        ]),
+      ref:'SOBRAC 2024 · Cap. 3; Cap. 6, Concl. IX; Cap. 7, Concl. VI, VIII–IX',
+      opts:[ {t:'Seguimento e duração da TH', to:'__module:duracao__'} ] }
+  }
+});
+
+/* ============================================================
+   MODULE: sgm — síndrome geniturinária
+   ============================================================ */
+const SGM_RX = H('Estrogênios vaginais') + T(['Fármaco', 'Nome comercial', 'Característica'], [
+    ['Estriol creme 1 mg/g', 'Stele®, Ovestrion®', 'mais barato; absorção sistêmica um pouco maior'],
+    ['Promestrieno creme 10 mg/g', 'Antrofi®, Coltrieno®, Promim®, Avestria®', 'absorção < 1% (desprezível)'],
+    ['Promestrieno cápsula vaginal 10 mg', 'Colpotrofine®', 'absorção desprezível'],
+    ['Estradiol comprimido vaginal 10 mcg', 'Vagifem®', 'mais potente; menos sensação de umidade; aplicador descartável']
+  ]) +
+  TIP('<b>Posologia (material de referência):</b> 1 aplicação à noite por 14–21 dias consecutivos (ataque), depois 2×/semana (manutenção). Não exige progestagênio (A). A eficácia dura enquanto o uso for mantido; pode ser continuado por anos com seguimento clínico (D). Segurança endometrial estudada até 12 meses — vigiar o endométrio por imagem em pacientes de alto risco.') +
+  H('Hidratantes vaginais (sem hormônio)') + T(['Base', 'Nomes comerciais', 'Posologia'], [
+    ['Ácido poliacrílico', 'Hidrafemme®, Lynax®, Vagidrat®, Vagisoft®, Klimavit®', '1 aplicação vaginal à noite a cada 3 dias'],
+    ['Ácido hialurônico', 'Hyalufem®, Belamy®, Provagin®, Lubrinat®', '1 aplicação vaginal à noite a cada 3 dias']
+  ]);
+
+registerModule({
+  id:'sgm', group:'Consulta rápida', label:'Síndrome geniturinária da menopausa',
+  desc:'Ressecamento, ardor, dispareunia, urgência miccional, ITU de repetição. A via vaginal é a preferencial quando as queixas são só geniturinárias.',
+  start:'sg0',
+  tree:{
+    sg0:{ title:'Qual o cenário?', opts:[
+      {t:'Só sintomas geniturinários, sem câncer de mama', to:'sg_local'},
+      {t:'Sintomas geniturinários persistem apesar da TH sistêmica', to:'sg_assoc'},
+      {t:'Antecedente de câncer de mama (ou outro câncer estrogênio-dependente)', to:'sg_mama'}
+    ]},
+    sg_local:{ title:'Estrogênio vaginal em baixa dose — tratamento preferencial.', tier:'act',
+      note:'A via vaginal é a de escolha quando as queixas são apenas locais (A): melhora atrofia, dispareunia, lubrificação e função sexual (A), urgência, bexiga hiperativa e ITU de repetição. Sem diferença de eficácia entre as formulações. Não aumenta risco cardiovascular, de TEV, de câncer de endométrio ou de mama. Laser e radiofrequência têm desempenho semelhante ao estrogênio tópico (B). DHEA vaginal tem evidência e aprovação para SGM (D).',
+      rx: SGM_RX,
+      ref:'SOBRAC 2024 · Cap. 3, Concl. II; Cap. 4 (função sexual); Cap. 11, Concl. VIII; Cap. 12, Concl. I–II, IV, VI' },
+    sg_assoc:{ title:'Associar estrogênio vaginal à TH sistêmica.', tier:'act',
+      note:'Ocorre em 10–15% das usuárias de TH sistêmica. A associação é recomendada e não exige ajuste do progestagênio.',
+      rx: SGM_RX,
+      ref:'SOBRAC 2024 · Cap. 3 (sintomas geniturinários)' },
+    sg_mama:{ title:'Começar por medidas não hormonais; se os sintomas persistirem, estrogênio vaginal em baixa dose em decisão compartilhada com o oncologista/mastologista.', tier:'warn',
+      note:'Estrogênio vaginal em baixa dose deve ser considerado quando a SGM compromete a qualidade de vida e a atividade sexual (A). Coorte de ~50 mil mulheres com câncer de mama não mostrou aumento de mortalidade com estrogênio vaginal. Dispositivos de energia (laser, radiofrequência) são alternativa para história de câncer estrogênio-dependente (D). Promestrieno tem a menor absorção sistêmica entre as opções.',
+      rx: SGM_RX,
+      ref:'SOBRAC 2024 · Cap. 3, Concl. III; Cap. 12, Concl. III, V' }
+  }
+});
+
+/* ============================================================
+   MODULE: naohormonal — tratamento não hormonal dos SVM
+   ============================================================ */
+const NH_COMPORT = H('Medidas comportamentais') + T(['Medida', 'Evidência'], [
+    ['Terapia cognitivo-comportamental', 'recomendada (A)'],
+    ['Hipnose', 'recomendada (A)'],
+    ['Perda de peso (sobrepeso/obesidade)', 'recomendada (B)'],
+    ['Atividade física', 'benefício geral; sem efeito direto comprovado nos fogachos (B)'],
+    ['Acupuntura', 'benefício modesto, possivelmente inespecífico (C)'],
+    ['Evitar gatilhos, mudar dieta', 'sem efeito comprovado — não recomendados (B)']
+  ]);
+const NH_FITO = H('Fitoterápicos aprovados pela ANVISA (eficácia controversa — A)') + T(['Fitoterápico', 'Nome comercial', 'Posologia'], [
+    ['Isoflavona de soja (<i>Glycine max</i>)', 'Soyfemme®, Isoflavine®, Buona®', '75–150 mg 1×/dia'],
+    ['<i>Trifolium pratense</i>', 'Climatrix®', '100 mg 1×/dia'],
+    ['<i>Cimicifuga / Actaea racemosa</i> (black cohosh)', 'Menovita® (300 mg), Clifemin® (160 mg), Aplause® (20 mg)', '1×/dia (Aplause®: 2×/dia)']
+  ]) + TIP('Superaram placebo em algumas metanálises, mas inferiores à TH. Suplementos com mais genisteína (> 18,8 mg) parecem mais eficazes. Black cohosh: relatos isolados de hepatotoxicidade. <b>Sem segurança</b> estabelecida de soja/isoflavonas após câncer de mama.');
+const NH_DROGAS = H('Medicamentos (Consenso, tabela de doses)') + T(['Fármaco', 'Dose diária', 'Titulação', 'Redução dos fogachos', 'Nome de referência*'], [
+    ['<b>Paroxetina</b> (ISRS)', '10–25 mg (7,5 mg estudado)', 'início 10 mg', '~64%', 'Aropax®, Pondera®'],
+    ['Citalopram (ISRS)', '10–20 mg', 'início 10 mg', '~50%', 'Cipramil®'],
+    ['<b>Escitalopram</b> (ISRS)', '10–20 mg', 'início 10 mg (5 mg em idosas/sensíveis)', '~50%', 'Lexapro®'],
+    ['<b>Venlafaxina</b> (IRSN)', '37,5–150 mg (37,5–75 mg eficazes)', 'início 37,5 mg', '~61%', 'Efexor XR®'],
+    ['<b>Desvenlafaxina</b> (IRSN)', '100–150 mg', 'início 25–50 mg', '~64%', 'Pristiq®'],
+    ['<b>Gabapentina</b>', '900–2.400 mg (8/8 h)', 'início 100–300 mg à noite; +300 mg à tarde; +300 mg pela manhã', '~46%', 'Neurontin®'],
+    ['Oxibutinina', '2,5–5 mg 2×/dia ou 15 mg/dia liberação lenta', '—', 'até 77%', 'Retemic®'],
+    ['Clonidina', '0,1–0,2 mg/dia', '—', 'menor que antidepressivos', 'Atensina®'],
+    ['<b>Fezolinetanto</b> (antagonista NK3)', '45 mg 1×/dia', 'dose única diária', '~61%', 'Veoza®']
+  ]) + TIP('* Nomes de referência listados para facilitar a prescrição — há genéricos; conferir apresentações na ANVISA. Contraindicações de ISRS/IRSN: síndrome serotoninérgica/neuroléptica, uso de IMAO; cautela em convulsões, bipolaridade, hiponatremia, HAS mal controlada, insuficiência renal/hepática. Fluoxetina e sertralina: eficácia duvidosa. Pregabalina: <b>não recomendada</b> (potencial de abuso). Oxibutinina: boca seca; uso prolongado pode piorar a cognição em idosas.') +
+  TIP('<b>Fezolinetanto 45 mg/dia</b> (antagonista NK3, Veoza®): não hormonal, com eficácia sobre a frequência dos fogachos comparável à TH e superior a paroxetina, desvenlafaxina e gabapentina (A). Já disponível no Brasil (o Consenso 2024 ainda o descrevia como indisponível). Não interfere com o CYP2D6 do tamoxifeno. Seguir a bula quanto à avaliação da função hepática.');
+
+registerModule({
+  id:'naohormonal', group:'Consulta rápida', label:'Fogachos sem hormônio (contraindicação ou preferência)',
+  desc:'Para mulheres com contraindicação à TH, fora da janela de oportunidade ou que preferem não usar hormônio. ISRS/IRSN, gabapentina e oxibutinina são eficazes (A).',
+  start:'nh0',
+  tree:{
+    nh0:{ title:'Algum destes contextos se aplica?', opts:[
+      {t:'Usa tamoxifeno', to:'nh_tam'},
+      {t:'Hipertensão mal controlada', to:'nh_has'},
+      {t:'Depressão ou ansiedade associada', to:'nh_dep'},
+      {t:'Insônia ou dor crônica / neuropática', to:'nh_gaba'},
+      {t:'Nenhum — escolher entre as opções', to:'nh_geral'}
+    ]},
+    nh_tam:{ title:'Preferir venlafaxina ou desvenlafaxina; evitar paroxetina e fluoxetina.', tier:'act',
+      note:'Paroxetina e fluoxetina inibem fortemente o CYP2D6 e podem reduzir a conversão do tamoxifeno em endoxifeno (D). Gabapentina, oxibutinina e fezolinetanto também não interferem nessa via.',
+      rx: NH_DROGAS + NH_COMPORT,
+      ref:'SOBRAC 2024 · Cap. 13, Concl. III–IV' },
+    nh_has:{ title:'Cautela com venlafaxina/desvenlafaxina (podem elevar a PA). Preferir ISRS (paroxetina, escitalopram) ou gabapentina.', tier:'act',
+      note:'Monitorar a pressão se um IRSN for usado, sobretudo desvenlafaxina 150 mg. A clonidina reduz pouco os fogachos e causa hipotensão, tontura e boca seca.',
+      rx: NH_DROGAS + NH_COMPORT,
+      ref:'SOBRAC 2024 · Cap. 13' },
+    nh_dep:{ title:'Antidepressivo como primeira opção — trata humor e fogachos.', tier:'act',
+      note:'Antidepressivos e terapia cognitiva são primeira opção na depressão maior pós-menopausa (B). Paroxetina, escitalopram, citalopram, venlafaxina e desvenlafaxina são os mais eficazes para os fogachos (até ~65%). Desvenlafaxina parece ter menos efeito sobre peso e libido. Na perimenopausa, a TH associada ao antidepressivo pode ter efeito sinérgico (B).',
+      rx: NH_DROGAS + NH_COMPORT,
+      ref:'SOBRAC 2024 · Cap. 4 (sintomas emocionais), Concl. III–IV; Cap. 13' },
+    nh_gaba:{ title:'Gabapentina é boa escolha: dose noturna melhora o sono e trata dor neuropática.', tier:'act',
+      note:'900 mg/dia reduzem em média 2 fogachos/dia, com efeito parecido aos ISRS/IRSN. Tontura, sonolência e edema são mais frequentes nas primeiras semanas. Iniciar 100–300 mg à noite e titular.',
+      rx: NH_DROGAS + NH_COMPORT,
+      ref:'SOBRAC 2024 · Cap. 13' },
+    nh_geral:{ title:'Opções eficazes: ISRS/IRSN, gabapentina, oxibutinina ou fezolinetanto (A); TCC e hipnose como medidas comportamentais.', tier:'act',
+      note:'Paroxetina é considerada primeira linha não hormonal com boa relação custo-efetividade. Começar com doses baixas e aumentar se não houver resposta.',
+      rx: NH_DROGAS + NH_COMPORT + NH_FITO,
+      ref:'SOBRAC 2024 · Cap. 13, Concl. I–III, V' }
+  }
+});
+
+/* ============================================================
+   MODULE: duracao — seguimento, duração e suspensão
+   ============================================================ */
+registerModule({
+  id:'duracao', group:'Consulta rápida', type:'static',
+  label:'Seguimento, duração e suspensão',
+  desc:'Por quanto tempo manter, como acompanhar e como suspender.',
+  html: `
+    <div class="refcard">
+      <h3>Duração</h3>
+      <ul>
+        <li><b>Não há duração máxima obrigatória</b> nem idade máxima para suspender a TH (D).</li>
+        <li>Uso prolongado: preferencialmente <b>transdérmico e em baixa dose</b>; com útero, <b>progesterona natural</b> (menor risco tromboembólico) (D).</li>
+        <li>Após os 60 anos: mesma recomendação — transdérmica, baixa dose, progesterona natural (B).</li>
+        <li>Risco de câncer de mama: pequeno (&lt; 1 caso/1.000 mulheres/ano — A); maior com regime estroprogestativo e com maior duração. No WHI, o estrogênio isolado não aumentou o risco; a combinação aumentou após 5 anos.</li>
+      </ul>
+    </div>
+    <div class="refcard">
+      <h3>Seguimento</h3>
+      <ul>
+        <li>Reavaliar periodicamente objetivos, sintomas e riscos; manter o <b>rastreamento mamográfico</b> em dia.</li>
+        <li>Ajustar para a <b>menor dose efetiva</b> (D).</li>
+        <li><b>Sangramento anormal durante a TH</b> → ultrassonografia transvaginal.</li>
+        <li>Hipertensão que surge durante a TH oral → considerar mudar para a via transdérmica.</li>
+        <li>Combinada estroprogestativa aumenta a densidade mamográfica (pode dificultar a leitura); estrogênio isolado e tibolona não (B).</li>
+        <li>Incentivar a cessação do tabagismo (A).</li>
+      </ul>
+    </div>
+    <div class="refcard">
+      <h3>Suspensão</h3>
+      <ul>
+        <li>Suspensão gradual <b>não</b> tem vantagem comprovada sobre a abrupta quanto ao retorno dos sintomas (D).</li>
+        <li>Ao suspender, a DMO cai 3–6% no primeiro ano e o risco de fratura volta ao de não usuárias — planejar a proteção óssea se houver risco de fratura.</li>
+      </ul>
+      <p style="margin-top:10px">SOBRAC 2024 · Cap. 3; Cap. 7; Cap. 10, Concl. V–IX</p>
+    </div>
+  `
+});
+
+/* ============================================================
+   MODULE: doses — tabelas de referência
+   ============================================================ */
+registerModule({
+  id:'doses', group:'Consulta rápida', type:'static',
+  label:'Tabelas de doses e progestagênios',
+  desc:'Doses de estrogênio por via e doses de progestagênio por esquema, conforme o Consenso SOBRAC 2024.',
+  html: `
+    <div class="refcard">
+      <h3>Estrogênios — Tabela 1</h3>
+      ${T(['Tipo', 'Ultrabaixa', 'Baixa', 'Convencional', 'Alta'], [
+        ['17β-estradiol oral', '0,5 mg', '1 mg', '2 mg', '> 2 mg'],
+        ['Valerato de estradiol oral', '—', '1 mg', '2 mg', '> 2 mg'],
+        ['Estrogênios conjugados*', '—', '0,3/0,45 mg', '0,625 mg', '1,25 mg'],
+        ['Estradiol transdérmico (adesivo)', '14 mcg*', '25 mcg', '50 mcg', '100 mcg'],
+        ['Estradiol gel', '0,5 mg', '0,75–1 mg', '1,5 mg', '3 mg']
+      ])}
+      <p>* Não disponível comercialmente no Brasil, segundo o Consenso. Vaginais: estriol creme 1 mg, estradiol cp 10 mcg, promestrieno óvulo ou creme 10 mg.</p>
+    </div>
+    <div class="refcard">
+      <h3>Progestagênios — Tabela 2 e apresentações</h3>
+      ${PG_ISOLADOS}
+    </div>
+    <div class="refcard">
+      <h3>Perfil dos progestagênios (material de referência)</h3>
+      <ul>
+        <li><b>Neutros:</b> progesterona micronizada, didrogesterona.</li>
+        <li><b>Androgênicos</b> (podem piorar lipídios, acne, oleosidade, queda de cabelo): noretisterona, levonorgestrel, medroxiprogesterona (também glicocorticoide).</li>
+        <li><b>Antiandrogênicos:</b> ciproterona (potente), drospirenona (também antimineralocorticoide — efeito diurético).</li>
+        <li>Potência endometrial: derivados da 19-nortestosterona &gt; pregnanos e progesterona micronizada.</li>
+      </ul>
+    </div>
+    <div class="refcard">
+      <h3>Oral × transdérmica</h3>
+      <ul>
+        <li><b>Oral:</b> mais fácil, barata, mais opções, absorção confiável, maior efeito em ↑HDL/↓LDL; mas ↑TG, ↑fatores de coagulação, ↑SHBG/CBG/TBG, piora doença biliar.</li>
+        <li><b>Transdérmica:</b> nível estável, neutra em TG, PA e coagulação, doses menores; mas mais cara, menos opções, absorção variável e irritação cutânea.</li>
+      </ul>
+    </div>
+  `
+});
+
+/* ============================================================
+   POPULAÇÕES ESPECIAIS
+   ============================================================ */
+registerModule({
+  id:'mama', group:'Populações especiais', label:'Câncer de mama ou risco genético',
+  desc:'Antecedente pessoal de câncer de mama, mutação BRCA ou risco aumentado.',
+  start:'ma0',
+  tree:{
+    ma0:{ title:'Qual a situação?', opts:[
+      {t:'Antecedente pessoal de câncer de mama, com fogachos', to:'ma_svm'},
+      {t:'Antecedente pessoal de câncer de mama, com sintomas geniturinários', to:'__module:sgm:sg_mama__'},
+      {t:'Mutação BRCA1/2 sem câncer, após salpingo-ooforectomia redutora de risco', to:'ma_brca'},
+      {t:'Sem câncer, mas com preocupação/risco aumentado (familiar, mamas densas)', to:'ma_risco'}
+    ]},
+    ma_svm:{ title:'TH sistêmica (estrogênio isolado ou combinada) não recomendada; tibolona contraindicada. Tratar com terapias não hormonais.', tier:'urgent',
+      note:'A contraindicação da TH decorre mais da falta de evidência de segurança do que de evidência clara de risco (B). Tibolona: contraindicada (A). Em usuárias de tamoxifeno, evitar paroxetina e fluoxetina.',
+      altnote:'o material de referência cita os critérios de elegibilidade de Mendoza et al. (Maturitas 2022): receptor hormonal positivo — TH categoria 3, tibolona categoria 4; receptor negativo — categoria 2. O Consenso SOBRAC não faz essa distinção.',
+      ref:'SOBRAC 2024 · Cap. 7, Concl. VII–VIII; Cap. 13, Concl. IV',
+      opts:[ {t:'Tratamento não hormonal (com ramo para tamoxifeno)', to:'__module:naohormonal__'} ] },
+    ma_brca:{ title:'TH de curto prazo parece segura até a idade média da menopausa.', tier:'act',
+      note:'Em portadoras de BRCA1 submetidas a ooforectomia profilática, a TH não parece aumentar o risco de câncer de mama (B). Sem útero, estrogênio isolado.',
+      ref:'SOBRAC 2024 · Cap. 7, Concl. V; Cap. 8, Concl. VII',
+      opts:[ {t:'Seguir para a escolha da via e prescrição', to:'__module:inicial:jan0__'} ] },
+    ma_risco:{ title:'Aconselhar com risco absoluto; TH não é contraindicada.', tier:'watch',
+      note:'O risco associado à TH é pequeno (&lt; 1 caso/1.000 mulheres/ano — A). Comunicar riscos como absoluto e atribuível (A): no WHI, E+P passou de 30 para 38 casos/10.000 mulheres/ano. Abordar os fatores modificáveis (obesidade, álcool, sedentarismo — C). Progesterona micronizada ou didrogesterona parecem associadas a menor risco (B); estrogênio isolado tem risco menor que a combinada (A).',
+      ref:'SOBRAC 2024 · Cap. 2, Concl. VI; Cap. 7, Concl. I–IV',
+      opts:[ {t:'Seguir avaliação para TH', to:'__module:inicial:ci0__'} ] }
+  }
+});
+
+registerModule({
+  id:'oncogine', group:'Populações especiais', label:'Câncer de endométrio ou ovário prévio',
+  desc:'Elegibilidade para TH após tratamento de câncer ginecológico.',
+  start:'og0',
+  tree:{
+    og0:{ title:'Qual o tumor?', opts:[
+      {t:'Endométrio — baixo grau, estádio inicial, tratado cirurgicamente', to:'og_end_baixo'},
+      {t:'Endométrio — alto grau ou avançado, ou sarcoma / leiomiossarcoma do estroma endometrial', to:'og_end_alto'},
+      {t:'Ovário — não hormônio-dependente', to:'og_ov'},
+      {t:'Ovário — hormônio-dependente (células da granulosa, seroso de baixo grau)', to:'og_ov_hd'}
+    ]},
+    og_end_baixo:{ title:'TH é opção se as terapias não hormonais forem ineficazes, em decisão compartilhada com o oncologista.', tier:'warn',
+      ref:'SOBRAC 2024 · Cap. 8, Concl. III',
+      opts:[ {t:'Tentar primeiro o tratamento não hormonal', to:'__module:naohormonal__'}, {t:'Optou-se por TH — escolher via e prescrição', to:'__module:inicial:jan0__'} ] },
+    og_end_alto:{ title:'TH sistêmica não recomendada.', tier:'urgent', ref:'SOBRAC 2024 · Cap. 8, Concl. IV',
+      opts:[ {t:'Tratamento não hormonal', to:'__module:naohormonal__'} ] },
+    og_ov:{ title:'Em geral os benefícios da TH superam os riscos, sobretudo com fogachos intensos ou menopausa precoce.', tier:'act', ref:'SOBRAC 2024 · Cap. 8, Concl. VI',
+      opts:[ {t:'Seguir para escolha da via e prescrição', to:'__module:inicial:jan0__'} ] },
+    og_ov_hd:{ title:'TH não recomendada.', tier:'urgent', ref:'SOBRAC 2024 · Cap. 8, Concl. VI',
+      opts:[ {t:'Tratamento não hormonal', to:'__module:naohormonal__'} ] }
+  }
+});
+
+registerModule({
+  id:'iop', group:'Populações especiais', label:'IOP e menopausa cirúrgica precoce',
+  desc:'Perda da função ovariana antes dos 40 anos (natural ou iatrogênica) ou ooforectomia bilateral antes da idade da menopausa.',
+  start:'io0',
+  tree:{
+    io0:{ title:'Há desejo de contracepção ou prefere usar anticoncepcional?', opts:[
+      {t:'Não — TH', to:'io_th'},
+      {t:'Sim / sem desejo reprodutivo e prefere ACO', to:'io_aco'}
+    ]},
+    io_th:{ title:'TH desde o diagnóstico até, no mínimo, a idade média da menopausa (~50 anos), em dose que reproduza os níveis do menacme.', tier:'act',
+      note:'Indicação nível A: sem tratamento, a IOP aumenta morbidade e mortalidade, sobretudo cardiovascular. A dose de estrogênio deve manter níveis séricos semelhantes aos do menacme (A) — usualmente maior que na menopausa habitual. Sem desejo reprodutivo, associar método contraceptivo (D). Priorizar formulações semelhantes à produção ovariana, em dose suficiente para sintomas, osso, humor, cognição e proteção cardiovascular. Aos ~50 anos: ajustar para o regime pós-menopausa ou suspender. Associar aconselhamento reprodutivo e de saúde mental, estilo de vida e prevenção de fraturas. <b>Com útero, associar progestagênio.</b>',
+      rx: T(['Opção', 'Exemplos'], [
+        ['Estradiol oral 2 mg', 'Primogyna® 2 mg; combinada: Suprema® (E2 2 mg + NETA 1 mg)'],
+        ['Estradiol transdérmico 50–100 mcg', 'Estradot® 50/100 ou Systen® 50; gel em dose convencional/alta'],
+        ['Progestagênio (com útero)', 'progesterona micronizada 200 mg 12–14 dias/mês ou 100–200 mg contínuo; ou DIU-LNG 52 mg']
+      ]),
+      ref:'SOBRAC 2024 · Cap. 3, Concl. XI–XIII' },
+    io_aco:{ title:'Anticoncepcional combinado oral é alternativa à TH em jovens sem desejo reprodutivo.', tier:'act',
+      note:'Pode haver gestação espontânea em até 5% dos casos de IOP. Se usar TH, associar outro método contraceptivo quando necessário (ex.: DIU-LNG, que também protege o endométrio).',
+      ref:'SOBRAC 2024 · Cap. 3 (hipoestrogenismo prematuro)' }
+  }
+});
+
+registerModule({
+  id:'sexual', group:'Populações especiais', label:'Desejo sexual hipoativo e androgênios',
+  desc:'Uso de testosterona, DHEA e tibolona nas queixas sexuais da pós-menopausa.',
+  start:'sx0',
+  tree:{
+    sx0:{ title:'A paciente já está adequadamente estrogenizada (TH sistêmica ou SGM tratada)?', opts:[
+      {t:'Sim — persiste desejo sexual hipoativo após excluir outras causas', to:'sx_testo'},
+      {t:'Não', to:'sx_estro'}
+    ]},
+    sx_estro:{ title:'Tratar primeiro o hipoestrogenismo; testosterona não é recomendada sem estrogenização adequada (D).', tier:'warn',
+      note:'A TH sistêmica geralmente não melhora desejo, excitação ou orgasmo (A), mas o estrogênio vaginal melhora a função sexual quando há SGM (A).',
+      ref:'SOBRAC 2024 · Cap. 4 (função sexual); Cap. 11, Concl. II',
+      opts:[ {t:'Avaliar TH sistêmica', to:'__module:inicial__'}, {t:'Tratar SGM', to:'__module:sgm__'} ] },
+    sx_testo:{ title:'Testosterona transdérmica em dose baixa pode ser associada à TH.', tier:'act',
+      note:'Indicação primária: queixas sexuais (desejo, excitação, orgasmo), excluídas outras causas (A). Via <b>transdérmica</b> (A). <b>Não há produto aprovado no Brasil para mulheres</b>; não usar apresentações masculinas, implantes ou injetáveis (risco de doses suprafisiológicas — D). Com útero, manter o progestagênio (D). Não dosar androgênios para diagnóstico (A). Manter só se houver melhora (D). DHEA sistêmica: não recomendada (A). O material de referência cita a <b>tibolona</b> como opção no desejo sexual hipoativo.',
+      ref:'SOBRAC 2024 · Cap. 11, Concl. I–IX',
+      opts:[ {t:'Ver tibolona', to:'__module:inicial:rx_tibolona__'} ] }
+  }
+});
+
+registerModule({
+  id:'referencia', group:'Consulta rápida', type:'static',
+  label:'Manipulados, bioidênticos e sobre esta ferramenta',
+  desc:'Posicionamento da SOBRAC sobre hormônios manipulados e as fontes desta ferramenta.',
+  html: `
+    <div class="refcard">
+      <h3>Bioidênticos manipulados e implantes</h3>
+      <ul>
+        <li>Não há evidência para recomendar <b>terapias hormonais bioidênticas manipuladas</b> — falta regulamentação, padronização de lote e testes de segurança e eficácia (A).</li>
+        <li><b>Testes hormonais salivares</b> não devem ser usados para ajustar doses; dosagens hormonais raramente são necessárias (D).</li>
+        <li><b>Implantes hormonais não regulamentados</b> não são recomendados (D).</li>
+      </ul>
+    </div>
+    <div class="refcard">
+      <h3>Sobre esta ferramenta</h3>
+      <p>As condutas seguem o <b>Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024</b> (SOBRAC; Machado RB, Pompei LM, eds.), com nível de evidência e capítulo indicados em cada cartão. Nomes comerciais, posologia de produtos e dicas práticas vêm do material <b>"Terapia Hormonal: Prescrição" e "Base Teórica"</b> (Lucas de Almeida Resende, Gineco Endócrino na Prática); onde esse material diverge do Consenso, o cartão sinaliza.</p>
+      <p style="margin-top:10px">Os nomes de referência dos fármacos não hormonais (ISRS, IRSN, gabapentina, oxibutinina, clonidina) foram acrescentados para facilitar a prescrição. <b>Disponibilidade e apresentações mudam</b> — confira na bula e na ANVISA antes de prescrever. Esta ferramenta não substitui a leitura do Consenso nem o julgamento clínico.</p>
+    </div>
+  `
+});
+
+registerModule({
+  id:'feedback', group:'Sua opinião', type:'feedback',
+  label:'Deixar feedback',
+  desc:'Ajude a melhorar esta ferramenta: avalie, diga o que faltou ou o que confundiu.'
+});
+
+
+/* boot */
+goModule('inicial');
+
+</script>
+<nav class="mobile-tabbar">
+  <a href="/" class="tab-item">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+    <span class="tab-label">Artigos</span>
+  </a>
+  <a href="/newsletters.html" class="tab-item">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg></span>
+    <span class="tab-label">Newsletter</span>
+  </a>
+  <a href="/ferramentas/conduta-colo-do-utero" class="tab-item active">
+    <span class="icon-wrap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+    <span class="tab-label">Ferramentas</span>
+  </a>
+</nav>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+</script>
+</body>
+</html>
