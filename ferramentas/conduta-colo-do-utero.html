@@ -12,7 +12,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fluxograma de condutas no rastreamento do câncer de colo do útero — Go de Plantão</title>
-  <meta name="description" content="Ferramenta interativa de apoio à decisão clínica para rastreamento e seguimento do câncer do colo do útero, com base nas Diretrizes Brasileiras (Parte II, versão preliminar de consulta pública, jul/2026)." />
+  <meta name="description" content="Ferramenta interativa de apoio à decisão clínica para rastreamento e seguimento do câncer do colo do útero, com base nas Diretrizes Brasileiras (Parte II, versão definitiva — Portaria Conjunta SAES/SCTIE nº 105/2026)." />
 
   <link rel="stylesheet" href="../style.css" />
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -280,7 +280,7 @@
     </div>
 
     <p class="tool-colophon">
-      Ferramenta de apoio à decisão construída a partir das Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II (Ministério da Saúde/Conitec/INCA), versão preliminar de julho de 2026. Em caso de dúvida, consulte o texto integral da diretriz e a equipe de referência em colposcopia.
+      Ferramenta de apoio à decisão construída a partir das Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II (Ministério da Saúde/Conitec/INCA), versão definitiva aprovada pela Portaria Conjunta SAES/SCTIE nº 105, de 20 de outubro de 2026. Em caso de dúvida, consulte o texto integral da diretriz e a equipe de referência em colposcopia.
     </p>
 
   </div>
@@ -620,12 +620,14 @@ registerModule({
   desc:'Mulher sintomática (sangramento intermenstrual, pós-coito ou pós-menopausa) — quando essa queixa, isoladamente, justifica colposcopia fora do rastreamento de rotina (Cap. 7.4).',
   start:'sg0',
   tree:{
-    sg0:{ title:'Qual o contexto do sangramento anormal?', opts:[
+    sg0:{ title:'Qual o contexto do sangramento anormal?', note:'A investigação apropriada não deve ser adiada em razão do sangramento; inclua coleta de amostra cervical para teste de DNA-HPV oncogênico considerando o histórico de rastreamento.', ref:'Rec. 7.4.1', opts:[
       {t:'Sangramento pós-menopausa (inclusive pós-coito)', to:'sg_posmeno'},
       {t:'Sangramento pós-coito, no menacme', to:'sg_poscoito_menacme'},
       {t:'Sangramento intermenstrual persistente e inexplicado', to:'sg_intermenstrual'},
       {t:'Suspeita clínica de câncer (úlcera extensa, lesão vegetante, necrose, sangramento intenso) ou citologia já mostrando câncer', to:'sg_suspeita_cancer'},
-      {t:'Sintomas sugestivos de IST (corrimento, dispareunia) associados ao sangramento', to:'sg_ist'}
+      {t:'Sintomas sugestivos de IST (corrimento, dispareunia) associados ao sangramento', to:'sg_ist'},
+      {t:'Causa benigna evidente, com rastreamento em dia (atrofia, escape por contracepção hormonal, sangramento de contato na coleta, menstruação excessiva isolada, IST, avaliação pré-DIU ou pré-admissional)', to:'sg_benigno'},
+      {t:'Pólipo endocervical, sem outros achados', to:'sg_polipo'}
     ]},
     sg_posmeno:{ title:'Encaminhar para avaliação ginecológica imediata para excluir malignidade do trato genital.', tier:'urgent',
       note:'Vale independentemente do resultado dos exames de rastreamento — não aguardar novo teste de DNA-HPV oncogênico. Investigar também causa endometrial (US transvaginal/histeroscopia), já que a atrofia é a causa mais comum mas não deve ser assumida sem excluir neoplasia.', ref:'Rec. 7.4.5' },
@@ -645,7 +647,10 @@ registerModule({
       note:'Se a biópsia local não for possível, encaminhar em acesso facilitado (“via rápida”) para referência terciária/centro oncológico. Considere abrir o módulo “Câncer superficialmente invasivo”.', ref:'Recs. 4.1.1, 7.4.6',
       opts:[ {t:'Ir para o módulo de Câncer superficialmente invasivo / suspeita de câncer', to:'__module:cancer__'} ] },
     sg_ist:{ title:'Não é necessário colposcopia por esse quadro isoladamente — seguir o PCDT de Atenção Integral às IST (testar/tratar Chlamydia e gonorreia).', tier:'watch',
-      note:'Só indicar teste de DNA-HPV oncogênico ou colposcopia se o rastreamento cervical já não estiver em dia.', ref:'Rec. 7.4.7' }
+      note:'Só indicar teste de DNA-HPV oncogênico ou colposcopia se o rastreamento cervical já não estiver em dia.', ref:'Rec. 7.4.7' },
+    sg_benigno:{ title:'Não é necessário novo teste de DNA-HPV oncogênico nem colposcopia, desde que o rastreamento cervical esteja em dia.', tier:'watch', ref:'Rec. 7.4.8' },
+    sg_polipo:{ title:'Pólipo endocervical isolado não requer colposcopia. Considerar a remoção ambulatorial por ginecologista, com envio para exame histopatológico.', tier:'watch',
+      note:'Pólipos isolados não alteram o rastreamento nem justificam colposcopia adicional, mesmo quando causam sangramento intermenstrual ou pós-coito.', ref:'Rec. 7.4.9' }
   }
 });
 
@@ -713,7 +718,7 @@ registerModule({
       {t:'ZT tipo 1 ou 2 (JEC completamente visível)', to:'f1_biopsia'},
       {t:'ZT tipo 3 (JEC não completamente visível)', to:'f2_biopsia'}
     ]},
-    f1_biopsia:{ title:'Há achado colposcópico (mesmo mínimo/inespecífico) a biopsiar?', note:'Biopsie qualquer achado menor ou inespecífico, incluindo aspecto incerto mesmo discreto.', opts:[
+    f1_biopsia:{ title:'Há achado colposcópico (mesmo mínimo/inespecífico) a biopsiar?', note:'Biopsie qualquer achado menor ou inespecífico, incluindo aspecto incerto mesmo discreto — de preferência ao menos duas biópsias, dirigidas inclusive a áreas de acetobranqueamento mínimo.', ref:'Rec. 1.1.1', opts:[
       {t:'Não — colposcopia integralmente normal, sem biópsia', to:'f1_seguimento'},
       {t:'Sim — biópsia realizada', to:'f1_biopsia_result'}
     ]},
@@ -751,6 +756,7 @@ registerModule({
     f2_excisao3:{ title:'Indicada excisão tipo 3 (excisão cilíndrica ampla, incluindo o canal endocervical).', tier:'act', ref:'Rec. 1.3.5',
       opts:[ {t:'Detalhar tipo de excisão e vigilância pós-tratamento', to:'__module:tratamento__'} ] },
     f2_agc:{ title:'Seguimento criterioso: colposcopia e citologia aos 6, 12 e 18 meses + teste de DNA-HPV oncogênico aos 12 e 24 meses.', tier:'warn',
+      note:'Se 35 anos ou mais (ou menos de 35 com obesidade, SOP ou sangramento uterino anormal), associar avaliação endometrial.',
       altnote:'excisão tipo 3 imediata é aceitável, em decisão compartilhada, quando não houver garantia de adesão ao seguimento.', ref:'Recs. 1.3.3–1.3.4',
       opts:[
         {t:'Todos os resultados permaneceram negativos até 24 meses', to:'f2_agc_36'},
@@ -767,7 +773,7 @@ registerModule({
       {t:'Negativo', to:'f2_retest24'},
       {t:'Positivo', to:'i_retorno_partei'}
     ]},
-    f2_retest24:{ title:'Repetir teste de DNA-HPV oncogênico em 24 meses (do controle anterior). Resultado:', tier:'watch', opts:[
+    f2_retest24:{ title:'Repetir teste de DNA-HPV oncogênico aos 24 meses (12 meses após o teste anterior). Resultado:', ref:'Rec. 1.3.2', tier:'watch', opts:[
       {t:'Negativo', to:'f1_retorno5'},
       {t:'Positivo', to:'i_retorno_partei'}
     ]},
@@ -789,11 +795,18 @@ registerModule({
       note:'Se ausente ou insatisfatória, colete a citologia — preferencialmente antes da colposcopia, na mesma visita — e responda com base no novo resultado.', opts:[
         {t:'HSIL ou ASC-H', to:'m2_start'},
         {t:'ASC-US ou LSIL', to:'m2_ascus_start'},
-        {t:'HSIL não podendo excluir microinvasão / AGC-FN / AIS / câncer', to:'m2_start'},
+        {t:'HSIL não podendo excluir microinvasão', to:'i_outro_hsil_micro'},
+        {t:'Atipia glandular (AGC-SOE, AGC-FN ou AIS)', to:'__module:glandular__'},
         {t:'Ausente ou insatisfatória — ainda não coletada', to:'i_outro_maior_pending'}
       ] },
-    i_outro_maior_pending:{ title:'Colher a citologia (preferencialmente antes da colposcopia, na mesma visita) e reavaliar a conduta com o resultado.', tier:'ask',
-      opts:[ {t:'Já tenho o resultado da citologia', to:'i_outro_maior_cyto'} ] }
+    i_outro_hsil_micro:{ title:'Excisão tipo 3, em peça única (não fragmentada) e com margens avaliáveis.', tier:'act',
+      note:'Citologia HSIL não podendo excluir microinvasão com achados anormais maiores: procedimento excisional, sem biópsia prévia — biopsiar antes apenas se houver achado sugestivo de invasão à colposcopia.', ref:'Figura 11 (nota a); Recs. 4.1.2, 5.2.4',
+      opts:[ {t:'Detalhar tipo de excisão e vigilância pós-tratamento', to:'__module:tratamento__'},
+             {t:'Ir para o módulo de Câncer superficialmente invasivo / suspeita de câncer', to:'__module:cancer__'} ] },
+    i_outro_maior_pending:{ title:'Colher a citologia, preferencialmente antes da colposcopia, na mesma visita.', tier:'ask',
+      note:'Quando não há dúvida de que o achado é anormal maior, o tratamento excisional expedito (sem biópsia prévia), conforme o tipo de ZT, já está recomendado. Havendo dúvida quanto à impressão colposcópica, a conduta depende do resultado dessa citologia.', ref:'Recs. 2.2.1–2.2.2',
+      opts:[ {t:'Sem dúvida quanto ao achado anormal maior — tratamento expedito', to:'m2_tratar_direto'},
+             {t:'Dúvida quanto à impressão colposcópica — já tenho o resultado da citologia', to:'i_outro_maior_cyto'} ] }
   }
 });
 
@@ -813,6 +826,7 @@ registerModule({
         <li>Realizar a colposcopia (ou nova coleta) entre <b>3 e 7 dias</b> após suspender o creme.</li>
         <li>Se a colposcopia já tiver sido feita sem preparo, ainda assim ela deve ser realizada (para não perder achados) — considere repeti-la após o preparo se o resultado ficar inconclusivo ou insatisfatório.</li>
         <li>É opcional: nunca deve ser uma barreira ao atendimento. Se houver contraindicação, recusa ou indisponibilidade do creme, siga sem adiar a consulta.</li>
+        <li>Também pode ser considerado em mulheres amamentando e em qualquer atrofia ou ressecamento vaginal (Recs. 6b.1–6b.2, 6e.1.6, 7.1.23, 7.1.30).</li>
       </ul>
     </div>
 
@@ -833,8 +847,34 @@ registerModule({
     </div>
 
     <div class="refcard">
+      <h3>Vacinação contra HPV após o tratamento</h3>
+      <p>Recomendada no SUS para mulheres tratadas por lesão intraepitelial de alto grau (NIC2+ e AIS), <b>independentemente da idade</b>: preferencialmente no período perioperatório ou até 12 meses após o procedimento, em <b>3 doses</b> (Nota Técnica nº 32/2026-CGICI/DPNI/SVSA/MS).</p>
+    </div>
+
+    <div class="refcard">
+      <h3>Boas práticas em colposcopia (Cap. 7)</h3>
+      <ul>
+        <li>Ácido acético a 3–5%, sempre na mesma concentração; aguardar tempo suficiente, sobretudo diante de achados menores (7.1.5–7.1.6).</li>
+        <li>Documentar o exame com a nomenclatura IFCPC e registrar o tipo de ZT (7.1.4, 7.1.13).</li>
+        <li>Citologia no contexto da colposcopia: preferencialmente antes do ácido acético; escovado endocervical após o ácido acético e antes do lugol, e antes das biópsias (7.1.7–7.1.8).</li>
+        <li>Escovado endocervical é preferível à curetagem; repetir o quanto antes se insatisfatório (7.1.10, 7.1.16).</li>
+        <li>Pelo menos dois fragmentos de biópsia; fragmentos do colo no mesmo frasco, os de vagina separados e identificados (7.1.18–7.1.19).</li>
+        <li>ZT tipo 3: tentar manobras para expor a JEC (abertura do espéculo, swab, espéculo endocervical); laminária e misoprostol não são recomendados (7.1.22–7.1.24).</li>
+        <li>Inflamação ou desepitelização que prejudique o exame: nova colposcopia 30–60 dias após o tratamento específico (7.1.25).</li>
+        <li>Discordância citologia × histologia: afastar lesão vaginal e revisar a lâmina; entre biópsia e escovado, considerar o diagnóstico mais grave (7.1.31–7.1.32).</li>
+        <li>Sem anormalidade citológica nem achado colposcópico, não fazer biópsias aleatórias, mesmo com HPV persistente (7.1.34).</li>
+        <li>Anestesia local injetável é indispensável nos procedimentos excisionais (7.1.29).</li>
+      </ul>
+    </div>
+
+    <div class="refcard">
+      <h3>Terminologia histológica (Cap. 7.3)</h3>
+      <p>Usar duas categorias (LSIL/HSIL), qualificando o HSIL: <code>HSIL(NIC2)</code>, <code>HSIL(NIC3)</code>, <code>HSIL(NIVa2)</code>, <code>HSIL(NIVa3)</code>. A imuno-histoquímica (p16) pode auxiliar o patologista, mas não é elemento norteador de conduta: as decisões se baseiam no laudo histopatológico final.</p>
+    </div>
+
+    <div class="refcard">
       <h3>Sobre esta ferramenta</h3>
-      <p>Construída a partir das Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II, versão <b>preliminar</b> em consulta pública (jul/2026). Cobre os Capítulos 1 a 6 (avaliação diagnóstica, doença glandular, câncer superficialmente invasivo, tratamento e vigilância pós-tratamento, histerectomizadas, HIV/imunossupressão e gestantes) e trechos selecionados do Capítulo 7 (indicação de colposcopia por sangramento). Não substitui a leitura da diretriz original nem o julgamento clínico — em caso de discordância entre esta ferramenta e o texto oficial, o texto oficial prevalece.</p>
+      <p>Construída a partir das Diretrizes Brasileiras para o Rastreamento do Câncer do Colo do Útero — Parte II, versão <b>definitiva</b>, aprovada pela Portaria Conjunta SAES/SCTIE nº 105, de 20 de outubro de 2026 (Relatório de Recomendação Conitec nº 1.151/2026). Cobre os Capítulos 1 a 6 (avaliação diagnóstica, doença glandular, câncer superficialmente invasivo, tratamento e vigilância pós-tratamento, histerectomizadas, HIV/imunossupressão e gestantes) e o Capítulo 7 (boas práticas em colposcopia e indicação de colposcopia por sangramento). Não substitui a leitura da diretriz original nem o julgamento clínico — em caso de discordância entre esta ferramenta e o texto oficial, o texto oficial prevalece.</p>
     </div>
   `
 });
@@ -870,7 +910,7 @@ const G1_NODES = [
    },
    {
     "t": "ASC-H/HSIL",
-    "to": "g1_c_seguimento"
+    "to": "g1_c_biopsy"
    },
    {
     "t": "HSIL não podendo excluir microinvasão / AGC-FN / AIS / câncer",
@@ -973,6 +1013,14 @@ const G1_NODES = [
     "to": "g1_b_seguimento"
    },
    {
+    "t": "Biópsia do colo com HSIL (NIC2-3) — qualquer resultado do escovado",
+    "to": "g1_a_excisao"
+   },
+   {
+    "t": "Biópsia do colo com AIS",
+    "to": "__module:glandular:gl_ais_colpo__"
+   },
+   {
     "t": "ASC-H, HSIL, HSIL não podendo excluir microinvasão, AGC-FN, AIS, adenocarcinoma invasor ou carcinoma escamoso invasor (sem suspeita clínica clara de doença invasiva)",
     "to": "g1_b_excisao3"
    },
@@ -1063,6 +1111,26 @@ const G1_NODES = [
    {
     "t": "Ir para o módulo de Câncer superficialmente invasivo / suspeita de câncer",
     "to": "__module:cancer__"
+   }
+  ]
+ },
+ {
+  "id": "g1_c_biopsy",
+  "title": "Qual o resultado da biópsia de achado colposcópico menor/inespecífico (se realizada)?",
+  "note": "Citologia reflexa ASC-H/HSIL, colposcopia normal ou com achados anormais menores, ZT tipo 1 ou 2. Na discordância entre citologia e histologia, assegure que não há lesão vaginal concomitante e, quando possível, solicite revisão da lâmina citológica (o laudo revisado prevalece — Rec. 7.1.31).",
+  "ref": "Figura 7; Rec. 1.6.1",
+  "opts": [
+   {
+    "t": "Biópsia não realizada (sem achado a biopsiar), negativa ou LSIL (NIC1)",
+    "to": "g1_c_seguimento"
+   },
+   {
+    "t": "HSIL (NIC2-3), AIS ou suspeita de microinvasão",
+    "to": "g1_a_excisao"
+   },
+   {
+    "t": "Câncer",
+    "to": "g1_a_cancer"
    }
   ]
  },
@@ -1207,6 +1275,10 @@ const G2_NODES = [
    {
     "t": "ASC-H ou pior (ASC-H+)",
     "to": "g2_a_asch_excisao"
+   },
+   {
+    "t": "Biópsia do colo com HSIL+ (NIC2, NIC3, AIS ou suspeita de microinvasão) — qualquer resultado do escovado",
+    "to": "g2_biopsia_hsil"
    }
   ]
  },
@@ -1380,6 +1452,10 @@ const G2_NODES = [
    {
     "t": "AGC-SOE (AGC) ou ASC-H+",
     "to": "g2_b_excisao"
+   },
+   {
+    "t": "Biópsia do colo com HSIL+ (NIC2, NIC3, AIS ou suspeita de microinvasão) — qualquer resultado do escovado",
+    "to": "g2_biopsia_hsil"
    }
   ]
  },
@@ -1489,8 +1565,13 @@ const G2_NODES = [
    {
     "t": "AGC-SOE (AGC) ou ASC-H+",
     "to": "g2_c_excisao"
+   },
+   {
+    "t": "Biópsia do colo com HSIL+ (NIC2, NIC3, AIS ou suspeita de microinvasão) — qualquer resultado do escovado",
+    "to": "g2_biopsia_hsil"
    }
-  ]
+  ],
+  "note": "Associar avaliação endometrial se 35 anos ou mais, ou menos de 35 com obesidade, SOP ou sangramento uterino anormal (Recs. 1.1.4, 3.4; Figura 10)."
  },
  {
   "id": "g2_c_seguimento",
@@ -1587,6 +1668,27 @@ const G2_NODES = [
   ]
  },
  {
+  "id": "g2_biopsia_hsil",
+  "title": "Procedimento excisional — com ZT tipo 3, excisão tipo 3 (mais de 15 mm, preferencialmente 20 mm de profundidade).",
+  "tier": "act",
+  "note": "Biópsia com HSIL (NIC2-3), AIS ou suspeita de microinvasão. A abordagem conservadora de HSIL (NIC2) não é aceitável em ZT tipo 3 (Rec. 2.1.4). Se AIS, siga também o módulo de Doença glandular; se doença invasiva, encaminhe ao centro oncológico.",
+  "ref": "Figuras 8–10; Recs. 2.1.4, 5.2.4",
+  "opts": [
+   {
+    "t": "Detalhar tipo de excisão e vigilância pós-tratamento",
+    "to": "__module:tratamento__"
+   },
+   {
+    "t": "Ir para o módulo de Doença glandular (AIS)",
+    "to": "__module:glandular__"
+   },
+   {
+    "t": "Ir para o módulo de Câncer superficialmente invasivo / suspeita de câncer",
+    "to": "__module:cancer__"
+   }
+  ]
+ },
+ {
   "id": "g2_d_check",
   "title": "Há suspeita clínica de invasão ou de câncer?",
   "ref": "Rec. 1.11.1",
@@ -1630,7 +1732,7 @@ const M2_NODES = [
  {
   "id": "m2_start",
   "title": "Há dúvida quanto à impressão colposcópica (achado pode ser menor, ou sugestivo de invasão) OU perspectiva de abordagem conservadora (mulher com ≤30 anos ou com preocupação quanto ao futuro obstétrico/reprodutivo)?",
-  "note": "Aplicável quando a colposcopia mostra achados anormais maiores E (DNA-HPV oncogênico positivo para 16/18) OU (HPV oncogênico diferente de 16/18 com citologia reflexa ASC-H ou HSIL).",
+  "note": "Aplicável quando a colposcopia mostra achados anormais maiores E (DNA-HPV oncogênico positivo para 16/18) OU (HPV oncogênico diferente de 16/18 com citologia reflexa ASC-H ou HSIL). Em ZT tipo 3 a abordagem conservadora não é aceitável (Rec. 2.1.4): nesse caso, a biópsia só se justifica por dúvida diagnóstica.",
   "ref": "Recs. 2.1.1, 2.1.2, 2.1.3, 2.3.1",
   "opts": [
    {
@@ -1647,19 +1749,24 @@ const M2_NODES = [
   "id": "m2_tratar_direto",
   "title": "Tratamento excisional expedito (\"ver e tratar\"), sem biópsia prévia, conforme o tipo de zona de transformação (ZT 1, 2 ou 3).",
   "tier": "act",
-  "ref": "Recs. 2.1.1, 2.3.1",
+  "ref": "Recs. 2.1.1, 2.3.1, 5.2.5",
   "opts": [
    {
     "t": "Detalhar tipo de excisão e vigilância pós-tratamento",
     "to": "__module:tratamento__"
    }
-  ]
+  ],
+  "note": "A excisão deve gerar espécime único e íntegro, com margens interpretáveis; a fragmentação intencional (técnica \"top-hat\") não é aceitável."
  },
  {
   "id": "m2_biopsia1",
   "title": "Realizar biópsia do achado colposcópico antes de decidir a conduta. Qual o resultado?",
   "ref": "Recs. 2.1.2, 2.1.3, 2.1.4",
   "opts": [
+   {
+    "t": "Negativa ou LSIL (NIC1)",
+    "to": "m2_biopsia_neg"
+   },
    {
     "t": "Sugestivo de invasão",
     "to": "m2_invasao"
@@ -1675,6 +1782,31 @@ const M2_NODES = [
    {
     "t": "Câncer",
     "to": "m2_cancer_refer"
+   }
+  ]
+ },
+ {
+  "id": "m2_biopsia_neg",
+  "title": "Biópsia negativa ou LSIL (NIC1) apesar do achado anormal maior: seguir as recomendações do Capítulo 1 (achados normais/menores), conforme genótipo, citologia reflexa e ZT.",
+  "tier": "warn",
+  "note": "Na discordância entre histologia e citologia, assegure que não há lesão vaginal concomitante e, quando possível, solicite revisão da lâmina citológica por um segundo profissional — o laudo revisado prevalece (Rec. 7.1.31). Se biópsia e escovado endocervical discordarem, considere o diagnóstico mais grave (Rec. 7.1.32).",
+  "ref": "Figuras 11 e 13; Recs. 7.1.31–7.1.32",
+  "opts": [
+   {
+    "t": "HPV 16/18, ZT tipo 1 ou 2",
+    "to": "f1_seguimento"
+   },
+   {
+    "t": "HPV 16/18, ZT tipo 3",
+    "to": "f2_escovado"
+   },
+   {
+    "t": "HPV não-16/18 com citologia ASC-H/HSIL, ZT tipo 1 ou 2",
+    "to": "g1_c_seguimento"
+   },
+   {
+    "t": "HPV não-16/18 com citologia ASC-H/HSIL, ZT tipo 3",
+    "to": "g2_b_brush"
    }
   ]
  },
@@ -2000,6 +2132,10 @@ const M2_NODES = [
    {
     "t": "HSIL (NIC3)",
     "to": "m2_ascus_tratar_nic3"
+   },
+   {
+    "t": "Invasão / câncer",
+    "to": "m2_cancer_refer"
    }
   ]
  },
@@ -2116,6 +2252,10 @@ const M2_NODES = [
    {
     "t": "HSIL (NIC2) ou HSIL (NIC3)",
     "to": "m2_ascus_tratar_zt3_nic23"
+   },
+   {
+    "t": "Invasão / câncer",
+    "to": "m2_cancer_refer"
    }
   ]
  },
@@ -2207,19 +2347,81 @@ const GL_NODES = [
   "id": "gl_colpo_investigacao",
   "title": "Realizar colposcopia com biópsia de qualquer achado colposcópico anormal (mesmo achados menores/inespecíficos) e investigação do canal por escovado endocervical, mesmo que a atipia glandular tenha sido referida em outro sítio.",
   "note": "Verificar também se há critério etário/de risco para avaliação endometrial concomitante (Rec. 3.4).",
-  "ref": "Recs. 3.1, 3.3",
+  "ref": "Recs. 3.1, 3.3; Figura 14",
   "opts": [
    {
     "t": "Colposcopia sem achados anormais e escovado endocervical negativo",
     "to": "gl_seguimento_3_2"
    },
    {
-    "t": "Achado (biópsia ou escovado) sugestivo de AIS ou AGC-FN",
+    "t": "Biópsia negativa ou LSIL (NIC1), sem atipia glandular no escovado",
+    "to": "gl_biopsia_neg"
+   },
+   {
+    "t": "Biópsia HSIL (NIC2)",
+    "to": "gl_hsil_nic2"
+   },
+   {
+    "t": "Biópsia HSIL (NIC3)",
+    "to": "gl_hsil_nic3"
+   },
+   {
+    "t": "AIS na biópsia, ou escovado mantém atipia glandular (AGC, AGC-FN ou AIS)",
     "to": "gl_ais_colpo"
    },
    {
     "t": "Biópsia confirma invasão (câncer)",
     "to": "gl_referir_cancer"
+   }
+  ]
+ },
+ {
+  "id": "gl_biopsia_neg",
+  "title": "Biópsia negativa ou LSIL (NIC1): seguimento conforme o Capítulo 1 (achados normais ou menores com AGC).",
+  "tier": "warn",
+  "ref": "Figura 14 (nota g)",
+  "opts": [
+   {
+    "t": "ZT tipo 1 ou 2 — seguimento criterioso de AGC",
+    "to": "__module:inicial:g1_b_seguimento__"
+   },
+   {
+    "t": "ZT tipo 3 — seguimento criterioso de AGC",
+    "to": "__module:inicial:g2_c_seguimento__"
+   }
+  ]
+ },
+ {
+  "id": "gl_hsil_nic2",
+  "title": "Procedimento excisional ou abordagem conservadora.",
+  "tier": "warn",
+  "note": "A abordagem conservadora é possível em mulheres com 30 anos ou menos, ou com preocupação quanto ao futuro obstétrico, com biópsia HSIL (NIC2), JEC completamente visível (ZT 1 ou 2), sem suspeita de lesão mais grave no canal e seguimento garantido. Nos demais casos, procedimento excisional.",
+  "ref": "Figura 14 (nota h); Recs. 2.1.3–2.1.4",
+  "opts": [
+   {
+    "t": "Critérios cumpridos — abordagem conservadora",
+    "to": "__module:inicial:m2_vigilancia_inicio__"
+   },
+   {
+    "t": "Critérios não cumpridos — procedimento excisional",
+    "to": "gl_hsil_nic3"
+   }
+  ]
+ },
+ {
+  "id": "gl_hsil_nic3",
+  "title": "Procedimento excisional conforme o tipo de ZT ou, mantida a suspeita de doença glandular, excisão tipo 3.",
+  "tier": "act",
+  "note": "Na excisão tipo 3 por suspeita glandular, a extensão segue o desejo de gestar (Recs. 3.10–3.11). Se o AIS for diagnosticado na peça, deve-se considerar a excisão tipo 3 como diagnóstica e seguir as recomendações de tratamento do AIS.",
+  "ref": "Figura 14 (nota i)",
+  "opts": [
+   {
+    "t": "Detalhar tipo de excisão e vigilância pós-tratamento",
+    "to": "__module:tratamento__"
+   },
+   {
+    "t": "AIS diagnosticado na peça de excisão",
+    "to": "gl_ais_incidental"
    }
   ]
  },
@@ -2311,13 +2513,14 @@ const GL_NODES = [
   "id": "gl_excisao_diagnostica",
   "title": "Realizar excisão tipo 3 com finalidade diagnóstica, para excluir adenocarcinoma endocervical — mesmo se já houver planejamento de histerectomia definitiva.",
   "tier": "act",
-  "ref": "Rec. 3.6",
+  "ref": "Recs. 3.6, 3.9–3.11",
   "opts": [
    {
     "t": "Peça de excisão obtida — avaliar margens",
     "to": "gl_excisao_margem"
    }
-  ]
+  ],
+  "note": "Peça única e íntegra, com margens interpretáveis (eletrocirurgia ou bisturi a frio); excisões em dois tempos (\"top-hat\") não são recomendadas (Rec. 3.9). Com desejo de preservar a fertilidade e JEC visível: toda a ZT + pelo menos 15 mm de canal (Rec. 3.10). Sem desejo reprodutivo: toda a ZT + no mínimo 20 mm de canal (Rec. 3.11)."
  },
  {
   "id": "gl_ais_incidental",
@@ -2455,13 +2658,15 @@ const GL_NODES = [
   "id": "gl_conservador_confirmado",
   "title": "Retornar ao rastreamento com DNA-HPV oncogênico a cada 3 anos, mantendo o útero.",
   "tier": "watch",
-  "ref": "Rec. 3.15"
+  "ref": "Rec. 3.15",
+  "note": "Entregar documento de contrarreferência com o momento do próximo teste e a periodicidade trienal (Rec. 3.16). A histerectomia simples continua sendo o tratamento preferencial após a conclusão da prole (Rec. 3.14)."
  },
  {
   "id": "gl_conservador_alterado",
-  "title": "Realizar nova colposcopia.",
+  "title": "Repetir a colposcopia associada à amostragem endocervical (escovado).",
   "tier": "warn",
-  "ref": "Rec. 3.15"
+  "ref": "Rec. 3.15; Figura 15",
+  "note": "DNA-HPV oncogênico positivo (qualquer tipo) ou citologia anormal em qualquer momento após tratamento conservador do AIS exige reavaliação imediata; diante de doença residual/recorrente, decidir entre vigilância intensificada, nova excisão ou histerectomia — que é a conduta preferencial."
  },
  {
   "id": "gl_segue_histerectomia",
@@ -2511,7 +2716,8 @@ const GL_NODES = [
   "id": "gl_avaliar_cavidade_acao",
   "title": "Realizar avaliação da cavidade uterina (ultrassonografia transvaginal, histeroscopia com biópsia dirigida, ou outra biópsia endometrial), associada à investigação cervical.",
   "tier": "warn",
-  "ref": "Rec. 3.4"
+  "ref": "Rec. 3.4",
+  "note": "Quando a investigação da cavidade uterina não puder ser feita de forma oportuna, priorize o tratamento da doença cervical identificada e programe a investigação endometrial assim que houver recurso (especialmente em mulheres assintomáticas)."
  },
  {
   "id": "gl_avaliar_cavidade_nao",
@@ -2604,6 +2810,22 @@ const CA_NODES = [
    {
     "t": "Novo fragmento (excisão com alça) confirma microinvasão, margens avaliáveis",
     "to": "ca_margens_resultado"
+   },
+   {
+    "t": "Novo material sem invasão",
+    "to": "ca_sem_invasao"
+   }
+  ]
+ },
+ {
+  "id": "ca_sem_invasao",
+  "title": "Sem invasão no novo material: conduzir conforme o diagnóstico histológico obtido, mantendo atenção à suspeita clínica.",
+  "tier": "warn",
+  "ref": "Rec. 4.1.1",
+  "opts": [
+   {
+    "t": "Ir para a avaliação pós-colposcopia",
+    "to": "__module:inicial:i0__"
    }
   ]
  },
@@ -2637,8 +2859,12 @@ const CA_NODES = [
   "note": "Se negativas para HSIL, define-se carcinoma superficialmente invasivo (FIGO IA1: invasão estromal até 3 mm).",
   "opts": [
    {
-    "t": "Margens negativas para HSIL — define-se FIGO IA1",
+    "t": "Margens negativas para HSIL e invasão estromal de até 3 mm — FIGO IA1",
     "to": "ca_lvsi"
+   },
+   {
+    "t": "Margens negativas, mas invasão estromal acima de 3 mm (FIGO IA2) ou mais",
+    "to": "ca_encaminhar_avancado"
    },
    {
     "t": "Margens comprometidas por HSIL ou microinvasão",
@@ -2663,8 +2889,12 @@ const CA_NODES = [
   "title": "As margens da nova peça de excisão estão comprometidas por HSIL ou por microinvasão?",
   "opts": [
    {
-    "t": "Margens negativas para HSIL — define-se FIGO IA1",
+    "t": "Margens negativas para HSIL e invasão estromal de até 3 mm — FIGO IA1",
     "to": "ca_lvsi"
+   },
+   {
+    "t": "Margens negativas, mas invasão estromal acima de 3 mm (FIGO IA2) ou mais",
+    "to": "ca_encaminhar_avancado"
    },
    {
     "t": "Ainda comprometidas por HSIL ou microinvasão, mesmo após a nova excisão",
@@ -2754,9 +2984,10 @@ const CA_NODES = [
  },
  {
   "id": "ca_retorno3anos_hist",
-  "title": "Retornar ao rastreamento de rotina com teste de DNA-HPV oncogênico a cada 3 anos.",
+  "title": "Retornar ao rastreamento com teste de DNA-HPV oncogênico a cada 3 anos, por pelo menos 25 anos.",
   "tier": "watch",
-  "ref": "Rec. 4.2.4"
+  "ref": "Recs. 4.2.4, 5.3.7",
+  "note": "Entregar documento de contrarreferência para a APS com o momento do próximo teste e sua periodicidade (Rec. 4.2.6)."
  },
  {
   "id": "ca_seg_cons_agenda",
@@ -2792,7 +3023,8 @@ const CA_NODES = [
   "id": "ca_retorno3anos_cons",
   "title": "Retornar ao rastreamento de rotina com teste de DNA-HPV oncogênico a cada 3 anos.",
   "tier": "watch",
-  "ref": "Rec. 4.2.5"
+  "ref": "Rec. 4.2.5",
+  "note": "Entregar documento de contrarreferência para a APS com o momento do próximo teste e sua periodicidade (Rec. 4.2.6)."
  },
  {
   "id": "ca_nova_lesao",
@@ -2820,8 +3052,42 @@ const TR_NODES = [
   "id": "tr_tipo_tratamento",
   "title": "Tratar com método excisional (tratamento preferencial para lesão precursora escamosa).",
   "tier": "ask",
-  "note": "Eletrocauterização cirúrgica, crioterapia, terapias com agentes tópicos, vacinas terapêuticas e outros produtos biológicos NÃO são aceitáveis como tratamento. Histerectomia é inaceitável como terapia primária de HSIL (só é aceitável para AIS/câncer invasor como tratamento definitivo, doença ginecológica benigna concomitante com indicação própria de histerectomia, ou quando a reexcisão de HSIL recidivado não for tecnicamente viável). Método ablativo (termoablação) é alternativa aceitável em populações com acesso limitado ao excisional, desde que a mulher preencha critérios de elegibilidade (ZT tipo 1 ou 2 visível, lesão totalmente visível, sem suspeita de câncer ou doença glandular); se não elegível, encaminhar para avaliação adicional ou tratamento excisional. Ofertar o tratamento no primeiro atendimento; se não for possível, realizar em até 3 meses. Se o tratamento não for feito em até 6 meses do diagnóstico, repetir a colposcopia antes de tratar. Em gestantes, adiar o tratamento para 12 semanas após o parto, com nova avaliação antes.",
-  "ref": "Recs. 5.1.1-5.1.3, 5.2.1, 5.2.2, 5.2.6",
+  "note": "Eletrocauterização cirúrgica, crioterapia, terapias com agentes tópicos, vacinas terapêuticas e outros produtos biológicos NÃO são aceitáveis como tratamento. Histerectomia é inaceitável como terapia primária de HSIL (só é aceitável para AIS/câncer invasor como tratamento definitivo, doença ginecológica benigna concomitante com indicação própria de histerectomia, ou quando a reexcisão de HSIL recidivado não for tecnicamente viável). Método ablativo (termoablação) é alternativa aceitável em populações com acesso limitado ao excisional, desde que a mulher preencha critérios de elegibilidade (ZT tipo 1 ou 2 visível, lesão totalmente visível, sem suspeita de câncer ou doença glandular); se não elegível, encaminhar para avaliação adicional ou tratamento excisional. Ofertar o tratamento no primeiro atendimento; se não for possível, realizar em até 3 meses. Se o tratamento não for feito em até 6 meses do diagnóstico, repetir a colposcopia antes de tratar. Em gestantes, adiar o tratamento para 12 semanas após o parto, com nova avaliação antes. Antes do tratamento, esclareça a mulher e obtenha consentimento informado (verbal ou, sempre que possível, escrito), registrado em prontuário (Rec. 5.1.4).",
+  "ref": "Recs. 5.1.1–5.1.4, 5.2.1, 5.2.2, 5.2.6",
+  "opts": [
+   {
+    "t": "Ver extensão da excisão (tipos 1, 2 e 3) e técnica",
+    "to": "tr_tecnica"
+   },
+   {
+    "t": "Vacinação contra HPV após o tratamento",
+    "to": "tr_vacina"
+   },
+   {
+    "t": "Definir situação da paciente para a vigilância pós-tratamento",
+    "to": "tr_situacao"
+   }
+  ]
+ },
+ {
+  "id": "tr_tecnica",
+  "title": "Extensão da excisão: definida pelo tipo de ZT, pelo tamanho/extensão da lesão e pela histologia conhecida ou suspeita.",
+  "tier": "act",
+  "note": "<b>Tipo 1</b> — indicada para ZT tipo 1; até 10 mm de profundidade.<br><b>Tipo 2</b> — indicada para ZT tipo 2; até 15 mm.<br><b>Tipo 3</b> — mais de 15 mm, preferencialmente 20 mm; indicada para ZT tipo 3, suspeita de doença microinvasiva e doença glandular comprovada ou suspeita.<br><br>Preferencialmente sob visão colposcópica e em <b>peça única</b>. Não usar técnicas complementares do canal como o \"top-hat\". A excisão eletrocirúrgica com alça (EZT/LEEP) é a técnica padrão; conização a frio é aceitável. Anestesia local injetável é indispensável (Rec. 7.1.29). Na pós-menopausa o colo é menor — a cervicometria ajuda a planejar a extensão. Excisões mais profundas aumentam o risco de parto prematuro: evite excisar além do necessário.",
+  "ref": "Recs. 5.2.3–5.2.5, 7.1.29",
+  "opts": [
+   {
+    "t": "Definir situação da paciente para a vigilância pós-tratamento",
+    "to": "tr_situacao"
+   }
+  ]
+ },
+ {
+  "id": "tr_vacina",
+  "title": "Oferecer vacinação contra HPV após o tratamento de lesão de alto grau (NIC2+ ou AIS), independentemente da idade.",
+  "tier": "act",
+  "note": "Preferencialmente no período perioperatório ou até 12 meses após o procedimento, em esquema de 3 doses, conforme o Programa Nacional de Imunizações (Nota Técnica nº 32/2026-CGICI/DPNI/SVSA/MS). A evidência de redução de recorrência ainda é limitada; a recomendação considera também a prevenção de novas infecções e reinfecção.",
+  "ref": "Cap. 5 — vacinação pós-tratamento",
   "opts": [
    {
     "t": "Definir situação da paciente para a vigilância pós-tratamento",
@@ -2923,7 +3189,7 @@ const TR_NODES = [
  },
  {
   "id": "tr_a_semhpv_normal",
-  "title": "Citologias normais aos 6 e 12 meses: retomar rastreamento de rotina com DNA-HPV oncogênico a cada 5 anos.",
+  "title": "Citologias normais aos 6 e 12 meses: continuar o seguimento conforme as Diretrizes de 2016 enquanto o teste de DNA-HPV oncogênico não estiver disponível.",
   "tier": "watch",
   "ref": "Rec. 5.3.11"
  },
@@ -2989,7 +3255,8 @@ const TR_NODES = [
   "id": "tr_a_curada",
   "title": "Teste de cura atingido (2 testes de DNA-HPV oncogênico consecutivos negativos): retomar rastreamento de rotina com DNA-HPV oncogênico a cada 5 anos.",
   "tier": "watch",
-  "ref": "Rec. 5.3.3"
+  "ref": "Recs. 5.3.3, 5.3.4, 5.3.6",
+  "note": "Entregar documento de contrarreferência para a APS (Rec. 5.3.4). Qualquer teste de DNA-HPV oncogênico positivo depois disso, mesmo no rastreamento na APS, indica nova colposcopia, independentemente da genotipagem ou da citologia (Rec. 5.3.6)."
  },
  {
   "id": "tr_a_colposcopia",
@@ -3148,7 +3415,8 @@ const TR_NODES = [
   "id": "tr_b_curada",
   "title": "Três testes de DNA-HPV oncogênico consecutivamente negativos: retomar rastreamento com DNA-HPV oncogênico a cada 3 anos, por pelo menos 25 anos.",
   "tier": "watch",
-  "ref": "Rec. 5.3.7"
+  "ref": "Rec. 5.3.7",
+  "note": "Entregar documento de contrarreferência para a APS com o momento do próximo teste e a periodicidade trienal (Rec. 5.3.4)."
  },
  {
   "id": "tr_b_colposcopia",
@@ -3261,7 +3529,7 @@ const HE_NODES = [
     "to": "he_dispensada"
    },
    {
-    "t": "Sem lesão identificada na peça cirúrgica, com antecedente de HSIL previamente tratada por procedimento excisional, e há registro de teste de DNA-HPV oncogênico negativo antes da histerectomia",
+    "t": "Sem lesão identificada na peça cirúrgica, com antecedente de HSIL ou AIS previamente tratado por procedimento excisional, e há registro de teste de DNA-HPV oncogênico negativo antes da histerectomia",
     "to": "he_b_tipo"
    },
    {
@@ -3277,7 +3545,8 @@ const HE_NODES = [
  {
   "id": "he_dispensada",
   "title": "Dispensar a mulher do rastreamento do colo do útero.",
-  "tier": "watch"
+  "tier": "watch",
+  "ref": "Parte I (Recs. 34 e 35)"
  },
  {
   "id": "he_b_tipo",
@@ -3293,7 +3562,8 @@ const HE_NODES = [
     "t": "AIS",
     "to": "he_b_3anos"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.1, 6a.5"
  },
  {
   "id": "he_b_5anos",
@@ -3308,7 +3578,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.1, 6a.5"
  },
  {
   "id": "he_b_3anos",
@@ -3323,7 +3594,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.1, 6a.5"
  },
  {
   "id": "he_c_tipo",
@@ -3338,7 +3610,8 @@ const HE_NODES = [
     "t": "AIS",
     "to": "he_c_ais_6m"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_hsil_6m",
@@ -3353,7 +3626,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_hsil_18m",
@@ -3368,7 +3642,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_hsil_cura",
@@ -3384,7 +3659,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_ais_6m",
@@ -3399,7 +3675,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_ais_18m",
@@ -3414,7 +3691,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_c_ais_cura",
@@ -3430,7 +3708,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.2, 6a.5"
  },
  {
   "id": "he_d_tipo",
@@ -3445,7 +3724,8 @@ const HE_NODES = [
     "t": "AIS",
     "to": "he_d_ais_6m"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
  },
  {
   "id": "he_d_hsil_6m",
@@ -3460,7 +3740,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
  },
  {
   "id": "he_d_hsil_18m",
@@ -3475,7 +3756,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
  },
  {
   "id": "he_d_hsil_cura",
@@ -3491,7 +3773,8 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
  },
  {
   "id": "he_d_ais_6m",
@@ -3506,12 +3789,31 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
  },
  {
   "id": "he_d_ais_18m",
   "title": "Repetir teste de DNA-HPV oncogênico 12 meses depois (18 meses após a cirurgia).",
   "tier": "warn",
+  "opts": [
+   {
+    "t": "Negativo",
+    "to": "he_d_ais_30m"
+   },
+   {
+    "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
+    "to": "he_colpo"
+   }
+  ],
+  "ref": "Recs. 6a.3, 6a.5"
+ },
+ {
+  "id": "he_d_ais_30m",
+  "title": "Realizar terceiro teste de DNA-HPV oncogênico 12 meses depois (30 meses após a cirurgia).",
+  "tier": "warn",
+  "note": "Para a histerectomia realizada por AIS, as Recs. 3.17 e 5.3.7 (e a Figura 18) indicam três testes (6, 18 e 30 meses) e seguimento trienal por pelo menos 25 anos, enquanto a Rec. 6a.3 cita dois testes. A ferramenta adota o esquema mais conservador.",
+  "ref": "Recs. 3.17, 5.3.7",
   "opts": [
    {
     "t": "Negativo",
@@ -3525,9 +3827,9 @@ const HE_NODES = [
  },
  {
   "id": "he_d_ais_cura",
-  "title": "Teste de cura atingido (2 testes de DNA-HPV oncogênico consecutivos negativos): retomar rastreamento com DNA-HPV oncogênico a cada 3 anos.",
+  "title": "Três testes de DNA-HPV oncogênico consecutivos negativos: retomar rastreamento com DNA-HPV oncogênico a cada 3 anos, por pelo menos 25 anos.",
   "tier": "watch",
-  "note": "Histerectomia foi realizada por AIS (doença identificada na peça).",
+  "note": "Histerectomia foi realizada por AIS (doença identificada na peça). Entregar documento de contrarreferência para a APS (Rec. 6a.4).",
   "opts": [
    {
     "t": "Negativo",
@@ -3537,13 +3839,15 @@ const HE_NODES = [
     "t": "Positivo para qualquer tipo viral, independentemente da citologia reflexa",
     "to": "he_colpo"
    }
-  ]
+  ],
+  "ref": "Recs. 3.17, 5.3.7, 6a.4"
  },
  {
   "id": "he_colpo",
   "title": "Encaminhar para colposcopia (avaliação de possível lesão vaginal de alto grau).",
   "tier": "urgent",
-  "note": "Indicada por teste de DNA-HPV oncogênico positivo para qualquer tipo viral, independentemente do resultado da citologia reflexa ou da genotipagem, em qualquer situação (B, C ou D) que envolva teste de DNA-HPV oncogênico após a histerectomia."
+  "note": "Indicada por teste de DNA-HPV oncogênico positivo para qualquer tipo viral, independentemente do resultado da citologia reflexa ou da genotipagem, em qualquer situação (B, C ou D) que envolva teste de DNA-HPV oncogênico após a histerectomia.",
+  "ref": "Rec. 6a.5"
  }
 ];
 registerModule({ id:'histerectomizada', group:'Populações especiais', label:'Mulheres histerectomizadas', desc:'Rastreamento e vigilância após histerectomia, conforme o motivo da cirurgia e o achado na peça.', start:'he_start', tree: arrToTree(HE_NODES) });
@@ -3552,7 +3856,7 @@ const HV_NODES = [
  {
   "id": "hv_start",
   "title": "Como está a colposcopia desta mulher (com DNA-HPV oncogênico positivo, qualquer genótipo)?",
-  "note": "Colher citologia durante a própria colposcopia quando não houver citologia reflexa disponível e os achados forem normais.",
+  "note": "Colher citologia durante a própria colposcopia quando não houver citologia reflexa disponível e os achados forem normais. A conduta não depende do genótipo (Rec. 6c.1.3), e contagem de CD4, carga viral ou uso de TARV não modificam a conduta (Rec. 6c.1.2).",
   "opts": [
    {
     "t": "Achados colposcópicos normais, ZT tipo 1 ou 2",
@@ -3734,31 +4038,20 @@ const HV_NODES = [
  },
  {
   "id": "hv_zt12_agc",
-  "title": "AGC-SOE (AGC): realizar escovado endocervical.",
+  "title": "AGC-SOE (AGC): seguir as recomendações do Capítulo 1 (escovado endocervical e seguimento criterioso).",
   "ref": "Rec. 6c.2.4",
   "opts": [
    {
-    "t": "Seguir a mesma lógica de seguimento de AGC da população geral",
-    "to": "hv_zt12_agc_seguimento"
-   }
-  ]
- },
- {
-  "id": "hv_zt12_agc_seguimento",
-  "title": "Manter seguimento criterioso: citologia e colposcopia semestrais + teste de DNA-HPV oncogênico anual (mesma lógica de seguimento de AGC da população geral).",
-  "tier": "warn",
-  "ref": "Rec. 6c.2.4",
-  "note": "Excepcionalmente, aceita-se excisão conforme o tipo de ZT (1 ou 2) nessas mulheres, desde que tenham 30 anos ou mais, quando não for possível assegurar a adesão à vigilância ou em situação de vulnerabilidade.",
-  "opts": [
+    "t": "Ir para o fluxo de AGC do Capítulo 1 (ZT tipo 1 ou 2)",
+    "to": "__module:inicial:g1_b_escovado__"
+   },
    {
     "t": "Excepcionalmente: 30 anos ou mais e sem garantia de adesão / situação de vulnerabilidade — excisão aceitável",
     "to": "hv_zt12_agc_excisao"
-   },
-   {
-    "t": "2 testes de DNA-HPV oncogênico consecutivos negativos (intervalo de 1 ano), colposcopia e citologia normais",
-    "to": "hv_zt12_retorno3"
    }
-  ]
+  ],
+  "tier": "warn",
+  "note": "Excepcionalmente, aceita-se procedimento excisional (conforme o tipo de ZT, 1 ou 2) desde que a mulher tenha 30 anos ou mais, quando não for possível assegurar a adesão à vigilância ou em situação de vulnerabilidade. Atenção: nesta população o retorno ao rastreamento é trienal e só ocorre após 2 testes de DNA-HPV oncogênico negativos consecutivos, com intervalo de 1 ano."
  },
  {
   "id": "hv_zt12_agc_excisao",
@@ -3851,31 +4144,20 @@ const HV_NODES = [
  },
  {
   "id": "hv_zt3_agc",
-  "title": "AGC-SOE (AGC): realizar escovado endocervical.",
+  "title": "AGC-SOE (AGC): realizar escovado endocervical e seguir as recomendações do Capítulo 1.",
   "ref": "Rec. 6c.3.2",
   "opts": [
    {
-    "t": "Seguir a mesma lógica de seguimento de AGC da população geral",
-    "to": "hv_zt3_agc_seguimento"
-   }
-  ]
- },
- {
-  "id": "hv_zt3_agc_seguimento",
-  "title": "Manter seguimento criterioso: citologia e colposcopia a cada 6 meses + teste de DNA-HPV oncogênico anual (mesma lógica de seguimento de AGC da população geral).",
-  "tier": "warn",
-  "ref": "Rec. 6c.3.2",
-  "note": "Excepcionalmente, aceita-se excisão tipo 3 nessas mulheres, desde que tenham 30 anos ou mais, quando não for possível assegurar adesão ou em situação de vulnerabilidade.",
-  "opts": [
+    "t": "Ir para o fluxo de AGC do Capítulo 1 (ZT tipo 3)",
+    "to": "__module:inicial:g2_c_brush__"
+   },
    {
     "t": "Excepcionalmente: 30 anos ou mais e sem garantia de adesão / situação de vulnerabilidade — excisão aceitável",
     "to": "hv_zt3_agc_excisao"
-   },
-   {
-    "t": "2 testes de DNA-HPV oncogênico consecutivos negativos (intervalo de 1 ano), colposcopia e citologia normais",
-    "to": "hv_zt3_retorno3"
    }
-  ]
+  ],
+  "tier": "warn",
+  "note": "Excepcionalmente, aceita-se procedimento excisional (excisão tipo 3) desde que a mulher tenha 30 anos ou mais, quando não for possível assegurar a adesão à vigilância ou em situação de vulnerabilidade. Atenção: nesta população o retorno ao rastreamento é trienal e só ocorre após 2 testes de DNA-HPV oncogênico negativos consecutivos, com intervalo de 1 ano."
  },
  {
   "id": "hv_zt3_agc_excisao",
@@ -3907,6 +4189,10 @@ const HV_NODES = [
    {
     "t": "ASC-H ou mais grave (ASC-H+)",
     "to": "hv_zt3_excisao_asch"
+   },
+   {
+    "t": "AGC-SOE (AGC)",
+    "to": "hv_zt3_agc"
    },
    {
     "t": "Negativo ou ASC-US/LSIL",
@@ -3981,14 +4267,16 @@ const HV_NODES = [
  },
  {
   "id": "hv_anormal_maior",
-  "title": "Achado colposcópico maior com DNA-HPV oncogênico positivo: tratamento excisional expedito, seguindo a mesma lógica do módulo de achados colposcópicos maiores da população geral.",
+  "title": "Achados colposcópicos anormais maiores: seguir as recomendações do Capítulo 2.",
   "tier": "act",
   "opts": [
    {
     "t": "Ir diretamente para a conduta de \"ver e tratar\" (achados maiores)",
     "to": "__module:inicial:m2_start__"
    }
-  ]
+  ],
+  "note": "Nesta população a conduta independe do genótipo (Rec. 6c.1.3); métodos ablativos não são recomendados (Rec. 6c.5.2).",
+  "ref": "Recs. 6c.1.3, 6c.4.1"
  },
  {
   "id": "hv_anormal_menor_biopsia",
@@ -4005,6 +4293,22 @@ const HV_NODES = [
    {
     "t": "Biópsia com suspeita de câncer microinvasor ou câncer",
     "to": "hv_anormal_menor_cancer"
+   },
+   {
+    "t": "Outras combinações (ex.: citologia ou escovado ASC-H+/AGC, ZT tipo 3)",
+    "to": "hv_anormal_outros"
+   }
+  ]
+ },
+ {
+  "id": "hv_anormal_outros",
+  "title": "Seguir as recomendações dos Capítulos 1 e 2, lembrando que nesta população a conduta independe do genótipo, a ablação não é recomendada e o retorno ao rastreamento é trienal.",
+  "tier": "warn",
+  "ref": "Recs. 6c.1.3, 6c.4.1, 6c.5.2",
+  "opts": [
+   {
+    "t": "Ir para a avaliação pós-colposcopia",
+    "to": "__module:inicial:i0__"
    }
   ]
  },
@@ -4133,7 +4437,8 @@ const HV_NODES = [
   "id": "hv_pos_trat_retorno3",
   "title": "Retornar ao rastreamento com teste de DNA-HPV oncogênico a cada 3 anos (trienal).",
   "tier": "watch",
-  "ref": "Rec. 6c.5.3"
+  "ref": "Rec. 6c.5.3",
+  "note": "Entregar documento de contrarreferência para a APS com o momento do próximo teste e a periodicidade (Rec. 6c.5.5)."
  },
  {
   "id": "hv_pos_trat_glandular",
@@ -4172,6 +4477,10 @@ const GE_NODES = [
     "to": "ge_d_urgente"
    },
    {
+    "t": "Outras situações (HPV não-16/18, achados anormais menores)",
+    "to": "ge_outros"
+   },
+   {
     "t": "Consultar: procedimentos contraindicados durante toda a gestação",
     "to": "ge_info_contraindicados"
    },
@@ -4180,6 +4489,13 @@ const GE_NODES = [
     "to": "ge_info_parto_vaginal"
    }
   ]
+ },
+ {
+  "id": "ge_outros",
+  "title": "A diretriz não traz fluxo específico para essas situações na gestação: aplicar os princípios gerais e reavaliar no pós-parto.",
+  "tier": "warn",
+  "note": "Biópsia somente se houver achado sugestivo de invasão (Rec. 6d.2.5); curetagem endocervical, biópsia endometrial e \"ver e tratar\" são contraindicados (Rec. 6d.2.4); escovado endocervical pode ser feito (Rec. 6d.2.3); não tratar HSIL/AIS durante a gestação (Rec. 6d.2.7).",
+  "ref": "Recs. 6d.2.3–6d.2.7"
  },
  {
   "id": "ge_a_seguimento",
@@ -4267,7 +4583,8 @@ const GE_NODES = [
     "t": "Ver achado da reavaliação pós-parto",
     "to": "ge_c_reaval_result"
    }
-  ]
+  ],
+  "note": "Idealmente entre 6 e 12 semanas após o parto (nunca antes de 4 semanas); a amamentação não contraindica a colposcopia, mas o hipoestrogenismo pode alterar os achados. Em gestantes vivendo com HIV ou imunossuprimidas, reavaliar sem atraso, idealmente em 6 semanas."
  },
  {
   "id": "ge_c_reaval_result",
