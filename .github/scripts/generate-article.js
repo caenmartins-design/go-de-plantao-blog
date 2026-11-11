@@ -5,6 +5,49 @@ const https = require('https');
 
 const BLOG_ROOT = path.join(__dirname, '..', '..');
 
+// Claude às vezes retorna quebras de linha literais dentro de strings do JSON
+// (ex.: dentro do article_body_html), o que viola a especificação JSON e quebra
+// o JSON.parse com "Bad control character in string literal". Escapa esses
+// caracteres de controle quando estão dentro de uma string, sem tocar no resto.
+function sanitizeJsonControlChars(str) {
+  let result = '';
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    const code = str.charCodeAt(i);
+    if (inString) {
+      if (escaped) {
+        result += ch;
+        escaped = false;
+        continue;
+      }
+      if (ch === '\\') {
+        result += ch;
+        escaped = true;
+        continue;
+      }
+      if (ch === '"') {
+        inString = false;
+        result += ch;
+        continue;
+      }
+      if (code < 0x20) {
+        if (ch === '\n') result += '\\n';
+        else if (ch === '\r') result += '\\r';
+        else if (ch === '\t') result += '\\t';
+        else result += '\\u' + code.toString(16).padStart(4, '0');
+        continue;
+      }
+      result += ch;
+    } else {
+      if (ch === '"') inString = true;
+      result += ch;
+    }
+  }
+  return result;
+}
+
 function downloadFile(url, destPath, headers = {}, redirectCount = 0) {
   return new Promise((resolve, reject) => {
     if (redirectCount > 5) return reject(new Error('Excesso de redirecionamentos ao baixar PDF'));
@@ -326,7 +369,7 @@ ${description}`
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Claude não retornou JSON válido:\n' + text);
 
-  const parsed = JSON.parse(jsonMatch[0]);
+  const parsed = JSON.parse(sanitizeJsonControlChars(jsonMatch[0]));
   const { meta_description, excerpt, article_body_html } = parsed;
 
   const finalCategory = categoryOverride || parsed.category || 'Ginecologia';
