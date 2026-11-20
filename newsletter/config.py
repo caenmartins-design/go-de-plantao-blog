@@ -56,4 +56,4 @@ MAX_POR_FONTE    = int(os.getenv("MAX_POR_FONTE", "20"))
 MAX_NEWSLETTER   = int(os.getenv("MAX_NEWSLETTER", "10"))
 
 # Blog
-BLOG_URL = os.getenv("BLOG_URL", "https://godeplantao.cae-nmartins.workers.dev/")
+BLOG_URL = os.getenv("BLOG_URL", "https://godeplantao.com.br/")
