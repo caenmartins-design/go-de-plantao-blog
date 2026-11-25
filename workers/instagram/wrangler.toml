@@ -1,0 +1,12 @@
+name = "godeplantao-instagram"
+main = "instagram.js"
+compatibility_date = "2024-09-01"
+
+[vars]
+# Origens que podem ler os posts (site oficial e o endereço workers.dev)
+ALLOWED_ORIGINS = "https://godeplantao.com.br,https://www.godeplantao.com.br,https://godeplantao.cae-nmartins.workers.dev"
+# Opcional: ID numérico da conta do Instagram. Se vazio, o worker tenta descobrir pelo token.
+IG_USER_ID = "17841407133634826"
+
+# Secret (configurar no painel da Cloudflare ou com `npx wrangler secret put IG_TOKEN`):
+#   IG_TOKEN — token de acesso da API do Instagram (nunca vai para o código nem para a página)
