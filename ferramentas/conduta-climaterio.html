@@ -223,6 +223,39 @@
     .rxt tr:last-child td{border-bottom:none}
     .rxt td:first-child{color:var(--tinta)}
     .rxtip{margin-top:10px; padding:11px 14px; background:var(--azul-light); border-radius:8px; font-size:14.5px; color:var(--tinta); line-height:1.55}
+
+    /* abas e grade MenoMEC */
+    .tool-tabs{display:flex; gap:10px; flex-wrap:wrap; margin:0 0 22px}
+    .tool-tab{display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:11px 18px; cursor:pointer; color:var(--tinta); font-family:'Itim', cursive; transition:border-color .15s, background .15s}
+    .tool-tab .tt{font-size:17px}
+    .tool-tab .sub{font-size:13px; color:var(--gray-600)}
+    .tool-tab:hover{border-color:var(--azul)}
+    .tool-tab.active{background:var(--azul); border-color:var(--azul); color:#fff}
+    .tool-tab.active .sub{color:rgba(255,255,255,.85)}
+    .srcbanner{margin-top:14px; padding:12px 16px; background:var(--white); border:1px solid var(--azul); border-left:4px solid var(--azul); border-radius:8px; font-size:14.5px; line-height:1.55; color:var(--tinta)}
+    .mmg{border-collapse:collapse; font-size:13.5px; line-height:1.35; width:100%}
+    .mmg th, .mmg td{border:1px solid rgba(0,0,0,.18); padding:6px 7px}
+    .mmg thead th{background:var(--gray-50); color:var(--tinta); font-weight:600; text-align:center}
+    .mmg thead th.mmcol{min-width:74px}
+    .mmg tr.mmic th{font-weight:500; font-size:12.5px}
+    .mmg th.mmcond{background:var(--gray-50); color:var(--tinta); text-align:left; min-width:120px; vertical-align:middle}
+    .mmg td.mmsub{background:var(--white); color:var(--tinta); text-align:left; min-width:190px}
+    .mmg td.mmc{text-align:center; color:#1d1d1f; font-weight:600; min-width:34px; white-space:nowrap}
+    .mmg td.mmc4{color:#fff; text-shadow:0 0 2px rgba(0,0,0,.45)}
+    .mmg sup{font-size:.72em}
+    .refcard .rxwrap .mmg{min-width:900px}
+    .refcard .mmg td.mmsub{min-width:150px}
+    .refcard .mmg th.mmcond{min-width:96px}
+    .refcard .mmg td.mmc{padding:6px 4px; min-width:28px}
+    .tool-layout.wide{grid-template-columns:minmax(0,1fr)}
+    .tool-layout.wide .tool-aside{position:static; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px}
+    .mmg-mini{max-width:520px}
+    .mmleg{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0}
+    .mmleg span{font-size:12.5px; padding:4px 9px; border-radius:6px; color:#1d1d1f}
+    .mmleg span.mmleg4{color:#fff}
+    .mmfn{margin:8px 0 0; padding-left:0; list-style:none}
+    .mmfn li{font-size:13.5px; line-height:1.5; color:var(--gray-600); margin-bottom:5px}
+    .mmabr, .mmsrc{font-size:13.5px !important; margin-top:10px}
   </style>
 </head>
 <body>
@@ -262,6 +295,8 @@
       <div class="article-divider"></div>
     </div>
 
+    <div class="tool-tabs" id="tooltabs" role="tablist" aria-label="Fonte da ferramenta"></div>
+
     <div class="tool-layout">
       <div class="tool-main">
         <div class="tool-intro" id="modintro"></div>
@@ -272,7 +307,7 @@
     </div>
 
     <p class="tool-colophon">
-      Ferramenta de apoio à decisão construída a partir do Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024 (SOBRAC/FEBRASGO). Nomes comerciais e dicas de uso a partir do material "Terapia Hormonal: Prescrição" (L. A. Resende, Gineco Endócrino na Prática). Disponibilidade e apresentações de medicamentos mudam — confira bula e registro na ANVISA antes de prescrever. Não substitui o texto do Consenso nem o julgamento clínico.
+      Ferramenta de apoio à decisão construída a partir do Consenso Brasileiro de Terapêutica Hormonal do Climatério 2024 (SOBRAC/FEBRASGO). Nomes comerciais e dicas de uso a partir do material "Terapia Hormonal: Prescrição" (L. A. Resende, Gineco Endócrino na Prática). Disponibilidade e apresentações de medicamentos mudam — confira bula e registro na ANVISA antes de prescrever. A aba "MenoMEC 2026" é baseada integralmente no consenso de Liss et al. (Menopause 2027; DOI 10.1097/GME.0000000000002947). Não substitui os textos originais nem o julgamento clínico.
     </p>
 
   </div>
@@ -376,7 +411,8 @@ function textEl(tag, cls, text){
 function renderNav(){
   const nav = document.getElementById('modnav');
   nav.innerHTML = '';
-  const all = Object.values(MODULES);
+  const tab = currentTab();
+  const all = Object.values(MODULES).filter(m => (m.tab || 'sobrac') === tab || m.type === 'feedback');
   const special = all.filter(m => m.group === 'Populações especiais');
   const opiniao = all.filter(m => m.group === 'Sua opinião');
   const main = all.filter(m => m.group === 'Fluxo principal');
@@ -396,9 +432,9 @@ function renderNav(){
   }
 
   nav.appendChild(block('Fluxo principal', null, main));
-  nav.appendChild(block('Populações especiais', 'Se alguma se aplica à paciente, comece por aqui — a conduta muda.', special, 'special'));
+  if (special.length) nav.appendChild(block('Populações especiais', 'Se alguma se aplica à paciente, comece por aqui — a conduta muda.', special, 'special'));
   nav.appendChild(block('💬 Sua opinião', 'O que faltou? O que confundiu? Leva menos de 1 minuto.', opiniao, 'feedback'));
-  nav.appendChild(block('Consulta rápida', null, other));
+  nav.appendChild(block(tab === 'menomec' ? 'Anexos e fonte' : 'Consulta rápida', null, other));
 }
 
 function renderIntro(){
@@ -407,6 +443,7 @@ function renderIntro(){
   box.innerHTML = '';
   box.appendChild(el('h1', null, [document.createTextNode(mod.label)]));
   if (mod.desc) box.appendChild(el('p', null, [document.createTextNode(mod.desc)]));
+  if (currentTab() === 'menomec') box.appendChild(el('div', {class:'srcbanner', html: MM_SOURCE}));
 }
 
 function renderTrail(){
@@ -596,7 +633,27 @@ function renderFeedback(){
   host.appendChild(card);
 }
 
+function currentTab(){
+  const m = currentModule();
+  if (m && m.type !== 'feedback') state.tab = m.tab || 'sobrac';
+  return state.tab || 'sobrac';
+}
+function renderTabs(){
+  const host = document.getElementById('tooltabs');
+  host.innerHTML = '';
+  const tab = currentTab();
+  [['sobrac', 'Consenso SOBRAC 2024', 'Brasil · da indicação à prescrição', 'inicial'],
+   ['menomec', 'MenoMEC 2026', 'EUA · TH ou não hormonal, por comorbidade', 'mm_inicial']].forEach(([k, t, sub, mid]) => {
+    const b = el('button', {class:'tool-tab' + (tab === k ? ' active' : ''), type:'button', role:'tab', 'aria-selected': String(tab === k)},
+      [textEl('span', 'tt', t), textEl('span', 'sub', sub)]);
+    b.addEventListener('click', () => { if (tab !== k) goModule(mid); });
+    host.appendChild(b);
+  });
+}
+
 function render(){
+  document.querySelector('.tool-layout').classList.toggle('wide', !!currentModule().wide);
+  renderTabs();
   renderNav();
   renderIntro();
   if (currentModule().type === 'static'){ renderStatic(); }
@@ -1201,8 +1258,313 @@ registerModule({
 });
 
 
+/* ============================================================
+   ABA MenoMEC — baseada integralmente em:
+   Liss J, et al. Recommendations for the use of hormone and nonhormone
+   treatment of vasomotor symptoms of menopause: Menopause Medical
+   Eligibility Criteria (MenoMEC) based on insights from a modified Delphi
+   panel. Menopause. 2027;34(11). DOI 10.1097/GME.0000000000002947.
+   Grade transcrita da Fig. 1 do artigo (tabelas 1 e 2).
+   ============================================================ */
+const MM_SOURCE = '<b>Esta aba é baseada integralmente no consenso MenoMEC</b> — Liss J, Larkin LC, Pinkerton JV, et al. <i>Recommendations for the use of hormone and nonhormone treatment of vasomotor symptoms of menopause: Menopause Medical Eligibility Criteria (MenoMEC) based on insights from a modified Delphi panel.</i> Menopause. 2027;34(11). DOI: 10.1097/GME.0000000000002947. Consenso norte-americano (painel Delphi modificado com 15 especialistas). O conteúdo desta aba não usa o Consenso SOBRAC 2024 nem nomes comerciais brasileiros — para isso, use a aba "Consenso SOBRAC 2024".';
+const MM_REF = 'MenoMEC (Liss et al., Menopause 2027)';
+
+/* colunas da grade: I = início, C = continuação */
+const MM_COLS = [
+  {k:'td', nome:'TH transdérmica', grupo:'TH'},
+  {k:'oral', nome:'TH oral', grupo:'TH'},
+  {k:'elin', nome:'Elinzanetanto (NKT)', grupo:'NH'},
+  {k:'fezo', nome:'Fezolinetanto (NKT)', grupo:'NH'},
+  {k:'parox', nome:'Paroxetina (Brisdelle®)', grupo:'NH'},
+  {k:'gaba', nome:'Gabapentina', grupo:'NH'},
+  {k:'oxi', nome:'Oxibutinina<sup>c</sup>', grupo:'NH'},
+  {k:'isrs', nome:'Outros ISRS/IRSN<sup>d</sup>', grupo:'NH'}
+];
+
+/* notas de rodapé da grade, traduzidas */
+const MM_FN = {
+  a:'Todas as pacientes devem ter avaliados o risco cardiovascular (escore PREVENT ASCVD em 10 anos) e o risco de câncer de mama antes de iniciar a TH.',
+  b:'O progestagênio é obrigatório em todas as pacientes com útero. Estrogênios conjugados/bazedoxifeno (Duavee®) podem ser usados em mulheres que não são candidatas a progestagênios.',
+  c:'Aplica-se a mulheres >65 anos. Foi relatado declínio cognitivo com o uso de oxibutinina em pacientes com e sem comprometimento cognitivo prévio. O uso de oxibutinina foi associado a declínio funcional, mental e comportamental em pacientes com doença de Alzheimer.',
+  d:'ISRS/IRSN podem incluir fluoxetina, citalopram, escitalopram, sertralina, duloxetina, venlafaxina e desvenlafaxina. Nota: paroxetina e fluoxetina são inibidores potentes do CYP2D6 e podem reduzir a conversão do tamoxifeno em endoxifeno em pacientes em terapia endócrina adjuvante.',
+  e:'Os anticoncepcionais combinados orais são geralmente mais eficazes para o controle de sintomas na perimenopausa e oferecem contracepção; porém, a TH pode ser usada quando eles não forem apropriados ou não forem a preferência.',
+  f:'Mulheres mais velhas (>70 anos) devem ser avaliadas anualmente quanto a riscos versus benefícios de manter a TH. Se o escore PREVENT ASCVD em 10 anos for >10%, a TH deve ser suspensa.',
+  g:'Avaliar uso de agonista de GLP-1 e/ou cirurgia bariátrica; pode-se considerar progestagênio não oral para proteção endometrial.',
+  h:'Se HbA1c <7%, pode-se iniciar/manter a TH. O objetivo deve ser sempre controlar a HbA1c antes de prescrever TH para redução de risco, também pela possível sobreposição de sintomas. No diabetes isolado não controlado, os riscos geralmente superam os benefícios tanto para formulações orais quanto não orais.',
+  i:'Risco/benefício influenciado pelo status de histerectomia (pode usar estrogênio [E] isolado) ou não (deve usar E+P).',
+  j:'Risco/benefício influenciado pela histologia do tumor.',
+  k:'Risco/benefício influenciado pela formulação usada: estrogênios conjugados vs estradiol; progestagênio sintético vs progesterona; estrogênios conjugados + bazedoxifeno.',
+  l:'Toda discussão sobre TH em sobreviventes de câncer de mama deve envolver o oncologista da paciente.',
+  m:'Esta categoria representa uma população heterogênea, com fatores de risco variados. Recomendam-se julgamento clínico e avaliação de risco individualizada.',
+  n:'A categoria 1 aplica-se à histologia escamosa. O adenocarcinoma cervical (~10% dos casos) pode exigir manejo semelhante ao das orientações para câncer de endométrio; considerar a histologia no aconselhamento.',
+  o:'A TH sistêmica não é recomendada em mulheres com câncer uterino avançado (estádio III/IV e/ou alto grau) nem em sarcomas uterinos.',
+  p:'O estádio do câncer e a presença de doença metastática ativa influenciam a adequação da TH. A discussão com o oncologista assistente é necessária para definir a melhor terapia. Não administrar TH em doença metastática.',
+  q:'Pacientes com câncer frequentemente apresentam estado de hipercoagulabilidade. Na hipercoagulabilidade, a TH transdérmica é preferível à oral.',
+  r:'Uma elevação nova não impede iniciar a medicação, mas exige investigação adequada e monitoramento contínuo.',
+  s:'Se as provas de função hepática subirem >5× o LSN, suspender.',
+  t:'Pode haver situações em que o risco varia e exige ponderação adicional.',
+  u:'Consultar a bula do produto.',
+  v:'Cautela com ISRS pelas possíveis interações com medicamentos usados na enxaqueca (ex.: triptanos).',
+  w:'Se a enxaqueca piorar com a TH, suspender.'
+};
+
+/* categorias da grade + texto do artigo correspondente (seção "Treatment recommendations") */
+const MM_CATS = [
+  {k:'idade', tab:1, nome:'Idade', fn:'',
+   texto:'Em geral, anticoncepcionais orais combinados contínuos são mais eficazes para o controle de sintomas na perimenopausa (<55 anos) e oferecem contracepção; a TH pode ser usada quando não forem apropriados, eficazes ou preferidos. Na transição menopausal, considerar a necessidade de contracepção. Acima de 70 anos, os riscos da TH geralmente superam os benefícios. Entre 60 e 69 anos, <b>iniciar TH transdérmica</b> e <b>manter TH oral</b> deve ser individualizado; para <b>manter a transdérmica</b>, as vantagens geralmente superam os riscos; para <b>iniciar a oral</b>, os riscos geralmente superam as vantagens. Reavaliar fatores de risco anualmente; se surgir contraindicação médica (além da idade), suspender a TH.'},
+  {k:'tabag', tab:1, nome:'Tabagismo', fn:'',
+   texto:'Tabagismo não contraindica estrogênio transdérmico, mas opções não hormonais também podem ser oferecidas. Estrogênio oral deve, em geral, ser evitado em fumantes atuais pelo possível aumento do risco trombótico — avaliar caso a caso. Com tabagismo apenas no passado, TH ou não hormonal podem ser usados.'},
+  {k:'prevent', tab:1, nome:'Escore PREVENT ASCVD em 10 anos', fn:'',
+   texto:'Com doença cardiovascular estabelecida ou risco elevado (PREVENT ASCVD >10%), a TH deve, em geral, ser evitada — embora estrogênio transdérmico em baixa dose possa não aumentar o risco de AVC em comparação com transdérmico em alta dose ou oral. A decisão deve ser estratificada pela avaliação do risco cardiovascular; se a paciente for de alto risco, está indicada avaliação com cardiologista.'},
+  {k:'dcv', tab:1, nome:'Doença cardiovascular conhecida', fn:'',
+   texto:'Na doença cardiovascular estabelecida, a TH deve, em geral, ser evitada; consultar cardiologista nas pacientes de alto risco. Suspender a TH diante de evento trombótico ou cardiovascular novo. Essas condições podem funcionar como contraindicações relativas, e não absolutas, em alguns cenários (categoria 3: os riscos geralmente superam os benefícios, mas a TH pode ser considerada com cautela e decisão compartilhada quando as alternativas forem inadequadas).'},
+  {k:'metab', tab:1, nome:'Metabólico', fn:'g',
+   texto:'Na presença de componentes da síndrome metabólica graves ou não controlados (hipertensão, dislipidemia, diabetes, obesidade), a terapia não hormonal deve ser considerada primeira linha em vez da TH oral. Com glicemia controlada (HbA1c <7%), hipertensão ou dislipidemia controladas, <b>estradiol transdérmico e progesterona micronizada</b> são considerados apropriados, e a terapia não hormonal também pode ser considerada. Em geral, limitar a TH às opções sistêmicas não orais.'},
+  {k:'riscomama', tab:1, nome:'Risco de câncer de mama', fn:'i,j,l',
+   texto:'Com risco elevado de câncer de mama, a terapia não hormonal deve, em geral, ser priorizada, embora a escolha dependa dos fatores de risco individuais e da discussão com oncologista. Em lesões mamárias de alto risco, a decisão compartilhada é essencial, com avaliação contínua de riscos e benefícios junto ao oncologista.'},
+  {k:'histmama', tab:1, nome:'História de câncer de mama', fn:'i,j,k,l',
+   texto:'Com história de câncer de mama, a terapia não hormonal deve, em geral, ser priorizada; a escolha depende de fatores individuais (ex.: CDIS após mastectomia bilateral vs cirurgia conservadora) e da discussão com o oncologista. ISRS/IRSN e gabapentina são opções citadas para quem tem história de câncer de mama.'},
+  {k:'gine', tab:2, nome:'História de câncer ginecológico', fn:'',
+   texto:'Na presença de câncer uterino ou de ovário, priorizar em geral a terapia não hormonal — a depender do tipo de câncer de ovário, idade, estádio e histórico cirúrgico. Pacientes com câncer de ovário seroso de alto grau e com câncer uterino estádio I e II podem receber TH.'},
+  {k:'outros', tab:2, nome:'História de outros cânceres', fn:'q',
+   texto:'Na presença de cânceres atuais ou prévios não hormônio-sensíveis (cólon, pulmão, melanoma), alternativas à TH sistêmica podem ser consideradas apropriadas, embora alguns clínicos ofereçam a TH como opção preferencial.'},
+  {k:'gastro', tab:2, nome:'Gastroenterológico / hepático', fn:'r',
+   texto:'Em condições hepáticas (provas de função hepática elevadas, cirrose, hepatite, doença inflamatória intestinal, MASLD), iniciar terapia não hormonal pode ser apropriado, <b>exceto as NKT</b>, geralmente inadequadas com transaminases >2× o LSN, cirrose e hepatite aguda; doença hepática ativa é contraindicação às NKT. A continuação com provas hepáticas alteradas deve seguir a bula. Doença hepática ativa grave contraindica a TH.'},
+  {k:'neuro', tab:2, nome:'Neurológico', fn:'',
+   texto:'Enxaqueca não contraindica a TH, mas formulações transdérmicas são preferidas e a terapia deve ser ajustada conforme a resposta; se os sintomas piorarem, migrar para terapia não hormonal. O elinzanetanto exige cautela em distúrbios do SNC, incluindo convulsões, e pode causar sonolência.'},
+  {k:'trombo', tab:2, nome:'Trombose (TVP/TEP)', fn:'',
+   texto:'Com história de trombose, oferecer primeiro opções não hormonais, mas considerar os benefícios da TH transdérmica ou local (ex.: transdérmica em baixa dose, TH vaginal), com apoio de hematologista em casos de maior risco ou incertos. TEV prévio não deve ser tratado como contraindicação uniforme: o estrogênio oral deve ser evitado após TEV, mas estradiol transdérmico em baixa dose (com progesterona micronizada, se necessário) pode ser razoável após decisão compartilhada, sobretudo após evento claramente provocado e sem fatores de risco persistentes importantes ou trombofilia grave. Pesar: evento provocado (ex.: pós-operatório), associado a hormônio ou não provocado; trombofilia ou outros fatores persistentes; idade, IMC, tabagismo e anticoagulação. TVP e TEP devem ser abordadas de forma semelhante. Já em anticoagulação, a TH transdérmica pode ser mantida com decisão compartilhada; com anticoagulação iniciada há 3–6 meses, a TH não é recomendada e o não hormonal é preferido.'},
+  {k:'autoimune', tab:2, nome:'Doença autoimune', fn:'', texto:''}
+];
+
+/* linhas da grade: [categoria, subcondição, notas, 16 valores na ordem TD I C · Oral I C · Elin I C · Fezo I C · Parox I C · Gaba I C · Oxi I C · ISRS I C]
+   "x^s,t" = valor com nota sobrescrita */
+const U12 = ' 1 1 1 1 1 1 1 1 1 1 1 1';
+const MM_ROWS = [
+  ['idade','<45 anos','e','1 1 1 1'+U12],
+  ['idade','45–59 anos','','1 1 1 1'+U12],
+  ['idade','60–69 anos','','2-3 2 3 2-3 1 1 1 1 1 1 1 1 2 2 1 1'],
+  ['idade','≥70 anos','f','3 2-3 3-4 3 1-2 1-2 1-2 1-2 2 2 2-3 2-3 3 3 2 2'],
+  ['tabag','Atual','','2 2 3 3 1 1 1 1 2 2 1 1 1 1 1 1'],
+  ['tabag','História prévia','','1 1 1 1'+U12],
+  ['prevent','Baixo risco: <3%','','1 1 1 1'+U12],
+  ['prevent','Risco limítrofe: 3% a <5%','','2-3 2-3 2-3 2-3'+U12],
+  ['prevent','Risco intermediário: 5% a <10%','','3 3 3 3'+U12],
+  ['prevent','Alto risco: ≥10%','','4 4 4 4'+U12],
+  ['dcv','Hipertensão — controlada','','1-2 1 2-3 2'+U12],
+  ['dcv','Hipertensão — não controlada','','3-4 3 4 3-4'+U12],
+  ['dcv','AVC / AIT','','3-4 3-4 4 4'+U12],
+  ['dcv','IAM não fatal','','3 3 4 4'+U12],
+  ['dcv','Angina','','3 3 4 4'+U12],
+  ['metab','IMC >30 kg/m²','','1 1 2 2'+U12],
+  ['metab','Diabetes — controlado','h','1 1 2 2'+U12],
+  ['metab','Diabetes — não controlado','','2 2 3 3'+U12],
+  ['metab','Hipercolesterolemia','','1 1 3 3'+U12],
+  ['metab','Hipertrigliceridemia','','2 2 3 3'+U12],
+  ['riscomama','Portadora de mutação genética, sem útero (E isolado)','','1 1 1 1'+U12],
+  ['riscomama','Portadora de mutação genética, com útero (E+P)','','2 2 2 2'+U12],
+  ['riscomama','Portadora de mutação genética, após mastectomia bilateral','','1 1 1 1'+U12],
+  ['riscomama','Alto risco histológico (HDA, HLA, CLIS)','','3 3 3 3'+U12],
+  ['riscomama','Radioterapia torácica prévia por outro câncer (ex.: Hodgkin)','','2 2 2 2'+U12],
+  ['riscomama','Alto risco por modelo (Tyrer-Cuzick v8 >5% em 5 anos ou >20% na vida, ou Gail >3%)','m','2-3 2-3 2-3 2-3'+U12],
+  ['histmama','Triplo-negativo (>5 anos / <5 anos)','','2/3 2/3 2/3 2/3'+U12],
+  ['histmama','RH positivo — em terapia endócrina','','4 4 4 4'+U12],
+  ['histmama','RH positivo — terapia endócrina concluída','','3 3 3 3'+U12],
+  ['histmama','CDIS com cirurgia conservadora — em terapia endócrina','','4 4 4 4'+U12],
+  ['histmama','CDIS com cirurgia conservadora — terapia endócrina concluída','','3 3 3 3'+U12],
+  ['histmama','CDIS após mastectomia bilateral','j','2 2 2 2'+U12],
+  ['histmama','Invasivo RH negativo (<5 anos)','','3 3 3 3'+U12],
+  ['histmama','Invasivo RH negativo (>5 anos)','','2 2 2 2'+U12],
+  ['histmama','Invasivo RH positivo — em terapia endócrina','','4 4 4 4'+U12],
+  ['histmama','Invasivo RH positivo — terapia endócrina concluída','','3 3 3 3'+U12],
+  ['gine','Colo do útero','n','1 1 1 1'+U12],
+  ['gine','Uterino','o','2 2 2 2'+U12],
+  ['gine','Ovário','p','2-3 2-3 2-3 2-3'+U12],
+  ['gine','Ovário — epitelial (pós-tratamento)','','2 2 2 2'+U12],
+  ['gine','Ovário — seroso de alto grau ou endometrioide','','2 2 2 2'+U12],
+  ['gine','Ovário — seroso de baixo grau (FIGO estádio I)','','2 2 2 2'+U12],
+  ['gine','Ovário — seroso de baixo grau (FIGO estádio II–IV ou recorrente)','','4 4 4 4'+U12],
+  ['gine','Tumor ovariano borderline','','1-2 1-2 1-2 1-2'+U12],
+  ['gine','Tumor de células germinativas (pós-tratamento)','','1 1 1 1'+U12],
+  ['gine','Tumor de células da granulosa (estádio I)','','3 3 3 3'+U12],
+  ['outros','Cólon','','1 1 1 1'+U12],
+  ['outros','Pulmão','','1 1 1 1'+U12],
+  ['outros','Melanoma','','2 2 2 2'+U12],
+  ['gastro','Provas de função hepática >2× LSN','','2 1-2 2-3 2 4 3-4^s,t 4 3-4^s,t 3 3 2 2 1 1 1 1'],
+  ['gastro','Cirrose','','2 2 3 3 4 4 4 4 3 3 2 2 1 1 1 1'],
+  ['gastro','Hepatite aguda','','4 3 4 3 3-4^s,t 3-4^s,t 3-4^s,t 3-4^s,t 3 3 2 2 1 1 1 1'],
+  ['gastro','História de hepatite C tratada','','1 1 3 3 1 1 1 1 3 3 2 2 1 1 1 1'],
+  ['gastro','Doença inflamatória intestinal','','1 1 3 3 1 1 1 1 3 3 2 2 1 1 1 1'],
+  ['gastro','MASLD / provas de função hepática elevadas <2× LSN','','1 1 2 1 1-2 1-2 2^t 2^t 2 2 1 1 1 1 1 1'],
+  ['gastro','Doença da vesícula biliar','','1-2 1 3 2-3'+U12],
+  ['neuro','Convulsões','u','1 1 1 1 1-2^u 1-2^u 1 1 1 1 1 1 1 1 1 1'],
+  ['neuro','Enxaqueca sem aura','v,w','1 1 1 1 1 1 1 1 2 2 1 1 1 1 2 2'],
+  ['neuro','Enxaqueca com aura','v,w','1 1 1-2 1-2 1 1 1 1 2 2 1 1 1 1 2 2'],
+  ['trombo','Em anticoagulação','','2 2 3 2-3 1 1 1 1 2 2 1 1 1 1 1 1'],
+  ['trombo','Sem anticoagulação','','3 3 4 4'+U12],
+  ['autoimune','Anticorpo antifosfolípide positivo','','4 4 4 4'+U12],
+  ['autoimune','Lúpus eritematoso sistêmico','','2-3 2-3 2-3 2-3'+U12],
+  ['autoimune','Artrite reumatoide','','1 1 1 1'+U12]
+].map((r, i) => {
+  const v = r[3].trim().split(/\s+/);
+  if (v.length !== 16) throw new Error('MenoMEC: linha com ' + v.length + ' valores: ' + r[1]);
+  return { id:'mmr_' + i, cat:r[0], sub:r[1], fn:r[2], v:v };
+});
+
+const MM_COR = {1:'#86c876', 2:'#d3eac6', 3:'#f5c5c8', 4:'#c62828'};
+function mmCell(val){
+  const [num, sup] = val.split('^');
+  const ns = num.split(/[-\/]/).map(Number);
+  const cor = x => (ns.length > 1 && x === 4) ? '#ea8a8a' : MM_COR[x];
+  const a = cor(ns[0]), b = cor(ns[ns.length - 1]);
+  const bg = ns.length > 1 ? 'linear-gradient(90deg,' + a + ' 0 50%,' + b + ' 50% 100%)' : a;
+  const dark = ns[0] === 4;
+  return '<td class="mmc' + (dark ? ' mmc4' : '') + '" style="background:' + bg + '">' + num + (sup ? '<sup>' + sup + '</sup>' : '') + '</td>';
+}
+function mmFnList(letters){
+  return letters.map(l => '<li><sup>' + l + '</sup> ' + MM_FN[l] + '</li>').join('');
+}
+const MM_LEGENDA = '<div class="mmleg"><span style="background:' + MM_COR[1] + '">1 = sem restrição de uso</span><span style="background:' + MM_COR[2] + '">2 = as vantagens geralmente superam os riscos teóricos ou comprovados</span><span style="background:' + MM_COR[3] + '">3 = os riscos teóricos ou comprovados geralmente superam as vantagens</span><span class="mmleg4" style="background:' + MM_COR[4] + '">4 = risco inaceitável à saúde (não usar)</span></div>';
+
+/* tabela completa (anexo) */
+function mmTabela(tab){
+  const cats = MM_CATS.filter(c => c.tab === tab);
+  let h = '<div class="rxwrap"><table class="mmg"><thead>' +
+    '<tr><th rowspan="3" class="mmcond">Condição</th><th rowspan="3" class="mmsub">Subcondição</th><th colspan="4">Terapia hormonal<sup>a,b</sup></th><th colspan="12">Terapia não hormonal</th></tr>' +
+    '<tr><th colspan="4">Em bula (EUA)</th><th colspan="6">Em bula (EUA)</th><th colspan="6">Fora de bula (EUA)</th></tr>' +
+    '<tr>' + MM_COLS.map(c => '<th colspan="2" class="mmcol">' + c.nome + '</th>').join('') + '</tr>' +
+    '<tr class="mmic"><th colspan="2">I = início; C = continuação</th>' + MM_COLS.map(() => '<th>I</th><th>C</th>').join('') + '</tr></thead><tbody>';
+  cats.forEach(c => {
+    const rows = MM_ROWS.filter(r => r.cat === c.k);
+    rows.forEach((r, i) => {
+      h += '<tr>' + (i === 0 ? '<th rowspan="' + rows.length + '" class="mmcond">' + c.nome + (c.fn ? '<sup>' + c.fn + '</sup>' : '') + '</th>' : '') +
+        '<td class="mmsub">' + r.sub + (r.fn ? '<sup>' + r.fn + '</sup>' : '') + '</td>' + r.v.map(mmCell).join('') + '</tr>';
+    });
+  });
+  h += '</tbody></table></div>';
+  const letras = ['a','b','c','d'];
+  cats.forEach(c => {
+    (c.fn ? c.fn.split(',') : []).forEach(l => letras.push(l));
+    MM_ROWS.filter(r => r.cat === c.k).forEach(r => {
+      (r.fn ? r.fn.split(',') : []).forEach(l => letras.push(l));
+      r.v.forEach(x => { const s = x.split('^')[1]; if (s) s.split(',').forEach(l => letras.push(l)); });
+    });
+  });
+  const uniq = [...new Set(letras)].sort();
+  return MM_LEGENDA + h + '<ul class="mmfn">' + mmFnList(uniq) + '</ul>';
+}
+
+/* nós do fluxo gerados a partir da grade */
+function mmLinhaNo(r){
+  const cat = MM_CATS.find(c => c.k === r.cat);
+  const n = x => Number(x.split('^')[0].split(/[-\/]/)[0]);
+  const td = n(r.v[0]), oral = n(r.v[2]);
+  const tier = td >= 4 ? 'urgent' : td === 3 ? 'warn' : 'act';
+  const nhOk = MM_COLS.slice(2).filter((c, i) => r.v[4 + i*2] === '1').map(c => c.nome);
+  const nhRestr = MM_COLS.slice(2).map((c, i) => ({c, v:r.v[4 + i*2]})).filter(o => o.v !== '1').map(o => o.c.nome + ' (cat. ' + o.v.replace('^', ' — nota ') + ')');
+  let resumo = 'Iniciar TH: <b>transdérmica categoria ' + r.v[0].replace('^', ' nota ') + '</b>, oral categoria ' + r.v[2].replace('^', ' nota ') + '. Manter TH já em uso: transdérmica ' + r.v[1] + ', oral ' + r.v[3] + '.';
+  resumo += '<br>Não hormonais sem restrição para iniciar (cat. 1): ' + (nhOk.length ? nhOk.join(', ') : 'nenhum') + '.';
+  if (nhRestr.length) resumo += '<br>Não hormonais com restrição: ' + nhRestr.join('; ') + '.';
+  const linhas = MM_COLS.map((c, i) => '<tr><td class="mmsub">' + c.nome + '</td>' + mmCell(r.v[i*2]) + mmCell(r.v[i*2 + 1]) + '</tr>').join('');
+  const letras = [...new Set([].concat(cat.fn ? cat.fn.split(',') : [], r.fn ? r.fn.split(',') : [],
+    ...r.v.map(x => (x.split('^')[1] || '').split(',').filter(Boolean)), ['a','b','c','d']))].sort();
+  return {
+    title: cat.nome + ' — ' + r.sub, tier: tier, note: resumo,
+    rx: '<h4>Linha da grade MenoMEC</h4><div class="rxwrap"><table class="mmg mmg-mini"><thead><tr><th>Terapia</th><th>Início</th><th>Continuação</th></tr></thead><tbody>' + linhas + '</tbody></table></div>' +
+      MM_LEGENDA + (cat.texto ? '<h4>O que diz o consenso</h4>' + TIP(cat.texto) : '') + '<h4>Notas da grade</h4><ul class="mmfn">' + mmFnList(letras) + '</ul>',
+    ref: MM_REF + ' · Fig. 1 e seção "Treatment recommendations"',
+    opts: [
+      {t:'Escolher o tratamento não hormonal (abordagem por sintoma)', to:'mm_nh'},
+      {t:'A paciente tem outra condição — consultar outra linha da grade', to:'mm_cat'}
+    ]
+  };
+}
+
+const MM_TREE = {
+  mm0:{ title:'Antes de escolher a terapia para sintomas vasomotores moderados a graves',
+    note:'O consenso recomenda avaliar: <b>gravidade</b> dos sintomas vasomotores (leve, moderada, grave), <b>sintomas concomitantes</b> (sono, ansiedade, depressão, queixas urinárias, dor), <b>medicações em uso</b> e <b>comorbidades</b> (ex.: câncer de mama prévio, síndrome metabólica, risco cardiovascular), sempre com <b>decisão compartilhada</b>. O diagnóstico é clínico (sintomas, idade, história menstrual e familiar); dosar FSH ou estradiol só raramente. A <b>TH é a primeira linha</b> sem contraindicação — E+P com útero, estrogênio isolado se histerectomizada. Contraindicações: sangramento vaginal inexplicado, doença hepática, câncer estrogênio-sensível prévio (incluindo mama), doença coronariana, AVC, IAM ou TEV prévios, ou história pessoal ou risco hereditário alto de doença tromboembólica. O não hormonal é opção para quem não é elegível ou não quer TH. Antes de iniciar TH, avaliar risco cardiovascular (PREVENT ASCVD 10 anos) e risco de câncer de mama.',
+    ref: MM_REF + ' · Results: clinical considerations; role of HT',
+    opts:[
+      {t:'Consultar a grade pela condição clínica da paciente', to:'mm_cat'},
+      {t:'A paciente não pode ou não quer TH — escolher o não hormonal', to:'mm_nh'},
+      {t:'A paciente já usa TH — reavaliação e duração', to:'mm_seg'}
+    ] },
+  mm_cat:{ title:'Qual condição clínica você quer avaliar?',
+    note:'Cada linha da grade traz a categoria (1 a 4) para <b>iniciar</b> e para <b>manter</b> cada terapia. Se a paciente tiver mais de uma condição, consulte cada linha correspondente.',
+    ref: MM_REF + ' · Fig. 1',
+    opts: MM_CATS.map(c => ({t:c.nome, to:'mmc_' + c.k})) },
+  mm_nh:{ title:'Escolha do não hormonal: abordagem pelo sintoma concomitante',
+    note:'O painel recomenda escolher o não hormonal considerando também os sintomas associados (incontinência urinária, sono, dor, depressão ou humor). ISRS/IRSN, gabapentina e oxibutinina eram historicamente a primeira linha; as terapias antagonistas de neurocinina (NKT), mais recentes, devem ser consideradas quando acessíveis, respeitadas as contraindicações.',
+    ref: MM_REF + ' · Results: role of nonhormone therapy',
+    opts:[
+      {t:'Sintomas de humor ou transtorno do humor associados', to:'mm_nh_isrs'},
+      {t:'Sudorese noturna e distúrbio do sono associados', to:'mm_nh_gaba'},
+      {t:'História de câncer de mama', to:'mm_nh_mama'},
+      {t:'Considerar NKT (fezolinetanto, elinzanetanto)', to:'mm_nh_nkt'},
+      {t:'O que o consenso não recomenda', to:'mm_nh_nao'}
+    ] },
+  mm_nh_isrs:{ title:'ISRS/IRSN', tier:'act',
+    note:'Recomendados para pacientes com contraindicação à TH que têm sintomas ou transtornos do humor concomitantes, para quem recusa as outras opções e para quem tem história de câncer de mama. Opções citadas na grade: paroxetina (Brisdelle®, em bula nos EUA) e outros ISRS/IRSN — fluoxetina, citalopram, escitalopram, sertralina, duloxetina, venlafaxina, desvenlafaxina.',
+    rx: '<ul class="mmfn">' + mmFnList(['d','v']) + '</ul>',
+    ref: MM_REF + ' · Role of NHT; Fig. 1, notas d e v' },
+  mm_nh_gaba:{ title:'Gabapentina', tier:'act',
+    note:'Pode ser considerada em pacientes com contraindicação à TH que têm sudorese noturna e distúrbio do sono concomitantes, ou com história de câncer de mama. O painel lembra que a gabapentina pode aumentar o risco de sedação.',
+    ref: MM_REF + ' · Role of NHT' },
+  mm_nh_mama:{ title:'História de câncer de mama: priorizar o não hormonal', tier:'act',
+    note:'ISRS/IRSN e gabapentina são opções citadas para quem tem história de câncer de mama. Em uso de tamoxifeno, lembrar que paroxetina e fluoxetina são inibidores potentes do CYP2D6 (nota d). As NKT são apropriadas e eficazes em quem tem contraindicação à TH (o artigo cita o elinzanetanto em sintomas vasomotores da terapia endócrina para câncer de mama). A escolha deve envolver o oncologista.',
+    rx: '<ul class="mmfn">' + mmFnList(['d','l']) + '</ul>',
+    ref: MM_REF + ' · Role of NHT; Cancer',
+    opts:[ {t:'Ver a linha da grade para o tipo de câncer de mama', to:'mmc_histmama'} ] },
+  mm_nh_nkt:{ title:'Antagonistas de neurocinina (NKT): fezolinetanto e elinzanetanto', tier:'act',
+    note:'Apoiadas como primeira linha, com início de ação rápido (em cerca de uma semana) e poucos efeitos adversos, mas limitadas por acesso e custo e exigindo <b>monitoramento periódico com provas de função hepática</b>. <b>Fezolinetanto:</b> contraindicado em cirrose, insuficiência renal grave e uso concomitante de inibidores do CYP1A2. <b>Elinzanetanto:</b> contraindicado na gestação; cautela com inibidores fortes do CYP3A4 (ex.: toranja/grapefruit) e em distúrbios do SNC, incluindo convulsões; pode causar sonolência. No fígado: geralmente inadequadas com transaminases >2× o LSN, cirrose e hepatite aguda; doença hepática ativa é contraindicação.',
+    rx: '<ul class="mmfn">' + mmFnList(['r','s','t','u']) + '</ul>',
+    ref: MM_REF + ' · Role of NHT; Gastroenterological/liver disease',
+    opts:[ {t:'Ver as linhas de doença hepática na grade', to:'mmc_gastro'} ] },
+  mm_nh_nao:{ title:'O que o consenso não recomenda para sintomas vasomotores', tier:'warn',
+    note:'<b>Clonidina:</b> não recomendada por unanimidade (falta de eficácia e risco de hipotensão). <b>Produtos de venda livre e fitoterápicos:</b> abordar com cautela e, em geral, desencorajar (dados insuficientes de segurança e eficácia, falta de regulação, interações) — podem ser apropriados após avaliação individual de risco e decisão compartilhada. <b>DHEA oral de venda livre:</b> não recomendada. <b>DHEA vaginal:</b> eficaz para sintomas vaginais locais, mas não para sintomas vasomotores. <b>TH vaginal local:</b> apropriada para síndrome geniturinária e atrofia vaginal. <b>Testosterona</b> (fora de bula): para transtorno do desejo sexual hipoativo, não para sintomas vasomotores.',
+    ref: MM_REF + ' · Role of NHT' },
+  mm_seg:{ title:'Mulher já em uso de TH: reavaliação periódica', tier:'watch',
+    note:'Reavaliar fatores de risco <b>anualmente</b>. A adequação da TH deve ser revista pelos sintomas: ao melhorar, considerar <b>reduzir a dose ou migrar para estrogênio transdérmico</b>, além de um período de teste sem TH; se os sintomas voltarem, a TH pode ser reiniciada após discussão de risco-benefício. O perfil de risco muda por dois mecanismos: (1) <b>comorbidades novas</b> (IAM, TVP, TEP, câncer de mama novo), que exigem reavaliação imediata; e (2) <b>acúmulo de risco com a idade e a duração</b> (câncer de mama com uso prolongado, risco cardiovascular com o envelhecimento). Se surgir contraindicação médica além da idade, suspender. Em evento trombótico ou oncológico maior novo, suspender a TH.',
+    rx: '<ul class="mmfn">' + mmFnList(['f']) + '</ul>',
+    ref: MM_REF + ' · Age; Duration of symptoms; Long-term risks; Adverse effect risks',
+    opts:[ {t:'Ver a linha de idade na grade', to:'mmc_idade'} ] }
+};
+MM_CATS.forEach(c => {
+  MM_TREE['mmc_' + c.k] = { title: c.nome + ': qual a situação da paciente?',
+    note: c.fn ? 'Notas desta condição na grade: ' + c.fn + ' (veja no cartão seguinte).' : null,
+    ref: MM_REF + ' · Fig. 1, tabela ' + c.tab,
+    opts: MM_ROWS.filter(r => r.cat === c.k).map(r => ({t:r.sub, to:r.id})) };
+});
+MM_ROWS.forEach(r => { MM_TREE[r.id] = mmLinhaNo(r); });
+
+registerModule({
+  id:'mm_inicial', tab:'menomec', group:'Fluxo principal', label:'Fogachos: TH ou não hormonal? — MenoMEC',
+  desc:'Fluxograma para escolher entre terapia hormonal e não hormonal nos sintomas vasomotores moderados a graves da menopausa, conforme as comorbidades da paciente, usando a grade de elegibilidade MenoMEC (categorias 1 a 4 para iniciar e manter cada terapia).',
+  start:'mm0', tree: MM_TREE
+});
+
+registerModule({
+  id:'mm_tab1', tab:'menomec', group:'Consulta rápida', type:'static', wide:true,
+  label:'Anexo — Tabela 1 da grade MenoMEC',
+  desc:'Idade, tabagismo, escore PREVENT ASCVD, doença cardiovascular, condições metabólicas, risco e história de câncer de mama. Tradução da Fig. 1 (primeira tabela) do artigo.',
+  html: '<div class="refcard"><h3>Critérios de elegibilidade: terapias para sintomas vasomotores da menopausa (EUA) — Tabela 1</h3><p>As recomendações se baseiam na melhor evidência disponível e em opinião de especialistas; toda decisão exige discussão com o clínico assistente e as especialidades pertinentes ao iniciar ou manter a terapia. Além das comorbidades listadas, todas as possíveis interações medicamentosas devem ser avaliadas. Excluir gestação se a paciente estiver na perimenopausa.</p>' + mmTabela(1) + '<p class="mmsrc">Fonte: ' + MM_REF + ', Fig. 1. Tradução para o português.</p></div>'
+});
+registerModule({
+  id:'mm_tab2', tab:'menomec', group:'Consulta rápida', type:'static', wide:true,
+  label:'Anexo — Tabela 2 da grade MenoMEC',
+  desc:'Câncer ginecológico, outros cânceres, condições gastroenterológicas e hepáticas, neurológicas, trombose e doenças autoimunes. Tradução da Fig. 1 (segunda tabela) do artigo.',
+  html: '<div class="refcard"><h3>Critérios de elegibilidade: terapias para sintomas vasomotores da menopausa (EUA) — Tabela 2</h3><p>As recomendações se baseiam na melhor evidência disponível e em opinião de especialistas; toda decisão exige discussão com o clínico assistente e as especialidades pertinentes ao iniciar ou manter a terapia. Além das comorbidades listadas, todas as possíveis interações medicamentosas devem ser avaliadas. Excluir gestação se a paciente estiver na perimenopausa.</p>' + mmTabela(2) + '<p class="mmabr"><b>Abreviaturas:</b> AIT, ataque isquêmico transitório; AVC, acidente vascular cerebral; CDIS, carcinoma ductal in situ; CLIS, carcinoma lobular in situ; E, estrogênio; E+P, estrogênio + progestagênio; FIGO, Federação Internacional de Ginecologia e Obstetrícia; HDA, hiperplasia ductal atípica; HLA, hiperplasia lobular atípica; IAM, infarto agudo do miocárdio; IMC, índice de massa corporal; ISRS, inibidor seletivo da recaptação de serotonina; IRSN, inibidor da recaptação de serotonina e noradrenalina; LSN, limite superior da normalidade; MASLD, doença hepática esteatótica associada à disfunção metabólica; NKT, terapia antagonista do receptor de neurocinina; PREVENT, Predicting Risk of Cardiovascular Disease Events; RH, receptor hormonal; TEP, tromboembolismo pulmonar; TEV, tromboembolismo venoso; TH, terapia hormonal; TVP, trombose venosa profunda.</p><p class="mmsrc">Fonte: ' + MM_REF + ', Fig. 1. Tradução para o português.</p></div>'
+});
+registerModule({
+  id:'mm_sobre', tab:'menomec', group:'Consulta rápida', type:'static',
+  label:'Sobre o consenso MenoMEC',
+  desc:'Como o consenso foi construído e suas limitações.',
+  html: '<div class="refcard"><h3>Sobre o MenoMEC</h3><p>' + MM_SOURCE + '</p><ul><li><b>Método:</b> revisão sistemática de diretrizes norte-americanas (2014–2024), questionário online com escala Likert de 9 pontos (consenso = ≥70% de concordância) e reuniões presenciais em Boston (março de 2025) e Filadélfia (março de 2026). Painel multidisciplinar de 15 especialistas (ginecologia, menopausa, oncologia, cardiologia, endocrinologia, neurologia, saúde óssea, hematologia e psiquiatria).</li><li><b>Grade:</b> modelada nos critérios de elegibilidade médica para contracepção dos EUA (US MEC). Categorias: 1 = sem restrição; 2 = vantagens geralmente superam os riscos; 3 = riscos geralmente superam as vantagens (contraindicação relativa — usar só com cautela e avaliação individual); 4 = risco inaceitável (não usar). Cada terapia tem categoria para início (I) e para continuação (C).</li><li><b>Foco:</b> realidade dos EUA — disponibilidade de medicamentos, rótulos "em bula/fora de bula" e acesso podem diferir do Brasil.</li><li><b>Limitações:</b> reflete opinião de especialistas, não evidência empírica direta; recomendações sobre fitoterápicos e NKT são mais cautelosas pela evidência limitada. É uma ferramenta de apoio à decisão, não uma diretriz prescritiva.</li><li><b>Financiamento:</b> o estudo foi financiado pela Bayer, e os especialistas receberam honorários; segundo os autores, a empresa não participou do desenho, da análise nem da redação.</li></ul></div>'
+});
+
+
 /* boot */
-goModule('inicial');
+goModule(location.hash === '#menomec' ? 'mm_inicial' : 'inicial');
 
 </script>
 <nav class="mobile-tabbar">
