@@ -59,10 +59,11 @@ export default {
     }
     const card = await cardResp.json();
 
-    // Cards de vídeo (título começando com "Vídeo") são só para Instagram —
-    // não devem virar artigo no blog.
-    if (/^v[ií]deo\b/i.test((card.name || '').trim())) {
-      return new Response('Card de vídeo — não gera artigo', { status: 200 });
+    // Cards de vídeo/segmentos fixos (ex.: "Vídeo: ...", "GO sem filtro") são só
+    // para Instagram — não devem virar artigo no blog.
+    const cardTitle = (card.name || '').trim();
+    if (/^v[ií]deo\b/i.test(cardTitle) || /^go sem filtro\b/i.test(cardTitle)) {
+      return new Response('Card de vídeo/segmento fixo — não gera artigo', { status: 200 });
     }
 
     const content = (card.desc || '').trim();
